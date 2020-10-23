@@ -17,8 +17,12 @@ const NumberInput = ({ value }: { value: number }) => {
   const previousTime = usePrevious(time);
 
   useEffect(() => {
-    if (input.current && Math.abs(time - previousTime) >= 10) {
-      input.current.setSelectionRange(1, 1);
+    if (input.current) {
+      if (Math.abs(time - previousTime) >= 10) {
+        input.current.setSelectionRange(1, 1);
+      } else {
+        input.current.setSelectionRange(0, 0);
+      }
     }
   }, [time]);
 
