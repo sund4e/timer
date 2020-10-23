@@ -53,6 +53,7 @@ const NumberInput = ({ value, onChange }: Props) => {
       value={inputValue}
       onChange={onChangeInput}
       onClick={onClick}
+      size={2}
     />
   );
 };
