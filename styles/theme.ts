@@ -6,6 +6,9 @@ export type Theme = {
     accent: string;
     light: string;
   };
+  fontSizes: {
+    big: string;
+  };
 };
 export const theme: Theme = {
   colors: {
@@ -14,5 +17,8 @@ export const theme: Theme = {
     highlight: '#494F69',
     accent: '#975E6E',
     light: '#E8E8E8',
+  },
+  fontSizes: {
+    big: '8vw',
   },
 };

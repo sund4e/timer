@@ -6,7 +6,7 @@ import { Theme } from '../../styles/theme';
 const StyledInput = styled.input`
   color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
   border-style: none;
-  font-size: 8em;
+  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big};
   caret-color: transparent;
   background-color: transparent;
 `;
