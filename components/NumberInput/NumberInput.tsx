@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { SyntheticEvent, useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import usePrevious from '../../hooks/usePrevious.tsx/usePrevious';
 
 const StyledInput = styled.input`
   color: ${({ theme }) => theme.colors.primary};
@@ -7,12 +8,20 @@ const StyledInput = styled.input`
   width: 50%;
   height: 50%;
   font-size: 8em;
-  caret-color: transparents;
+  caret-color: transparent;
   background-color: transparent;
 `;
 
 const NumberInput = () => {
   const [time, setTime] = useState(0);
+  const input = useRef<HTMLInputElement>();
+  const previousTime = usePrevious(time);
+
+  useEffect(() => {
+    if (Math.abs(time - previousTime) >= 10) {
+      input.current.setSelectionRange(1, 1);
+    }
+  }, [time]);
 
   const inputValue = time < 10 ? `0${time}` : time.toString();
 
@@ -26,7 +35,9 @@ const NumberInput = () => {
       setTime(newTime);
     }
   };
-  return <StyledInput value={inputValue} onChange={onChangeInput} />;
+  return (
+    <StyledInput ref={input} value={inputValue} onChange={onChangeInput} />
+  );
 };
 
 export default NumberInput;
