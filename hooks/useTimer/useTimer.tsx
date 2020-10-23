@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
-type Props = {
-  startTime: number;
-  onTimeEnd: () => void;
-};
 
-const Timer = ({ startTime, onTimeEnd }: Props) => {
+const useTimer = (startTime: number, onTimeEnd: () => void) => {
   const [time, setTime] = useState(startTime);
   useEffect(() => {
     if (time === 0) {
@@ -18,4 +14,4 @@ const Timer = ({ startTime, onTimeEnd }: Props) => {
   return time;
 };
 
-export default Timer;
+export default useTimer;

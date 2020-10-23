@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import styled from 'styled-components';
 import Container from '../components/Container';
-import Timer from '../components/Timer';
+import useTimer from '../hooks/useTimer';
 
 const Title = styled.h1`
   font-size: 50px;
@@ -9,6 +9,10 @@ const Title = styled.h1`
 `;
 
 const Home = () => {
+  const handleEnd = () => {
+    console.log('END');
+  };
+  const time = useTimer(10, handleEnd);
   return (
     <div>
       <Head>
@@ -16,9 +20,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>
-        <Title>
-          <Timer startTime={10} onTimeEnd={() => console.log('END')} />
-        </Title>
+        <Title>{time}</Title>
       </Container>
     </div>
   );
