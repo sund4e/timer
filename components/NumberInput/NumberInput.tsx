@@ -5,8 +5,6 @@ import usePrevious from '../../hooks/usePrevious.tsx/usePrevious';
 const StyledInput = styled.input`
   color: ${({ theme }) => theme.colors.primary};
   border-style: none;
-  width: 50%;
-  height: 50%;
   font-size: 8em;
   caret-color: transparent;
   background-color: transparent;
@@ -35,8 +33,18 @@ const NumberInput = () => {
       setTime(newTime);
     }
   };
+
+  const onClick = () => {
+    input.current.setSelectionRange(0, 0);
+  };
+
   return (
-    <StyledInput ref={input} value={inputValue} onChange={onChangeInput} />
+    <StyledInput
+      ref={input}
+      value={inputValue}
+      onChange={onChangeInput}
+      onClick={onClick}
+    />
   );
 };
 
