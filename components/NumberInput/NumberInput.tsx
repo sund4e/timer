@@ -11,22 +11,26 @@ const StyledInput = styled.input`
   background-color: transparent;
 `;
 
-const NumberInput = ({ value }: { value: number }) => {
-  const [time, setTime] = useState(value);
+type Props = {
+  value: number;
+  onChange: (newValue: number) => void;
+};
+
+const NumberInput = ({ value, onChange }: Props) => {
   const input = useRef<HTMLInputElement>(null);
-  const previousTime = usePrevious(time);
+  const previousTime = usePrevious(value);
 
   useEffect(() => {
     if (input.current) {
-      if (Math.abs(time - previousTime) >= 10) {
+      if (Math.abs(value - previousTime) >= 10) {
         input.current.setSelectionRange(1, 1);
       } else {
         input.current.setSelectionRange(0, 0);
       }
     }
-  }, [time]);
+  }, [value]);
 
-  const inputValue = time < 10 ? `0${time}` : time.toString();
+  const inputValue = value < 10 ? `0${value}` : value.toString();
 
   const onChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
@@ -35,7 +39,7 @@ const NumberInput = ({ value }: { value: number }) => {
 
     if (!isNaN(parseInt(tens)) && !isNaN(parseInt(ones))) {
       const newTime = parseInt(`${tens}${ones}`);
-      setTime(newTime);
+      onChange(newTime);
     }
   };
 
