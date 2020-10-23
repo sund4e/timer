@@ -1,22 +1,23 @@
 import styled from 'styled-components';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, MutableRefObject } from 'react';
 import usePrevious from '../../hooks/usePrevious.tsx/usePrevious';
+import { Theme } from '../../styles/theme';
 
 const StyledInput = styled.input`
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
   border-style: none;
   font-size: 8em;
   caret-color: transparent;
   background-color: transparent;
 `;
 
-const NumberInput = () => {
-  const [time, setTime] = useState(0);
-  const input = useRef<HTMLInputElement>();
+const NumberInput = ({ value }: { value: number }) => {
+  const [time, setTime] = useState(value);
+  const input = useRef<HTMLInputElement>(null);
   const previousTime = usePrevious(time);
 
   useEffect(() => {
-    if (Math.abs(time - previousTime) >= 10) {
+    if (input.current && Math.abs(time - previousTime) >= 10) {
       input.current.setSelectionRange(1, 1);
     }
   }, [time]);
@@ -35,7 +36,7 @@ const NumberInput = () => {
   };
 
   const onClick = () => {
-    input.current.setSelectionRange(0, 0);
+    input.current && input.current.setSelectionRange(0, 0);
   };
 
   return (

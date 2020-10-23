@@ -2,6 +2,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import Container from '../components/Container';
 import useTimer from '../hooks/useTimer';
+import NumberInput from '../components/NumberInput';
 
 const Title = styled.h1`
   font-size: 50px;
@@ -21,6 +22,7 @@ const Home = () => {
       </Head>
       <Container>
         <Title>{time}</Title>
+        <NumberInput value={0} />
       </Container>
     </div>
   );

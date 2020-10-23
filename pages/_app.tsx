@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { theme } from '../styles/theme';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -9,16 +10,6 @@ const GlobalStyle = createGlobalStyle`
     font-family: Verdana, Helvetica, sans-serif;
   }
 `;
-
-const theme = {
-  colors: {
-    dark: '#141414',
-    primary: '#182033',
-    highlight: '#494F69',
-    accent: '#975E6E',
-    light: '#E8E8E8',
-  },
-};
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
