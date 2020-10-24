@@ -7,38 +7,39 @@ const StyledInput = styled.input`
   color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
   border-style: none;
   font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big};
-  caret-color: transparent;
+  caret-color: transparents;
   background-color: transparent;
 `;
 
-type Props = {
+export type Props = {
   value: number;
   onChange: (newValue: number) => void;
+  size: number;
 };
 
-const NumberInput = ({ value, onChange }: Props) => {
+const NumberInput = ({ value, onChange, size }: Props) => {
   const input = useRef<HTMLInputElement>(null);
-  const previousTime = usePrevious(value);
-
-  useEffect(() => {
-    if (input.current) {
-      if (Math.abs(value - previousTime) >= 10) {
-        input.current.setSelectionRange(1, 1);
-      } else {
-        input.current.setSelectionRange(0, 0);
-      }
-    }
-  }, [value]);
+  const changeIndex = useRef<number>(0);
 
   const inputValue = value < 10 ? `0${value}` : value.toString();
 
   const onChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
-    const tens = newValue[0];
-    const ones = tens !== inputValue[0] ? newValue[2] : newValue[1];
+    const newTime = parseInt(newValue.slice(0, size));
 
-    if (!isNaN(parseInt(tens)) && !isNaN(parseInt(ones))) {
-      const newTime = parseInt(`${tens}${ones}`);
+    if (!isNaN(newTime)) {
+      changeIndex.current =
+        changeIndex.current === size - 1 ? 0 : changeIndex.current + 1;
+
+      //We need to use tiemout to avoid race condition with browser updating the input
+      setTimeout(() => {
+        input.current &&
+          input.current.setSelectionRange(
+            changeIndex.current,
+            changeIndex.current
+          );
+      }, 0);
+
       onChange(newTime);
     }
   };
@@ -53,7 +54,7 @@ const NumberInput = ({ value, onChange }: Props) => {
       value={inputValue}
       onChange={onChangeInput}
       onClick={onClick}
-      size={2}
+      size={size}
     />
   );
 };
