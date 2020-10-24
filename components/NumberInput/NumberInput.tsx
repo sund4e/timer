@@ -25,23 +25,25 @@ const NumberInput = ({ value, onChange, size }: Props) => {
 
   const onChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
-    const newTime = parseInt(newValue.slice(0, size));
+    const integers = Array.from(newValue).map((character: string) =>
+      parseInt(character)
+    );
 
-    if (!isNaN(newTime)) {
+    if (integers.every((num) => !isNaN(num))) {
+      const newTime = parseInt(integers.slice(0, size).join(''));
       changeIndex.current =
         changeIndex.current === size - 1 ? 0 : changeIndex.current + 1;
-
-      //We need to use tiemout to avoid race condition with browser updating the input
-      setTimeout(() => {
-        input.current &&
-          input.current.setSelectionRange(
-            changeIndex.current,
-            changeIndex.current
-          );
-      }, 0);
-
       onChange(newTime);
     }
+
+    //Use tiemout to set the cursor position to avoid race condition with browser updating the input
+    setTimeout(() => {
+      input.current &&
+        input.current.setSelectionRange(
+          changeIndex.current,
+          changeIndex.current
+        );
+    }, 0);
   };
 
   const onClick = () => {

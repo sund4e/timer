@@ -53,4 +53,17 @@ describe('NumberInput', () => {
     jest.runAllTimers();
     expect(input.selectionStart).toEqual(1);
   });
+
+  it('does not allow inputting letters', () => {
+    const value = 22;
+    const newValue = '2a2';
+    const onChange = jest.fn();
+    render({ value, onChange });
+    const input = screen.getByRole('textbox') as HTMLInputElement;
+    fireEvent.change(input, {
+      target: { value: newValue },
+    });
+    expect(input).toHaveValue(value.toString());
+    expect(onChange).not.toHaveBeenCalled();
+  });
 });
