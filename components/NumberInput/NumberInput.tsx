@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { useState, useRef, useEffect, MutableRefObject } from 'react';
-import usePrevious from '../../hooks/usePrevious.tsx/usePrevious';
+import { useRef } from 'react';
 import { Theme } from '../../styles/theme';
 
 const StyledInput = styled.input`
