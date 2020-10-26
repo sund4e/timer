@@ -66,4 +66,20 @@ describe('NumberInput', () => {
     expect(input).toHaveValue(value.toString());
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  describe('isFocused', () => {
+    it('focuses input if true', () => {
+      const isFocused = true;
+      render({ isFocused });
+      const input = screen.getByRole('textbox') as HTMLInputElement;
+      expect(input).toHaveFocus();
+    });
+
+    it('focuses input if false', () => {
+      const isFocused = false;
+      render({ isFocused });
+      const input = screen.getByRole('textbox') as HTMLInputElement;
+      expect(input).not.toHaveFocus();
+    });
+  });
 });

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Theme } from '../../styles/theme';
 
 const StyledInput = styled.input`
@@ -14,11 +14,22 @@ export type Props = {
   value: number;
   onChange: (newValue: number) => void;
   size: number;
+  isFocused: boolean;
 };
 
-const NumberInput = ({ value, onChange, size }: Props) => {
+const NumberInput = ({ value, onChange, size, isFocused }: Props) => {
   const input = useRef<HTMLInputElement>(null);
   const changeIndex = useRef<number>(0);
+
+  useEffect(() => {
+    if (input.current) {
+      if (isFocused) {
+        input.current.focus();
+      } else {
+        input.current.blur();
+      }
+    }
+  }, [isFocused]);
 
   const inputValue = value < 10 ? `0${value}` : value.toString();
 
