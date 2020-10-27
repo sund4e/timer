@@ -12,7 +12,7 @@ const StyledInput = styled.input`
 
 export type Props = {
   value: number;
-  onChange: (newValue: number) => void;
+  onChange: (newValue: number, inputReady: boolean) => void;
   size: number;
   isFocused: boolean;
 };
@@ -35,15 +35,18 @@ const NumberInput = ({ value, onChange, size, isFocused }: Props) => {
 
   const onChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
-    const integers = Array.from(newValue).map((character: string) =>
-      parseInt(character)
-    );
+    const currentIndex = changeIndex.current;
+    const changedValue = newValue[currentIndex];
+    const valueWithChange =
+      inputValue.toString().substr(0, currentIndex) +
+      changedValue +
+      inputValue.toString().substr(currentIndex + 1);
+    const newTime = parseInt(valueWithChange.slice(0, size));
 
-    if (integers.every((num) => !isNaN(num))) {
-      const newTime = parseInt(integers.slice(0, size).join(''));
-      changeIndex.current =
-        changeIndex.current === size - 1 ? 0 : changeIndex.current + 1;
-      onChange(newTime);
+    if (!isNaN(newTime)) {
+      const lastIndex = changeIndex.current === size - 1;
+      changeIndex.current = lastIndex ? 0 : changeIndex.current + 1;
+      onChange(newTime, lastIndex);
     }
 
     //Use tiemout to set the cursor position to avoid race condition with browser updating the input
