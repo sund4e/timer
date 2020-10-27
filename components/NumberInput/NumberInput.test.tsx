@@ -4,7 +4,7 @@ import NumberInput, { Props } from './NumberInput';
 
 jest.useFakeTimers();
 
-describe('NumberInput', () => {
+fdescribe('NumberInput', () => {
   const render = (override: Partial<Props>) => {
     const defaultProps = {
       size: 2,
@@ -16,76 +16,68 @@ describe('NumberInput', () => {
     return renderElement(<NumberInput {...defaultProps} />);
   };
   it('renders start value', () => {
-    const value = 12;
+    const value = 45;
     render({ value });
-    const input = screen.getByRole('textbox');
-    expect(input).toHaveValue(value.toString());
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    expect(inputs.length).toEqual(2);
+    expect(inputs[0].value).toEqual('4');
+    expect(inputs[1].value).toEqual('5');
   });
 
-  it('calls onChange correctly when changing tens', () => {
+  it('calls onChange correctly when changing other than last input', () => {
     const onChange = jest.fn();
     render({ onChange, value: 11 });
-    const input = screen.getByRole('textbox');
-    const firstInput = '211';
-    fireEvent.change(input, {
-      target: { value: firstInput },
+    const inputs = screen.getAllByRole('textbox');
+    fireEvent.change(inputs[0], {
+      target: { value: '2' },
     });
     expect(onChange).toHaveBeenCalledWith(21, false);
   });
 
-  it('calls onChange correctly when changing ones', () => {
+  it('calls onChange correctly when changing last input', () => {
     const onChange = jest.fn();
     render({ onChange, value: 11 });
-    const input = screen.getByRole('textbox');
-    const firstInput = '111';
-    const secondInput = '121';
-    fireEvent.change(input, {
-      target: { value: firstInput },
-    });
-
-    fireEvent.change(input, {
-      target: { value: secondInput },
+    const inputs = screen.getAllByRole('textbox');
+    fireEvent.change(inputs[1], {
+      target: { value: '2' },
     });
     expect(onChange).toHaveBeenCalledWith(12, true);
   });
 
-  it('sets cursor corretly', () => {
-    const newValue = '200';
-    render({ value: 0 });
-    const input = screen.getByRole('textbox') as HTMLInputElement;
-    fireEvent.change(input, {
-      target: { value: newValue },
-    });
-    jest.runAllTimers();
-    expect(input.selectionStart).toEqual(1);
-  });
-
   it('does not allow inputting letters', () => {
-    const value = 22;
-    const newValue = 'a22';
     const onChange = jest.fn();
-    render({ value, onChange });
-    const input = screen.getByRole('textbox') as HTMLInputElement;
-    fireEvent.change(input, {
-      target: { value: newValue },
+    render({ value: 22, onChange });
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    fireEvent.change(inputs[0], {
+      target: { value: 'a' },
     });
-    expect(input).toHaveValue(value.toString());
+    expect(inputs[0]).toHaveValue('2');
     expect(onChange).not.toHaveBeenCalled();
   });
 
   describe('isFocused', () => {
-    it('focuses input if true', () => {
-      const isFocused = true;
-      render({ isFocused });
-      const input = screen.getByRole('textbox') as HTMLInputElement;
-      expect(input).toHaveFocus();
+    it('focuses first input initially if true', () => {
+      render({ isFocused: true });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      expect(inputs[0] === document.activeElement).toEqual(true);
     });
 
-    it('focuses input if false', () => {
-      const isFocused = false;
-      render({ isFocused });
-      const input = screen.getByRole('textbox') as HTMLInputElement;
-      expect(input).not.toHaveFocus();
+    it('focuses next input after change if true', () => {
+      render({ isFocused: true });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      fireEvent.change(inputs[0], {
+        target: { value: '2' },
+      });
+      expect(inputs[1] === document.activeElement).toEqual(true);
+    });
+
+    it('does not focus any input if false', () => {
+      render({ isFocused: false });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const isFocused = inputs.some(
+        (input) => input === document.activeElement
+      );
+      expect(isFocused).toBe(false);
     });
   });
 });

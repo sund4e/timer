@@ -1,76 +1,69 @@
-import styled from 'styled-components';
-import { useRef, useEffect } from 'react';
-import { Theme } from '../../styles/theme';
-
-const StyledInput = styled.input`
-  color: ${({ theme }: { theme: Theme }) => theme.colors.primary};
-  border-style: none;
-  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big};
-  caret-color: transparents;
-  background-color: transparent;
-`;
+import { useState } from 'react';
+import SingleInput from '../SingleInput/SingleInput';
 
 export type Props = {
+  onChange: (value: number, inputReady: boolean) => void;
   value: number;
-  onChange: (newValue: number, inputReady: boolean) => void;
-  size: number;
   isFocused: boolean;
+  size: number;
 };
 
-const NumberInput = ({ value, onChange, size, isFocused }: Props) => {
-  const input = useRef<HTMLInputElement>(null);
-  const changeIndex = useRef<number>(0);
+const getValueAsArray = (value: number, size: number) => {
+  const valueArray = Array.from(value.toString()).map((value) =>
+    parseInt(value)
+  );
+  if (valueArray.length < size) {
+    const defict = size - valueArray.length;
+    const defictArray = new Array(defict).fill(0);
+    return [...defictArray, ...valueArray];
+  }
 
-  useEffect(() => {
-    if (input.current) {
-      if (isFocused) {
-        input.current.focus();
-      } else {
-        input.current.blur();
-      }
+  if (valueArray.length > size) {
+    return valueArray.slice(0, size);
+  }
+
+  return valueArray;
+};
+
+const NumberInput = ({
+  value,
+  onChange,
+  isFocused,
+  size,
+}: NumberInputProps) => {
+  const [focusIndex, setFocusIndex] = useState(0);
+  const inputValue = getValueAsArray(value, size);
+
+  const focusNextInput = () => {};
+
+  const onChangeInput = (index: number) => (newValue: number) => {
+    const newNumber = parseInt(
+      Object.assign([], inputValue, { [index]: newValue }).join('')
+    );
+    const nextIndex = index + 1;
+    const inputReady = nextIndex === inputValue.length;
+    if (inputReady) {
+      setFocusIndex(0);
+    } else {
+      setFocusIndex(nextIndex);
     }
-  }, [isFocused]);
-
-  const inputValue = value < 10 ? `0${value}` : value.toString();
-
-  const onChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
-    const newValue = event.currentTarget.value;
-    const currentIndex = changeIndex.current;
-    const changedValue = newValue[currentIndex];
-    const valueWithChange =
-      inputValue.toString().substr(0, currentIndex) +
-      changedValue +
-      inputValue.toString().substr(currentIndex + 1);
-    const newTime = parseInt(valueWithChange.slice(0, size));
-
-    if (!isNaN(newTime)) {
-      const lastIndex = changeIndex.current === size - 1;
-      changeIndex.current = lastIndex ? 0 : changeIndex.current + 1;
-      onChange(newTime, lastIndex);
-    }
-
-    //Use tiemout to set the cursor position to avoid race condition with browser updating the input
-    setTimeout(() => {
-      input.current &&
-        input.current.setSelectionRange(
-          changeIndex.current,
-          changeIndex.current
-        );
-    }, 0);
-  };
-
-  const onClick = () => {
-    input.current && input.current.setSelectionRange(0, 0);
+    focusNextInput();
+    onChange(newNumber, inputReady);
   };
 
   return (
-    <StyledInput
-      ref={input}
-      value={inputValue}
-      onChange={onChangeInput}
-      onClick={onClick}
-      size={size}
-    />
+    <>
+      {inputValue.map((num: number, index: number) => {
+        return (
+          <SingleInput
+            key={index}
+            onChange={onChangeInput(index)}
+            value={num}
+            isFocused={isFocused && focusIndex === index}
+          />
+        );
+      })}
+    </>
   );
 };
 
