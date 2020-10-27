@@ -10,9 +10,10 @@ describe('NumberInput', () => {
       size: 2,
       value: 0,
       onChange: () => {},
+      isFocused: true,
       ...override,
     };
-    renderElement(<NumberInput {...defaultProps} />);
+    return renderElement(<NumberInput {...defaultProps} />);
   };
   it('renders start value', () => {
     const value = 12;
@@ -23,28 +24,33 @@ describe('NumberInput', () => {
 
   it('calls onChange correctly when changing tens', () => {
     const onChange = jest.fn();
-    const newValue = '100';
-    render({ onChange, value: 0 });
+    render({ onChange, value: 11 });
     const input = screen.getByRole('textbox');
+    const firstInput = '211';
     fireEvent.change(input, {
-      target: { value: newValue },
+      target: { value: firstInput },
     });
-    expect(onChange).toHaveBeenCalledWith(10);
+    expect(onChange).toHaveBeenCalledWith(21, false);
   });
 
   it('calls onChange correctly when changing ones', () => {
     const onChange = jest.fn();
-    const newValue = '12';
-    render({ onChange, value: 0 });
+    render({ onChange, value: 11 });
     const input = screen.getByRole('textbox');
+    const firstInput = '111';
+    const secondInput = '121';
     fireEvent.change(input, {
-      target: { value: newValue },
+      target: { value: firstInput },
     });
-    expect(onChange).toHaveBeenCalledWith(12);
+
+    fireEvent.change(input, {
+      target: { value: secondInput },
+    });
+    expect(onChange).toHaveBeenCalledWith(12, true);
   });
 
   it('sets cursor corretly', () => {
-    const newValue = '222';
+    const newValue = '200';
     render({ value: 0 });
     const input = screen.getByRole('textbox') as HTMLInputElement;
     fireEvent.change(input, {
@@ -56,7 +62,7 @@ describe('NumberInput', () => {
 
   it('does not allow inputting letters', () => {
     const value = 22;
-    const newValue = '2a2';
+    const newValue = 'a22';
     const onChange = jest.fn();
     render({ value, onChange });
     const input = screen.getByRole('textbox') as HTMLInputElement;
