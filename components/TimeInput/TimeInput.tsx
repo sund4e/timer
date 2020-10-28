@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import NumberInput from '../NumberInput/NumberInput';
 import { Theme } from '../../styles/theme';
-import { getHms, Input } from './timeConverters';
+import { getHms, Input, getSeconds } from './timeConverters';
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,12 +22,12 @@ export type Props = {
 
 const TimeInput = ({ value, onChange }: Props) => {
   const [time, setTime] = useState(getHms(value));
-  const [focusedInput, setFocusedInput] = useState(Input.hours);
+  const [focusedInput, setFocusedInput] = useState<Input | null>(Input.hours);
 
   const nextInput = {
     [Input.hours]: Input.minutes,
     [Input.minutes]: Input.seconds,
-    [Input.seconds]: Input.hours,
+    [Input.seconds]: null,
   };
 
   const onChangeInput = (inputName: Input) => (
@@ -39,7 +39,13 @@ const TimeInput = ({ value, onChange }: Props) => {
       [inputName]: newValue,
     });
     if (inputReady) {
-      setFocusedInput(nextInput[inputName]);
+      const next = nextInput[inputName];
+      if (next !== null) {
+        setFocusedInput(next);
+      } else {
+        onChange(getSeconds(time));
+        setFocusedInput(null);
+      }
     }
   };
 

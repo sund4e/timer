@@ -44,4 +44,31 @@ fdescribe('NumberInput', () => {
     });
     expect(inputs[4] === document.activeElement).toBeTruthy();
   });
+
+  describe('onChange', () => {
+    it('is called for last input change', () => {
+      const onChange = jest.fn();
+      render({ onChange });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[inputs.length - 1];
+      fireEvent.change(input, {
+        target: {
+          value: 5,
+        },
+      });
+      expect(onChange).toHaveBeenCalled();
+    });
+    it('is not called for other than last inputs', () => {
+      const onChange = jest.fn();
+      render({ onChange });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[2];
+      fireEvent.change(input, {
+        target: {
+          value: 5,
+        },
+      });
+      expect(onChange).not.toHaveBeenCalled();
+    });
+  });
 });

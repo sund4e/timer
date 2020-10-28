@@ -15,3 +15,7 @@ export const getHms = (seconds: number): Hms => {
     [Input.seconds]: Math.floor((seconds % 3600) % 60),
   };
 };
+
+export const getSeconds = (hms: Hms) => {
+  return hms[Input.hours] * 3600 + hms[Input.minutes] * 60 + hms[Input.seconds];
+};
