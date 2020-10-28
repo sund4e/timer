@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const useTimer = (startTime: number, onTimeEnd: () => void) => {
   const [time, setTime] = useState(startTime);
   const [isPaused, setIsPaused] = useState(false);
+  const timer = useRef<number>();
+
   useEffect(() => {
-    console.log('effect');
+    console.log('newTime', time);
     if (time === 0) {
       onTimeEnd();
     } else if (!isPaused) {
-      setTimeout(() => {
+      timer.current = setTimeout(() => {
         setTime(time - 1);
       }, 1000);
     }
@@ -16,14 +18,16 @@ const useTimer = (startTime: number, onTimeEnd: () => void) => {
 
   const pause = () => {
     setIsPaused(true);
+    clearTimeout(timer.current);
   };
 
   const setNewTime = (seconds: number) => {
-    console.log('newTime!');
+    console.log('setNewTime', seconds);
     setTime(seconds);
+    clearTimeout(timer.current);
     setIsPaused(false);
   };
-  console.log('render');
+
   return { time, setTime: setNewTime, pause };
 };
 
