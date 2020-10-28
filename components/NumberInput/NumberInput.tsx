@@ -6,6 +6,7 @@ export type Props = {
   value: number;
   isFocused: boolean;
   size: number;
+  onClick: () => void;
 };
 
 const getValueAsArray = (value: number, size: number) => {
@@ -25,12 +26,7 @@ const getValueAsArray = (value: number, size: number) => {
   return valueArray;
 };
 
-const NumberInput = ({
-  value,
-  onChange,
-  isFocused,
-  size,
-}: NumberInputProps) => {
+const NumberInput = ({ value, onChange, isFocused, size, onClick }: Props) => {
   const [focusIndex, setFocusIndex] = useState(0);
   const inputValue = getValueAsArray(value, size);
 
@@ -51,6 +47,11 @@ const NumberInput = ({
     onChange(newNumber, inputReady);
   };
 
+  const onClickInput = (index: number) => () => {
+    setFocusIndex(index);
+    onClick();
+  };
+
   return (
     <>
       {inputValue.map((num: number, index: number) => {
@@ -60,6 +61,7 @@ const NumberInput = ({
             onChange={onChangeInput(index)}
             value={num}
             isFocused={isFocused && focusIndex === index}
+            onClick={onClickInput(index)}
           />
         );
       })}

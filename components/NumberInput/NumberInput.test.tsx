@@ -11,6 +11,7 @@ fdescribe('NumberInput', () => {
       value: 0,
       onChange: () => {},
       isFocused: true,
+      onClick: () => {},
       ...override,
     };
     return renderElement(<NumberInput {...defaultProps} />);
@@ -79,5 +80,13 @@ fdescribe('NumberInput', () => {
       );
       expect(isFocused).toBe(false);
     });
+  });
+
+  it('calls onClick when one of onputs is clicked', () => {
+    const onClick = jest.fn();
+    render({ onClick });
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    fireEvent.click(inputs[0]);
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

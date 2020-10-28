@@ -18,9 +18,10 @@ export type Props = {
   value: number;
   onChange: (newValue: number) => void;
   isFocused: boolean;
+  onClick: () => void;
 };
 
-const SingleInput = ({ value, onChange, isFocused }: Props) => {
+const SingleInput = ({ value, onChange, isFocused, onClick }: Props) => {
   const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -55,6 +56,7 @@ const SingleInput = ({ value, onChange, isFocused }: Props) => {
       onChange={onChangeInput}
       size={1}
       isFocused={isFocused}
+      onClick={onClick}
     />
   );
 };
