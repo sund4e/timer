@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NumberInput from '../NumberInput/NumberInput';
 import { Theme } from '../../styles/theme';
 import { getHms, Input, getSeconds } from './timeConverters';
@@ -18,11 +18,12 @@ const StyledSpan = styled.span`
 export type Props = {
   value: number;
   onChange: (seconds: number) => void;
+  onFocus: () => void;
 };
 
-const TimeInput = ({ value, onChange }: Props) => {
+const TimeInput = ({ value, onChange, onFocus }: Props) => {
   const [time, setTime] = useState(getHms(value));
-  const [focusedInput, setFocusedInput] = useState<Input | null>(Input.hours);
+  const [focusedInput, setFocusedInput] = useState<Input | null>(null);
 
   const nextInput = {
     [Input.hours]: Input.minutes,
@@ -51,6 +52,7 @@ const TimeInput = ({ value, onChange }: Props) => {
 
   const onClick = (inputName: Input) => () => {
     setFocusedInput(inputName);
+    onFocus();
   };
 
   const getInput = (input: Input) => {

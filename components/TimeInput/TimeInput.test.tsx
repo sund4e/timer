@@ -9,6 +9,7 @@ fdescribe('NumberInput', () => {
     const defaultProps = {
       value: 6574,
       onChange: () => {},
+      onFocus: () => {},
       ...override,
     };
     return renderElement(<TimeInput {...defaultProps} />);
@@ -43,6 +44,14 @@ fdescribe('NumberInput', () => {
       },
     });
     expect(inputs[4] === document.activeElement).toBeTruthy();
+  });
+
+  it('calls onFocus upon clicking input', () => {
+    const onFocus = jest.fn();
+    render({ onFocus });
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    fireEvent.click(inputs[2]);
+    expect(onFocus).toHaveBeenCalled();
   });
 
   describe('onChange', () => {
