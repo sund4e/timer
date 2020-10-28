@@ -1,0 +1,73 @@
+import styled from 'styled-components';
+import { useState } from 'react';
+import NumberInput from '../NumberInput/NumberInput';
+import { Theme } from '../../styles/theme';
+import { getHms, Input } from './timeConverters';
+
+const Wrapper = styled.div`
+  display: flex;
+  border-style: solid;
+  height: 30%;
+  align-items: center;
+`;
+
+const StyledSpan = styled.span`
+  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big};
+`;
+
+export type Props = {
+  value: number;
+  onChange: (seconds: number) => void;
+};
+
+const TimeInput = ({ value, onChange }: Props) => {
+  const [time, setTime] = useState(getHms(value));
+  const [focusedInput, setFocusedInput] = useState(Input.hours);
+
+  const nextInput = {
+    [Input.hours]: Input.minutes,
+    [Input.minutes]: Input.seconds,
+    [Input.seconds]: Input.hours,
+  };
+
+  const onChangeInput = (inputName: Input) => (
+    newValue: number,
+    inputReady: boolean
+  ) => {
+    setTime({
+      ...time,
+      [inputName]: newValue,
+    });
+    if (inputReady) {
+      setFocusedInput(nextInput[inputName]);
+    }
+  };
+
+  const onClick = (inputName: Input) => () => {
+    setFocusedInput(inputName);
+  };
+
+  const getInput = (input: Input) => {
+    return (
+      <NumberInput
+        value={time[input]}
+        onChange={onChangeInput(input)}
+        isFocused={focusedInput === input}
+        size={2}
+        onClick={onClick(input)}
+      />
+    );
+  };
+
+  return (
+    <Wrapper>
+      {getInput(Input.hours)}
+      <StyledSpan>:</StyledSpan>
+      {getInput(Input.minutes)}
+      <StyledSpan>:</StyledSpan>
+      {getInput(Input.seconds)}
+    </Wrapper>
+  );
+};
+
+export default TimeInput;
