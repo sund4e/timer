@@ -25,6 +25,10 @@ const TimeInput = ({ value, onChange, onFocus }: Props) => {
   const [time, setTime] = useState(getHms(value));
   const [focusedInput, setFocusedInput] = useState<Input | null>(null);
 
+  useEffect(() => {
+    setTime(getHms(value));
+  }, [value]);
+
   const nextInput = {
     [Input.hours]: Input.minutes,
     [Input.minutes]: Input.seconds,
