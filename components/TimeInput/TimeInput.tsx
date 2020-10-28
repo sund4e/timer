@@ -39,18 +39,19 @@ const TimeInput = ({ value, onChange, onFocus }: Props) => {
     newValue: number,
     inputReady: boolean
   ) => {
-    setTime({
+    const newTime = {
       ...time,
       [inputName]: newValue,
-    });
-    if (inputReady) {
-      const next = nextInput[inputName];
-      if (next !== null) {
+    };
+    const next = nextInput[inputName];
+    if (next === null && inputReady) {
+      onChange(getSeconds(newTime));
+      setFocusedInput(null);
+    } else {
+      if (inputReady) {
         setFocusedInput(next);
-      } else {
-        onChange(getSeconds(time));
-        setFocusedInput(null);
       }
+      setTime(newTime);
     }
   };
 
