@@ -43,8 +43,8 @@ const TimeInput = ({ value, onChange, onFocus }: Props) => {
 
   const maxValue = {
     [Input.hours]: 24,
-    [Input.minutes]: 60,
-    [Input.seconds]: 60,
+    [Input.minutes]: 59,
+    [Input.seconds]: 59,
   };
 
   const onChangeInput = (inputName: Input) => (
