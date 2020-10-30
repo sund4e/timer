@@ -76,6 +76,7 @@ const SingleInput = ({
       onClick={onClickInput}
       tabIndex={0}
       onKeyPress={onKeyPress}
+      role="textbox"
     >
       {value}
     </StyledInput>
