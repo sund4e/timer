@@ -3,8 +3,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Theme } from '../../styles/theme';
 
 const StyledInput = styled.div`
-  color: ${({ theme, isFocused }: { theme: Theme; isFocused: boolean }) =>
-    isFocused ? theme.colors.accent : theme.colors.primary};
+  opacity: ${({ isFocused }: { isFocused: boolean }) => (isFocused ? 0.5 : 1)};
   border-style: none;
   font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big};
   caret-color: transparents;
@@ -26,9 +25,16 @@ export type Props = {
   onChange: (newValue: number) => void;
   isFocused: boolean;
   onClick: () => void;
+  className?: string;
 };
 
-const SingleInput = ({ value, onChange, isFocused, onClick }: Props) => {
+const SingleInput = ({
+  value,
+  onChange,
+  isFocused,
+  onClick,
+  className,
+}: Props) => {
   const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -63,6 +69,7 @@ const SingleInput = ({ value, onChange, isFocused, onClick }: Props) => {
 
   return (
     <StyledInput
+      className={className}
       ref={input}
       onChange={onChangeInput}
       isFocused={isFocused}

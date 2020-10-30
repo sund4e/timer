@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SingleInput from '../SingleInput/SingleInput';
 
 export type Props = {
@@ -7,9 +7,10 @@ export type Props = {
   isFocused: boolean;
   size: number;
   onClick: () => void;
+  className?: string;
 };
 
-const getValueAsArray = (value: number, size: number) => {
+const getValueAsArray = (value: number, size: number): number[] => {
   const valueArray = Array.from(value.toString()).map((value) =>
     parseInt(value)
   );
@@ -26,24 +27,29 @@ const getValueAsArray = (value: number, size: number) => {
   return valueArray;
 };
 
-const NumberInput = ({ value, onChange, isFocused, size, onClick }: Props) => {
+const NumberInput = ({
+  value,
+  onChange,
+  isFocused,
+  size,
+  onClick,
+  className,
+}: Props) => {
   const [focusIndex, setFocusIndex] = useState(0);
   const inputValue = getValueAsArray(value, size);
 
-  const focusNextInput = () => {};
-
-  const onChangeInput = (index: number) => (newValue: number) => {
+  const onChangeInput = (newValue: number) => {
     const newNumber = parseInt(
-      Object.assign([], inputValue, { [index]: newValue }).join('')
+      Object.assign([], inputValue, { [focusIndex]: newValue }).join('')
     );
-    const nextIndex = index + 1;
+    const nextIndex = focusIndex + 1;
     const inputReady = nextIndex === inputValue.length;
+
     if (inputReady) {
       setFocusIndex(0);
     } else {
       setFocusIndex(nextIndex);
     }
-    focusNextInput();
     onChange(newNumber, inputReady);
   };
 
@@ -57,8 +63,9 @@ const NumberInput = ({ value, onChange, isFocused, size, onClick }: Props) => {
       {inputValue.map((num: number, index: number) => {
         return (
           <SingleInput
+            className={className}
             key={index}
-            onChange={onChangeInput(index)}
+            onChange={onChangeInput}
             value={num}
             isFocused={isFocused && focusIndex === index}
             onClick={onClickInput(index)}
