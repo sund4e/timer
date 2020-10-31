@@ -17,20 +17,19 @@ const StyledSpan = styled.span`
 `;
 
 const InvalidNumberInput = styled(NumberInput)`
-  color: ${({ theme, isFocused }: { theme: Theme; isFocused: boolean }) =>
-    isFocused ? theme.colors.accent : theme.colors.primary};
+  color: ${({ theme }: { theme: Theme }) => theme.colors.accent};
 `;
 
 export type Props = {
   value: number;
   onChange: (seconds: number) => void;
   onFocus: () => void;
-  isFocused: boolean;
+  initalFocus: Input;
 };
 
-const TimeInput = ({ value, onChange, onFocus, isFocused }: Props) => {
+const TimeInput = ({ value, onChange, onFocus, initalFocus }: Props) => {
   const [time, setTime] = useState(getHms(value));
-  const [focusedInput, setFocusedInput] = useState<Input | null>(Input.hours);
+  const [focusedInput, setFocusedInput] = useState<Input | null>(initalFocus);
   const [isInvalid, setIsInvalid] = useState(false);
 
   useKeyPressCallBack('Enter', () => {
@@ -87,15 +86,15 @@ const TimeInput = ({ value, onChange, onFocus, isFocused }: Props) => {
   };
 
   const getInput = (input: Input) => {
-    const isFocusedInput = focusedInput === input;
+    const isFocused = focusedInput === input;
     const props = {
       value: time[input],
       onChange: onChangeInput(input),
-      isFocused: isFocused && isFocusedInput,
+      isFocused: isFocused,
       size: 2,
       onClick: onClick(input),
     };
-    return isFocusedInput && isInvalid ? (
+    return isFocused && isInvalid ? (
       <InvalidNumberInput {...props} />
     ) : (
       <NumberInput {...props} />

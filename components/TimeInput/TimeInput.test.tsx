@@ -1,6 +1,7 @@
 import { act, fireEvent, screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import TimeInput, { Props } from './TimeInput';
+import { Input } from './timeConverters';
 
 jest.useFakeTimers();
 
@@ -9,7 +10,7 @@ const render = (override?: Partial<Props>) => {
     value: 6574,
     onChange: () => {},
     onFocus: () => {},
-    isFocused: true,
+    initalFocus: Input.hours,
     ...override,
   };
   return renderElement(<TimeInput {...defaultProps} />);
@@ -31,36 +32,34 @@ describe('TimeInput', () => {
     expect(inputs[5]).toHaveTextContent('4');
   });
 
-  describe('isFocused', () => {
-    it('allows focusing on click when true', () => {
-      render({ isFocused: true });
+  describe('Focusing', () => {
+    it('initally focuses the initialFocus', () => {
+      render({ initalFocus: Input.minutes });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[2];
+      expect(input === document.activeElement).toBeTruthy();
+    });
+    it('focuses input on click', () => {
+      render({ initalFocus: Input.hours });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       const input = inputs[2];
       fireEvent.click(input);
       expect(input === document.activeElement).toBeTruthy();
     });
 
-    it('does not allow focusing on click when false', () => {
-      render({ isFocused: false });
+    it('focuses next input after finishing one', () => {
+      render();
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const input = inputs[2];
-      fireEvent.click(input);
-      expect(input === document.activeElement).toBeFalsy();
+      fireEvent.keyPress(inputs[0], {
+        key: '1',
+        charCode: 49,
+      });
+      fireEvent.keyPress(inputs[1], {
+        key: '5',
+        charCode: 53,
+      });
+      expect(inputs[2] === document.activeElement).toBeTruthy();
     });
-  });
-
-  it('focuses next input after finishing one', () => {
-    render();
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    fireEvent.keyPress(inputs[0], {
-      key: '1',
-      charCode: 49,
-    });
-    fireEvent.keyPress(inputs[1], {
-      key: '5',
-      charCode: 53,
-    });
-    expect(inputs[2] === document.activeElement).toBeTruthy();
   });
 
   it('calls onFocus upon clicking input', () => {

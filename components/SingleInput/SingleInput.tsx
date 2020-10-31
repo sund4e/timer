@@ -12,12 +12,6 @@ const StyledInput = styled.div`
     outline: none;
   }
   flex-grow: 0;
-  ::-moz-selection {
-    color: red;
-  }
-  ::selection {
-    color: red;
-  }
 `;
 
 export type Props = {
