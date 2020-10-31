@@ -3,7 +3,6 @@ import useTimer from '../../hooks/useTimer';
 import { useEffect, useState } from 'react';
 
 const Timer = () => {
-  const [isTimeInputFocused, setIsTimeInputFocused] = useState(false);
   const handleEnd = () => {
     console.log('END');
   };
@@ -15,12 +14,10 @@ const Timer = () => {
 
   const onFocus = () => {
     pause();
-    setIsTimeInputFocused(true);
   };
 
   const onChange = (seconds: number) => {
     setTime(seconds);
-    setIsTimeInputFocused(false);
   };
 
   return (
