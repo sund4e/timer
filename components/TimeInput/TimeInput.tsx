@@ -7,9 +7,9 @@ import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 const Wrapper = styled.div`
   display: flex;
-  border-style: solid;
   height: 30%;
   align-items: center;
+  justify-content: center;
 `;
 
 const StyledSpan = styled.span`
@@ -18,6 +18,11 @@ const StyledSpan = styled.span`
 
 const InvalidNumberInput = styled(NumberInput)`
   color: ${({ theme }: { theme: Theme }) => theme.colors.accent};
+`;
+
+const NumberInputWithFocus = styled(NumberInput)`
+  ${({ theme, isFocused }: { theme: Theme; isFocused: boolean }) =>
+    isFocused && `color: ${theme.colors.highlight}`};
 `;
 
 export type Props = {
@@ -97,7 +102,7 @@ const TimeInput = ({ value, onChange, onFocus, initalFocus }: Props) => {
     return isFocused && isInvalid ? (
       <InvalidNumberInput {...props} />
     ) : (
-      <NumberInput {...props} />
+      <NumberInputWithFocus {...props} />
     );
   };
 

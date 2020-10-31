@@ -11,7 +11,6 @@ const StyledInput = styled.div`
   &:focus {
     outline: none;
   }
-  flex-grow: 0;
 `;
 
 export type Props = {
