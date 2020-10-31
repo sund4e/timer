@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import SingleInput from '../SingleInput/SingleInput';
 
 export type Props = {

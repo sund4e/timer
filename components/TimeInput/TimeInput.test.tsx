@@ -1,19 +1,24 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import TimeInput, { Props } from './TimeInput';
 
 jest.useFakeTimers();
 
-fdescribe('TimeInput', () => {
-  const render = (override?: Partial<Props>) => {
-    const defaultProps = {
-      value: 6574,
-      onChange: () => {},
-      onFocus: () => {},
-      ...override,
-    };
-    return renderElement(<TimeInput {...defaultProps} />);
+const render = (override?: Partial<Props>) => {
+  const defaultProps = {
+    value: 6574,
+    onChange: () => {},
+    onFocus: () => {},
+    isFocused: true,
+    ...override,
   };
+  return renderElement(<TimeInput {...defaultProps} />);
+};
+
+describe('TimeInput', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   it('renders value', () => {
     const value = 6574;
     render({ value });
@@ -26,12 +31,22 @@ fdescribe('TimeInput', () => {
     expect(inputs[5]).toHaveTextContent('4');
   });
 
-  it('allows focusing on click', () => {
-    render();
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    const input = inputs[2];
-    fireEvent.click(input);
-    expect(input === document.activeElement).toBeTruthy();
+  describe('isFocused', () => {
+    it('allows focusing on click when true', () => {
+      render({ isFocused: true });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[2];
+      fireEvent.click(input);
+      expect(input === document.activeElement).toBeTruthy();
+    });
+
+    it('does not allow focusing on click when false', () => {
+      render({ isFocused: false });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[2];
+      fireEvent.click(input);
+      expect(input === document.activeElement).toBeFalsy();
+    });
   });
 
   it('focuses next input after finishing one', () => {
@@ -69,6 +84,20 @@ fdescribe('TimeInput', () => {
       });
       expect(onChange).toHaveBeenCalled();
     });
+
+    it('is called upon enter', () => {
+      const onChange = jest.fn();
+      const value = 10;
+      render({ onChange, value });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[2];
+      fireEvent.keyDown(input, {
+        key: 'Enter',
+        charCode: 13,
+      });
+      expect(onChange).toHaveBeenCalledWith(value);
+    });
+
     it('is not called for other than last inputs', () => {
       const onChange = jest.fn();
       render({ onChange });
