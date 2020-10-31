@@ -11,6 +11,8 @@ const StyledInput = styled.div`
   &:focus {
     outline: none;
   }
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 `;
 
 export type Props = {
