@@ -8,6 +8,7 @@ export type Theme = {
   };
   fontSizes: {
     big: string;
+    medium: number;
   };
 };
 export const theme: Theme = {
@@ -20,5 +21,6 @@ export const theme: Theme = {
   },
   fontSizes: {
     big: '8vw',
+    medium: 2.5,
   },
 };
