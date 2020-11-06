@@ -2,9 +2,7 @@ import { fireEvent, screen, act } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import NumberInput, { Props } from './NumberInput';
 
-jest.useFakeTimers();
-
-fdescribe('NumberInput', () => {
+describe('NumberInput', () => {
   const render = (override: Partial<Props>) => {
     const defaultProps = {
       size: 2,
