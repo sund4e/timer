@@ -3,16 +3,17 @@ import Toggle from '../Toggle';
 
 export type Props = {
   setNotify: (notify: () => void) => void;
+  initialShow: boolean;
 };
 
-const NotificationToggle = ({ setNotify }: Props) => {
-  const [showNotification, setShowNotification] = useState(false);
+const NotificationToggle = ({ setNotify, initialShow = true }: Props) => {
+  const [showNotification, setShowNotification] = useState(initialShow);
   const [isDenied, setIsDenied] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(false);
 
   useEffect(() => {
     if (showNotification && isBrowserSupported) {
-      if (Notification.permission !== 'denied') {
+      if (Notification.permission === 'denied') {
         setIsDenied(true);
         Notification.requestPermission().then((permission) => {
           if (permission === 'granted') {
@@ -21,7 +22,7 @@ const NotificationToggle = ({ setNotify }: Props) => {
         });
       }
     }
-  }, [showNotification]);
+  }, [showNotification, isBrowserSupported]);
 
   useEffect(() => {
     if ('Notification' in window) {
