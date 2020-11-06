@@ -1,12 +1,11 @@
 import TimeInput, { Input } from '../TimeInput';
+import NotificationToggle from '../NotificationToggle';
 import useTimer from '../../hooks/useTimer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, MutableRefObject } from 'react';
 
 const Timer = () => {
-  const handleEnd = () => {
-    console.log('END');
-  };
-  const { time, setTime, pause } = useTimer(10, handleEnd);
+  const { time, setTime, pause } = useTimer(10, onTimeEnd);
+  const [notify, setNotify] = useState<(() => void) | null>(null);
 
   useEffect(() => {
     pause();
@@ -20,13 +19,22 @@ const Timer = () => {
     setTime(seconds);
   };
 
+  function onTimeEnd() {
+    if (notify) {
+      notify();
+    }
+  }
+
   return (
-    <TimeInput
-      value={time}
-      onChange={onChange}
-      onFocus={onFocus}
-      initalFocus={Input.minutes}
-    />
+    <>
+      <TimeInput
+        value={time}
+        onChange={onChange}
+        onFocus={onFocus}
+        initalFocus={Input.minutes}
+      />
+      <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
+    </>
   );
 };
 
