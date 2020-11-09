@@ -5,6 +5,7 @@ import { useEffect, useState, useRef, MutableRefObject } from 'react';
 
 const Timer = () => {
   const { time, setTime, pause } = useTimer(10, onTimeEnd);
+  const [isFocused, setIsFocused] = useState(true);
   const [notify, setNotify] = useState<(() => void) | null>(null);
 
   useEffect(() => {
@@ -13,10 +14,12 @@ const Timer = () => {
 
   const onFocus = () => {
     pause();
+    setIsFocused(true);
   };
 
   const onChange = (seconds: number) => {
     setTime(seconds);
+    setIsFocused(false);
   };
 
   function onTimeEnd() {
@@ -30,10 +33,14 @@ const Timer = () => {
       <TimeInput
         value={time}
         onChange={onChange}
+        isFocused={isFocused}
         onFocus={onFocus}
         initalFocus={Input.minutes}
       />
-      <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
+      <NotificationToggle
+        setNotify={(notify) => setNotify(() => notify)}
+        initialShow={true}
+      />
     </>
   );
 };

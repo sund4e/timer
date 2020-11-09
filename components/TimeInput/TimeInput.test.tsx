@@ -10,6 +10,7 @@ const render = (override?: Partial<Props>) => {
     value: 6574,
     onChange: () => {},
     onFocus: () => {},
+    isFocused: true,
     initalFocus: Input.hours,
     ...override,
   };

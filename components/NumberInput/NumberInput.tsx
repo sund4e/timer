@@ -4,9 +4,9 @@ import SingleInput from '../SingleInput/SingleInput';
 export type Props = {
   onChange: (value: number, inputReady: boolean) => void;
   value: number;
-  isFocused: boolean;
+  focusIndex: number | undefined;
   size: number;
-  onClick: () => void;
+  onClick: (index: number) => void;
   className?: string;
 };
 
@@ -30,32 +30,25 @@ const getValueAsArray = (value: number, size: number): number[] => {
 const NumberInput = ({
   value,
   onChange,
-  isFocused,
+  focusIndex,
   size,
   onClick,
   className,
 }: Props) => {
-  const [focusIndex, setFocusIndex] = useState(0);
   const inputValue = getValueAsArray(value, size);
 
   const onChangeInput = (newValue: number) => {
+    if (focusIndex === undefined) return;
     const newNumber = parseInt(
       Object.assign([], inputValue, { [focusIndex]: newValue }).join('')
     );
     const nextIndex = focusIndex + 1;
     const inputReady = nextIndex === inputValue.length;
-
-    if (inputReady) {
-      setFocusIndex(0);
-    } else {
-      setFocusIndex(nextIndex);
-    }
     onChange(newNumber, inputReady);
   };
 
   const onClickInput = (index: number) => () => {
-    setFocusIndex(index);
-    onClick();
+    onClick(index);
   };
 
   return (
@@ -67,7 +60,7 @@ const NumberInput = ({
             key={index}
             onChange={onChangeInput}
             value={num}
-            isFocused={isFocused && focusIndex === index}
+            isFocused={focusIndex === index}
             onClick={onClickInput(index)}
           />
         );

@@ -8,7 +8,7 @@ describe('NumberInput', () => {
       size: 2,
       value: 0,
       onChange: () => {},
-      isFocused: true,
+      focusIndex: 0,
       onClick: () => {},
       ...override,
     };
@@ -25,7 +25,7 @@ describe('NumberInput', () => {
 
   it('calls onChange correctly when changing other than last input', () => {
     const onChange = jest.fn();
-    render({ onChange, value: 11 });
+    render({ onChange, value: 11, focusIndex: 0 });
     const inputs = screen.getAllByRole('textbox');
     fireEvent.keyPress(inputs[0], {
       key: '2',
@@ -36,7 +36,7 @@ describe('NumberInput', () => {
 
   it('calls onChange correctly when changing last input', () => {
     const onChange = jest.fn();
-    render({ onChange, value: 11 });
+    render({ onChange, value: 11, focusIndex: 1 });
     const inputs = screen.getAllByRole('textbox');
     fireEvent.click(inputs[1]);
     fireEvent.keyPress(inputs[1], {
@@ -58,15 +58,15 @@ describe('NumberInput', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  describe('isFocused', () => {
-    it('focuses first input initially if true', () => {
-      render({ isFocused: true });
+  describe('focusIndex', () => {
+    it('focuses first input if 0', () => {
+      render({ focusIndex: 0 });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       expect(inputs[0] === document.activeElement).toEqual(true);
     });
 
-    it('focuses next input after change if true', () => {
-      render({ isFocused: true });
+    it('focuses second input if 1', () => {
+      render({ focusIndex: 1 });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       fireEvent.keyPress(inputs[0], {
         key: '2',
@@ -75,8 +75,8 @@ describe('NumberInput', () => {
       expect(inputs[1] === document.activeElement).toEqual(true);
     });
 
-    it('does not focus any input if false', () => {
-      render({ isFocused: false });
+    it('does not focus any input if undefined', () => {
+      render({ focusIndex: undefined });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       const isFocused = inputs.some(
         (input) => input === document.activeElement

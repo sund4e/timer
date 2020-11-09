@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import NumberInput from '../NumberInput/NumberInput';
 import { Theme } from '../../styles/theme';
 import { getHms, Input, getSeconds } from './timeConverters';
@@ -21,89 +21,121 @@ const InvalidNumberInput = styled(NumberInput)`
 `;
 
 const NumberInputWithFocus = styled(NumberInput)`
-  ${({ theme, isFocused }: { theme: Theme; isFocused: boolean }) =>
-    isFocused && `color: ${theme.colors.highlight}`};
+  ${({ theme }: { theme: Theme }) => `color: ${theme.colors.highlight}`};
 `;
 
 export type Props = {
   value: number;
   onChange: (seconds: number) => void;
+  isFocused: boolean;
   onFocus: () => void;
   initalFocus: Input;
 };
 
-const TimeInput = ({ value, onChange, onFocus, initalFocus }: Props) => {
-  const [time, setTime] = useState(getHms(value));
-  const [focusedInput, setFocusedInput] = useState<Input | null>(initalFocus);
+const Inputs = {
+  [Input.hours]: {
+    indexes: [0, 1],
+    maxValue: 99,
+  },
+  [Input.minutes]: {
+    indexes: [2, 3],
+    maxValue: 59,
+  },
+  [Input.seconds]: {
+    indexes: [4, 5],
+    maxValue: 59,
+  },
+};
+
+const Indexes = Object.values(Inputs).reduce<number[]>(
+  (arr, input) => [...arr, ...input.indexes],
+  []
+);
+
+const TimeInput = ({
+  value,
+  onChange,
+  onFocus,
+  initalFocus,
+  isFocused,
+}: Props) => {
+  const time = useRef(getHms(value));
   const [isInvalid, setIsInvalid] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState<number>(
+    Inputs[initalFocus].indexes[0]
+  );
 
   useKeyPressCallBack('Enter', () => {
-    setFocusedInput(null);
+    onChange(getSeconds(time.current));
   });
 
+  // useKeyPressCallBack('ArrowRight', () => {
+  //   const nextIndex = focusedIndex + 1;
+  //   setFocusedIndex(nextIndex);
+  // });
+
   useEffect(() => {
-    setTime(getHms(value));
+    time.current = getHms(value);
   }, [value]);
 
   useEffect(() => {
-    if (focusedInput === null) {
-      onChange(getSeconds(time));
+    if (!isFocused) {
+      setIsInvalid(false);
     }
-  }, [focusedInput]);
+  }, [isFocused]);
 
-  const nextInput = {
-    [Input.hours]: Input.minutes,
-    [Input.minutes]: Input.seconds,
-    [Input.seconds]: null,
-  };
-
-  const maxValue = {
-    [Input.hours]: 24,
-    [Input.minutes]: 59,
-    [Input.seconds]: 59,
-  };
-
-  const onChangeInput = (inputName: Input) => (
-    newValue: number,
-    inputReady: boolean
-  ) => {
+  const onChangeInput = (inputName: Input) => (newValue: number) => {
     const newTime = {
-      ...time,
+      ...time.current,
       [inputName]: newValue,
     };
-    setTime(newTime);
 
-    if (newValue > maxValue[inputName] && inputReady) {
-      setIsInvalid(true);
-      return;
+    const nextIndex = focusedIndex + 1;
+    const isInputReady = !Inputs[inputName].indexes.includes(nextIndex);
+    time.current = newTime;
+
+    if (isInputReady) {
+      if (newValue > Inputs[inputName].maxValue) {
+        setIsInvalid(true);
+        setFocusedIndex(Inputs[inputName].indexes[0]);
+        return;
+      }
+      setIsInvalid(false);
     }
 
-    const next = nextInput[inputName];
-    if (inputReady) {
-      setIsInvalid(false);
-      setFocusedInput(next);
+    if (Indexes.includes(nextIndex)) {
+      setFocusedIndex(nextIndex);
+    } else {
+      onChange(getSeconds(newTime));
     }
   };
 
-  const onClick = (inputName: Input) => () => {
-    setFocusedInput(inputName);
+  const onClick = (inputName: Input) => (index: number) => {
+    setFocusedIndex(Inputs[inputName].indexes[index]);
     onFocus();
   };
 
   const getInput = (input: Input) => {
-    const isFocused = focusedInput === input;
+    const focusedPosition = Inputs[input].indexes.findIndex(
+      (index) => index === focusedIndex
+    );
+    const focusIndex =
+      !isFocused || focusedPosition < 0 ? undefined : focusedPosition;
     const props = {
-      value: time[input],
+      value: time.current[input],
       onChange: onChangeInput(input),
-      isFocused: isFocused,
       size: 2,
       onClick: onClick(input),
+      focusIndex: focusIndex,
     };
-    return isFocused && isInvalid ? (
-      <InvalidNumberInput {...props} />
-    ) : (
-      <NumberInputWithFocus {...props} />
-    );
+
+    if (isFocused) {
+      if (isInvalid && focusIndex !== undefined) {
+        return <InvalidNumberInput {...props} />;
+      }
+      return <NumberInputWithFocus {...props} />;
+    }
+    return <NumberInput {...props} />;
   };
 
   return (
