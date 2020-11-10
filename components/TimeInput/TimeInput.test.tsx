@@ -61,6 +61,26 @@ describe('TimeInput', () => {
       });
       expect(inputs[2] === document.activeElement).toBeTruthy();
     });
+
+    fit('focuses next input after pressing right arrow', () => {
+      render({ initalFocus: Input.minutes });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      fireEvent.keyDown(window, {
+        key: 'ArrowRight',
+        charCode: 39,
+      });
+      expect(inputs[3] === document.activeElement).toBeTruthy();
+    });
+
+    fit('focuses previoius input after pressing left arrow', () => {
+      render({ initalFocus: Input.minutes });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      fireEvent.keyDown(window, {
+        key: 'ArrowLeft',
+        charCode: 37,
+      });
+      expect(inputs[1] === document.activeElement).toBeTruthy();
+    });
   });
 
   it('calls onFocus upon clicking input', () => {

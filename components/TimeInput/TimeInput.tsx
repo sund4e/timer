@@ -69,10 +69,23 @@ const TimeInput = ({
     onChange(getSeconds(time.current));
   });
 
-  // useKeyPressCallBack('ArrowRight', () => {
-  //   const nextIndex = focusedIndex + 1;
-  //   setFocusedIndex(nextIndex);
-  // });
+  const isValidIndex = (newIndex: number) => {
+    return Indexes.includes(newIndex);
+  };
+
+  useKeyPressCallBack('ArrowRight', () => {
+    setFocusedIndex((previousIndex) => {
+      const newIndex = previousIndex + 1;
+      return isValidIndex(newIndex) ? newIndex : previousIndex;
+    });
+  });
+
+  useKeyPressCallBack('ArrowLeft', () => {
+    setFocusedIndex((previousIndex) => {
+      const newIndex = previousIndex - 1;
+      return isValidIndex(newIndex) ? newIndex : previousIndex;
+    });
+  });
 
   useEffect(() => {
     time.current = getHms(value);
