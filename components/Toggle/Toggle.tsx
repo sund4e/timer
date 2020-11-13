@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const toggleWidth = '60px';
-const toggleHeight = '34px';
+const toggleHeight = 34;
 
 const Label = styled.label`
   position: relative;
@@ -9,14 +9,15 @@ const Label = styled.label`
 `;
 
 const Wrapper = styled.div`
-  height: ${toggleHeight};
+  height: ${toggleHeight}px;
+  padding: ${toggleHeight / 4}px;
 `;
 
 const Span = styled.span`
   position: absolute;
   cursor: pointer;
   width: ${toggleWidth};
-  height: ${toggleHeight};
+  height: ${toggleHeight}px;
   top: 0;
   left: 0;
   right: 0;
