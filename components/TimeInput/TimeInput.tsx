@@ -52,6 +52,10 @@ const Indexes = Object.values(Inputs).reduce<number[]>(
   []
 );
 
+const isValidIndex = (newIndex: number) => {
+  return Indexes.includes(newIndex);
+};
+
 const TimeInput = ({
   value,
   onChange,
@@ -64,17 +68,11 @@ const TimeInput = ({
   const [focusedIndex, setFocusedIndex] = useState<number>(
     Inputs[initalFocus].indexes[0]
   );
+  const [isReady, setIsReady] = useState(false);
 
   useKeyPressCallBack('Enter', () => {
-    setTime((time) => {
-      onChange(getSeconds(time));
-      return time;
-    });
+    setIsReady(true);
   });
-
-  const isValidIndex = (newIndex: number) => {
-    return Indexes.includes(newIndex);
-  };
 
   useKeyPressCallBack('ArrowRight', () => {
     setFocusedIndex((previousIndex) => {
@@ -89,6 +87,13 @@ const TimeInput = ({
       return isValidIndex(newIndex) ? newIndex : previousIndex;
     });
   });
+
+  useEffect(() => {
+    if (isReady) {
+      onChange(getSeconds(time));
+      setIsReady(false);
+    }
+  }, [isReady]);
 
   useEffect(() => {
     setTime(getHms(value));
