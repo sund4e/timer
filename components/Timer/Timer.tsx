@@ -35,7 +35,11 @@ const Timer = ({
   };
 
   const onChange = (seconds: number) => {
-    setStartTime(seconds);
+    if (startTime === seconds) {
+      start();
+    } else {
+      setStartTime(seconds);
+    }
     setIsFocused(false);
   };
 

@@ -31,9 +31,7 @@ const useTimer = (startTime: number, onTimeEnd: () => void) => {
   };
 
   const start = () => {
-    if (!timer.current) {
-      nextTick();
-    }
+    nextTick();
   };
 
   return { time, start, pause };

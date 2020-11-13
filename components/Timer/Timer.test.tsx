@@ -72,4 +72,21 @@ fdescribe('Timer', () => {
     });
     expect(onTimeEnd).toHaveBeenCalledTimes(1);
   });
+
+  it('runs timer after value input even if new value is the same as inital', () => {
+    const initialTime = 10;
+    render({ initialTime, isActive: true, isFocused: true });
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    const lastInput = inputs[inputs.length - 1];
+    fireEvent.click(lastInput);
+    fireEvent.keyPress(lastInput, {
+      key: '0',
+      charCode: 49,
+    });
+    expect(getElementWithText('00:00:10')).toBeDefined();
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    expect(getElementWithText('00:00:09')).toBeDefined();
+  });
 });
