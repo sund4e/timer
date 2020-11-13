@@ -13,6 +13,7 @@ fdescribe('Timer', () => {
       isActive: true,
       isFocused: true,
       setIsFocused: () => {},
+      restart: false,
       ...override,
     };
     const rendered = renderElement(<Timer {...defaultProps} />);
@@ -88,5 +89,27 @@ fdescribe('Timer', () => {
       jest.advanceTimersByTime(1000);
     });
     expect(getElementWithText('00:00:09')).toBeDefined();
+  });
+
+  describe('restart', () => {
+    it('true runs timer again after finishing', () => {
+      const initialTime = 10;
+      render({ initialTime, isActive: true, isFocused: false, restart: true });
+      expect(getElementWithText('00:00:10')).toBeDefined();
+      act(() => {
+        jest.advanceTimersByTime(10000);
+      });
+      expect(getElementWithText('00:00:10')).toBeDefined();
+    });
+
+    it('false stops timer after finishing', () => {
+      const initialTime = 10;
+      render({ initialTime, isActive: true, isFocused: false, restart: false });
+      expect(getElementWithText('00:00:10')).toBeDefined();
+      act(() => {
+        jest.advanceTimersByTime(10000);
+      });
+      expect(getElementWithText('00:00:00')).toBeDefined();
+    });
   });
 });

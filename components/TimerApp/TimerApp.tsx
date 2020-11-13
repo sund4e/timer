@@ -17,6 +17,7 @@ const TimerApp = () => {
   return (
     <>
       <Timer
+        restart={restart}
         onTimeEnd={onTimeEnd}
         isActive={true}
         initialTime={10}

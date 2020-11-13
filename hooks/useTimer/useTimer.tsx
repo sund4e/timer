@@ -34,7 +34,11 @@ const useTimer = (startTime: number, onTimeEnd: () => void) => {
     nextTick();
   };
 
-  return { time, start, pause };
+  const reset = () => {
+    setTime(startTime);
+  };
+
+  return { time, start, pause, reset };
 };
 
 export default useTimer;

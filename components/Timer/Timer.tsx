@@ -10,6 +10,7 @@ export type Props = {
   initialTime: number;
   isFocused: boolean;
   setIsFocused: (isFocused: boolean) => void;
+  restart: boolean;
 };
 
 const Timer = ({
@@ -18,9 +19,10 @@ const Timer = ({
   initialTime,
   isFocused,
   setIsFocused,
+  restart,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
-  const { time, start, pause } = useTimer(startTime, onTimeEnd);
+  const { time, start, pause, reset } = useTimer(startTime, hanldeEnd);
 
   useEffect(() => {
     if (isFocused || !isActive) {
@@ -29,6 +31,13 @@ const Timer = ({
       start();
     }
   }, [isFocused, isActive]);
+
+  function hanldeEnd() {
+    if (restart) {
+      reset();
+    }
+    onTimeEnd();
+  }
 
   const onFocus = () => {
     setIsFocused(true);
