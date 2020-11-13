@@ -1,7 +1,7 @@
 import Timer from '../Timer';
 import NotificationToggle from '../NotificationToggle';
 import Toggle from '../Toggle';
-import { useEffect, useState, useRef, MutableRefObject } from 'react';
+import { useState } from 'react';
 
 const TimerApp = () => {
   const [notify, setNotify] = useState<(() => void) | null>(null);
@@ -20,7 +20,7 @@ const TimerApp = () => {
         restart={restart}
         onTimeEnd={onTimeEnd}
         isActive={true}
-        initialTime={10}
+        initialTime={1200}
         isFocused={isFocused}
         setIsFocused={setIsFocused}
       />
