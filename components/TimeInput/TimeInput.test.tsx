@@ -5,16 +5,20 @@ import { Input } from './timeConverters';
 
 jest.useFakeTimers();
 
+const defaultProps = {
+  value: 6574,
+  onChange: () => {},
+  onFocus: () => {},
+  isFocused: true,
+  initalFocus: Input.hours,
+};
+
 const render = (override?: Partial<Props>) => {
-  const defaultProps = {
-    value: 6574,
-    onChange: () => {},
-    onFocus: () => {},
-    isFocused: true,
-    initalFocus: Input.hours,
+  const props = {
+    ...defaultProps,
     ...override,
   };
-  return renderElement(<TimeInput {...defaultProps} />);
+  return renderElement(<TimeInput {...props} />);
 };
 
 describe('TimeInput', () => {
@@ -31,6 +35,16 @@ describe('TimeInput', () => {
     expect(inputs[3]).toHaveTextContent('9');
     expect(inputs[4]).toHaveTextContent('3');
     expect(inputs[5]).toHaveTextContent('4');
+  });
+
+  it('updates value', () => {
+    const value = 6574;
+    const { rerender } = renderElement(
+      <TimeInput {...defaultProps} value={value} />
+    );
+    rerender(<TimeInput {...defaultProps} value={value + 1} />);
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    expect(inputs[5]).toHaveTextContent('5');
   });
 
   describe('Focusing', () => {
@@ -62,7 +76,7 @@ describe('TimeInput', () => {
       expect(inputs[2] === document.activeElement).toBeTruthy();
     });
 
-    fit('focuses next input after pressing right arrow', () => {
+    it('focuses next input after pressing right arrow', () => {
       render({ initalFocus: Input.minutes });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       fireEvent.keyDown(window, {
@@ -72,7 +86,7 @@ describe('TimeInput', () => {
       expect(inputs[3] === document.activeElement).toBeTruthy();
     });
 
-    fit('focuses previoius input after pressing left arrow', () => {
+    it('focuses previoius input after pressing left arrow', () => {
       render({ initalFocus: Input.minutes });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       fireEvent.keyDown(window, {

@@ -59,14 +59,17 @@ const TimeInput = ({
   initalFocus,
   isFocused,
 }: Props) => {
-  const time = useRef(getHms(value));
+  const [time, setTime] = useState(getHms(value));
   const [isInvalid, setIsInvalid] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(
     Inputs[initalFocus].indexes[0]
   );
 
   useKeyPressCallBack('Enter', () => {
-    onChange(getSeconds(time.current));
+    setTime((time) => {
+      onChange(getSeconds(time));
+      return time;
+    });
   });
 
   const isValidIndex = (newIndex: number) => {
@@ -88,7 +91,7 @@ const TimeInput = ({
   });
 
   useEffect(() => {
-    time.current = getHms(value);
+    setTime(getHms(value));
   }, [value]);
 
   useEffect(() => {
@@ -99,13 +102,13 @@ const TimeInput = ({
 
   const onChangeInput = (inputName: Input) => (newValue: number) => {
     const newTime = {
-      ...time.current,
+      ...time,
       [inputName]: newValue,
     };
 
     const nextIndex = focusedIndex + 1;
     const isInputReady = !Inputs[inputName].indexes.includes(nextIndex);
-    time.current = newTime;
+    setTime(newTime);
 
     if (isInputReady) {
       if (newValue > Inputs[inputName].maxValue) {
@@ -135,7 +138,7 @@ const TimeInput = ({
     const focusIndex =
       !isFocused || focusedPosition < 0 ? undefined : focusedPosition;
     const props = {
-      value: time.current[input],
+      value: time[input],
       onChange: onChangeInput(input),
       size: 2,
       onClick: onClick(input),

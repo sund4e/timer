@@ -1,7 +1,7 @@
 export enum Input {
-  seconds,
-  minutes,
-  hours,
+  seconds = 'seconds',
+  minutes = 'minutes',
+  hours = 'hours',
 }
 export type Hms = {
   [Input.hours]: number;
