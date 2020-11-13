@@ -2,7 +2,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import Container from '../components/Container';
 import useTimer from '../hooks/useTimer';
-import NumberInput from '../components/NumberInput';
+import TimerApp from '../components/TimerApp';
 
 const Title = styled.h1`
   font-size: 50px;
@@ -13,7 +13,7 @@ const Home = () => {
   const handleEnd = () => {
     console.log('END');
   };
-  const time = useTimer(10, handleEnd);
+  // const time = useTimer(10, handleEnd);
   return (
     <div>
       <Head>
@@ -21,8 +21,8 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>
-        <Title>{time}</Title>
-        <NumberInput value={0} />
+        {/* <Title>{time}</Title> */}
+        <TimerApp />
       </Container>
     </div>
   );

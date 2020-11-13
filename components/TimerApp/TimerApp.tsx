@@ -1,0 +1,39 @@
+import Timer from '../Timer';
+import NotificationToggle from '../NotificationToggle';
+import Toggle from '../Toggle';
+import { useEffect, useState, useRef, MutableRefObject } from 'react';
+
+const TimerApp = () => {
+  const [notify, setNotify] = useState<(() => void) | null>(null);
+  const [restart, setRestart] = useState(true);
+  const [isFocused, setIsFocused] = useState(true);
+
+  function onTimeEnd() {
+    if (notify) {
+      notify();
+    }
+  }
+
+  return (
+    <>
+      <Timer
+        onTimeEnd={onTimeEnd}
+        isActive={true}
+        initialTime={10}
+        isFocused={isFocused}
+        setIsFocused={setIsFocused}
+      />
+      <NotificationToggle
+        setNotify={(notify) => setNotify(() => notify)}
+        initialShow={true}
+      />
+      <Toggle
+        isOn={restart}
+        setIsOn={setRestart}
+        label={'Restart timer when done'}
+      />
+    </>
+  );
+};
+
+export default TimerApp;

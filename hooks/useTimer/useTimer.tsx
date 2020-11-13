@@ -2,33 +2,41 @@ import { useState, useEffect, useRef } from 'react';
 
 const useTimer = (startTime: number, onTimeEnd: () => void) => {
   const [time, setTime] = useState(startTime);
-  const [isPaused, setIsPaused] = useState(false);
   const timer = useRef<number>();
 
   useEffect(() => {
-    console.log('newTime', time);
+    setTime(startTime);
+    clearTimeout(timer.current);
+  }, [startTime]);
+
+  const nextTick = () => {
+    timer.current = setTimeout(() => {
+      setTime(time - 1);
+    }, 1000);
+  };
+
+  useEffect(() => {
     if (time === 0) {
       onTimeEnd();
-    } else if (!isPaused) {
-      timer.current = setTimeout(() => {
-        setTime(time - 1);
-      }, 1000);
+    } else {
+      nextTick();
     }
-  }, [time, isPaused]);
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, [time]);
 
   const pause = () => {
-    setIsPaused(true);
     clearTimeout(timer.current);
   };
 
-  const setNewTime = (seconds: number) => {
-    console.log('setNewTime', seconds);
-    setTime(seconds);
-    clearTimeout(timer.current);
-    setIsPaused(false);
+  const start = () => {
+    if (!timer.current) {
+      nextTick();
+    }
   };
 
-  return { time, setTime: setNewTime, pause };
+  return { time, start, pause };
 };
 
 export default useTimer;

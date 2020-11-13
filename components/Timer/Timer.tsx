@@ -1,32 +1,43 @@
 import TimeInput, { Input } from '../TimeInput';
 import NotificationToggle from '../NotificationToggle';
+import Toggle from '../Toggle';
 import useTimer from '../../hooks/useTimer';
 import { useEffect, useState, useRef, MutableRefObject } from 'react';
 
-const Timer = () => {
-  const { time, setTime, pause } = useTimer(10, onTimeEnd);
-  const [isFocused, setIsFocused] = useState(true);
-  const [notify, setNotify] = useState<(() => void) | null>(null);
+export type Props = {
+  onTimeEnd: () => void;
+  isActive: boolean;
+  initialTime: number;
+  isFocused: boolean;
+  setIsFocused: (isFocused: boolean) => void;
+};
+
+const Timer = ({
+  onTimeEnd,
+  isActive,
+  initialTime,
+  isFocused,
+  setIsFocused,
+}: Props) => {
+  const [startTime, setStartTime] = useState(initialTime);
+  const { time, start, pause } = useTimer(startTime, onTimeEnd);
 
   useEffect(() => {
-    pause();
-  }, []);
+    if (isFocused || !isActive) {
+      pause();
+    } else {
+      start();
+    }
+  }, [isFocused, isActive]);
 
   const onFocus = () => {
-    pause();
     setIsFocused(true);
   };
 
   const onChange = (seconds: number) => {
-    setTime(seconds);
+    setStartTime(seconds);
     setIsFocused(false);
   };
-
-  function onTimeEnd() {
-    if (notify) {
-      notify();
-    }
-  }
 
   return (
     <>
@@ -36,10 +47,6 @@ const Timer = () => {
         isFocused={isFocused}
         onFocus={onFocus}
         initalFocus={Input.minutes}
-      />
-      <NotificationToggle
-        setNotify={(notify) => setNotify(() => notify)}
-        initialShow={true}
       />
     </>
   );
