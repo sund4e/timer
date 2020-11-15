@@ -1,23 +1,20 @@
 import styled from 'styled-components';
 
-const toggleWidth = '60px';
-const toggleHeight = 34;
-
 const Label = styled.label`
   position: relative;
   display: inline-block;
 `;
 
 const Wrapper = styled.div`
-  height: ${toggleHeight}px;
-  padding: ${toggleHeight / 4}px;
+  height: ${({ theme }) => theme.fontSizes.medium}em;
+  padding: ${({ theme }) => theme.fontSizes.medium * 0.25}em;
 `;
 
 const Span = styled.span`
   position: absolute;
   cursor: pointer;
-  width: ${toggleWidth};
-  height: ${toggleHeight}px;
+  width: ${({ theme }) => theme.fontSizes.medium * 1.7}em;
+  height: ${({ theme }) => theme.fontSizes.medium}em;
   top: 0;
   left: 0;
   right: 0;
@@ -31,10 +28,10 @@ const Span = styled.span`
     border-radius: 50%;
     position: absolute;
     content: '';
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: ${({ theme }) => theme.fontSizes.medium * 0.7}em;
+    width: ${({ theme }) => theme.fontSizes.medium * 0.7}em;
+    left: ${({ theme }) => theme.fontSizes.medium * 0.15}em;
+    bottom: ${({ theme }) => theme.fontSizes.medium * 0.15}em;
     background-color: ${({ theme }) => theme.colors.light};
     -webkit-transition: 0.4s;
     transition: 0.4s;
@@ -49,9 +46,11 @@ const Input = styled.input`
     opacity: 1;
   }
   :checked + ${Span}:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(
+      ${({ theme }) => theme.fontSizes.medium * 0.7}em
+    );
+    -ms-transform: translateX(${({ theme }) => theme.fontSizes.medium * 0.7}em);
+    transform: translateX(${({ theme }) => theme.fontSizes.medium * 0.7}em);
   }
   :focus + ${Span} {
     box-shadow: 0 0 1px ${({ theme }) => theme.colors.highlight};
@@ -60,7 +59,7 @@ const Input = styled.input`
 
 const Text = styled.span`
   position: relative;
-  left: ${toggleWidth};
+  left: ${({ theme }) => theme.fontSizes.medium * 1.8}em;
   top: 8px;
 `;
 

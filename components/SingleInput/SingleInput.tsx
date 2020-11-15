@@ -5,7 +5,7 @@ import { Theme } from '../../styles/theme';
 const StyledInput = styled.div`
   opacity: ${({ isFocused }: { isFocused: boolean }) => (isFocused ? 0.5 : 1)};
   border-style: none;
-  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big};
+  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big}vw;
   caret-color: transparents;
   background-color: transparent;
   &:focus {

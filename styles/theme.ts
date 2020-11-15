@@ -7,7 +7,7 @@ export type Theme = {
     light: string;
   };
   fontSizes: {
-    big: string;
+    big: number;
     medium: number;
   };
   transition: number;
@@ -21,8 +21,8 @@ export const theme: Theme = {
     light: '#E8E8E8',
   },
   fontSizes: {
-    big: '8vw',
-    medium: 2.5,
+    big: 8,
+    medium: 2,
   },
   transition: 0.4,
 };

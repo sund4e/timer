@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledSpan = styled.span`
-  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big};
+  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big}vw;
 `;
 
 const StyledNumberInput = styled(NumberInput)`
@@ -164,14 +164,6 @@ const TimeInput = ({
         {...props}
       />
     );
-
-    if (isFocused) {
-      if (isInvalid && focusIndex !== undefined) {
-        return <InvalidNumberInput {...props} />;
-      }
-      return <NumberInputWithFocus {...props} />;
-    }
-    return <NumberInput {...props} />;
   };
 
   return (
