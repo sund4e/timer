@@ -11,8 +11,8 @@ const StyledInput = styled.div`
   &:focus {
     outline: none;
   }
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  -webkit-transition: ${({ theme }: { theme: Theme }) => theme.transition}s;
+  transition: ${({ theme }: { theme: Theme }) => theme.transition}s;
 `;
 
 export type Props = {

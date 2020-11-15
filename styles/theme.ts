@@ -10,6 +10,7 @@ export type Theme = {
     big: string;
     medium: number;
   };
+  transition: number;
 };
 export const theme: Theme = {
   colors: {
@@ -23,4 +24,5 @@ export const theme: Theme = {
     big: '8vw',
     medium: 2.5,
   },
+  transition: 0.4,
 };

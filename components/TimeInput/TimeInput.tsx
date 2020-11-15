@@ -16,12 +16,19 @@ const StyledSpan = styled.span`
   font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big};
 `;
 
-const InvalidNumberInput = styled(NumberInput)`
-  color: ${({ theme }: { theme: Theme }) => theme.colors.accent};
-`;
-
-const NumberInputWithFocus = styled(NumberInput)`
-  ${({ theme }: { theme: Theme }) => `color: ${theme.colors.highlight}`};
+const StyledNumberInput = styled(NumberInput)`
+  color: ${({
+    theme,
+    isInvalid,
+    isFocused,
+  }: {
+    theme: Theme;
+    isInvalid: boolean;
+    isFocused: boolean;
+  }) =>
+    isInvalid ? theme.colors.accent : isFocused ? theme.colors.highlight : ''};
+  transition: ${({ theme }) => theme.transition}s;
+  -webkit-transition: ${({ theme }) => theme.transition}s;
 `;
 
 export type Props = {
@@ -149,6 +156,14 @@ const TimeInput = ({
       onClick: onClick(input),
       focusIndex: focusIndex,
     };
+
+    return (
+      <StyledNumberInput
+        isFocused={isFocused}
+        isInvalid={isInvalid && focusIndex !== undefined}
+        {...props}
+      />
+    );
 
     if (isFocused) {
       if (isInvalid && focusIndex !== undefined) {
