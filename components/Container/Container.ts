@@ -6,6 +6,8 @@ const Container = styled.div`
   flex-direction: column;
   height: 100vh;
   background-color: ${({ theme }) => theme.colors.light};
+  background-image: url('./luirojarvi.jpg');
+  background-size: cover;
   color: ${({ theme }) => theme.colors.primary};
 `;
 
