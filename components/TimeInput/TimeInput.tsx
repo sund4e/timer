@@ -7,9 +7,9 @@ import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 const Wrapper = styled.div`
   display: flex;
-  height: 30%;
   align-items: center;
   justify-content: center;
+  flex: 1;
 `;
 
 const StyledSpan = styled.span`

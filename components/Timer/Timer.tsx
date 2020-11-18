@@ -53,15 +53,13 @@ const Timer = ({
   };
 
   return (
-    <>
-      <TimeInput
-        value={time}
-        onChange={onChange}
-        isFocused={isFocused}
-        onFocus={onFocus}
-        initalFocus={Input.minutes}
-      />
-    </>
+    <TimeInput
+      value={time}
+      onChange={onChange}
+      isFocused={isFocused}
+      onFocus={onFocus}
+      initalFocus={Input.minutes}
+    />
   );
 };
 
