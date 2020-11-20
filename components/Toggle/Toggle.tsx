@@ -15,18 +15,21 @@ const getToggleButtonTranslate = (theme: Theme) =>
   getToggleButtonMargin(theme) * 2 -
   getToggleButtonDiameter(theme);
 
+const getPadding = (theme: Theme) => getToggleHeight(theme) * 0.25;
+
 const ToggleButton = styled.label`
-  position: relative;
+  padding: 0px;
   display: inline-block;
 `;
 
 const Wrapper = styled.div`
   height: ${({ theme }) => getToggleHeight(theme)}rem;
-  padding: ${({ theme }) => getToggleHeight(theme) * 0.25}rem;
+  padding: ${({ theme }) => getPadding(theme)}rem;
+  display: flex;
 `;
 
-const Span = styled.span`
-  position: absolute;
+const Span = styled.div`
+  position: relative;
   cursor: pointer;
   width: ${({ theme }) => getToggleWidth(theme)}rem;
   height: ${({ theme }) => getToggleHeight(theme)}rem;
@@ -35,8 +38,7 @@ const Span = styled.span`
   right: 0;
   bottom: 0;
   background-color: ${({ theme }) => theme.colors.highlight};
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  transition: ${({ theme }) => theme.transition}s;
   border-radius: 34px;
   opacity: 0.5;
   :before {
@@ -48,15 +50,12 @@ const Span = styled.span`
     left: ${({ theme }) => getToggleButtonMargin(theme)}rem;
     bottom: ${({ theme }) => getToggleButtonMargin(theme)}rem;
     background-color: ${({ theme }) => theme.colors.light};
-    -webkit-transition: ${({ theme }) => theme.transition}s;
     transition: ${({ theme }) => theme.transition}s;
   }
 `;
 
 const Input = styled.input`
-  opacity: 0;
-  width: 0;
-  height: 0;
+  display: none;
   :checked + ${Span} {
     opacity: 1;
   }
@@ -74,10 +73,12 @@ const Input = styled.input`
   }
 `;
 
-const Text = styled.span`
-  padding-left: ${({ theme }) => getToggleWidth(theme)}rem;
+const Text = styled.div`
+  padding-left: ${({ theme }) => getPadding(theme)}rem;
   line-height: ${({ theme }) => getToggleHeight(theme)}rem;
   vertical-align: middle;
+  opacity: ${({ isOn }: { isOn: boolean }) => (isOn ? 1 : 0.5)};
+  transition: ${({ theme }) => theme.transition}s;
 `;
 
 export type Props = {
@@ -96,7 +97,7 @@ const Toggle = ({ isOn, setIsOn, label }: Props) => {
         <Input type="checkbox" checked={isOn} onChange={onChange} />
         <Span />
       </ToggleButton>
-      <Text>{label}</Text>
+      <Text isOn={isOn}>{label}</Text>
     </Wrapper>
   );
 };
