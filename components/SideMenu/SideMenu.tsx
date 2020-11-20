@@ -34,18 +34,18 @@ const StyledButton = styled(SwitchButton)`
   right: 0px;
 `;
 
-type Props = {
+export type Props = {
   children: React.ReactNode;
   className?: string;
 };
 
 const SideMenu = ({ children, className }: Props) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <Menu isOpen={isOpen} className={className}>
-        <div>{children}</div>
+        {children}
       </Menu>
       <StyledButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
     </>
