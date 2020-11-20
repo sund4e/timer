@@ -10,7 +10,6 @@ const StyledButton = styled.button`
   border: none;
   cursor: pointer;
   padding: 0;
-  z-index: 10;
 
   &:focus {
     outline: none;
@@ -18,7 +17,9 @@ const StyledButton = styled.button`
 
   div {
     width: ${({ theme }) => theme.fontSizes.medium}rem;
-    border-bottom: 2px solid ${({ theme }) => theme.colors.highlight};
+    height: 5px;
+    background-color: ${({ theme }) => theme.colors.highlight};
+    border-radius: 10px;
     transition: all 0.3s linear;
     position: relative;
     transform-origin: 1px;
@@ -29,7 +30,6 @@ const StyledButton = styled.button`
 
     :nth-child(2) {
       opacity: ${({ open }) => (open ? '0' : '1')};
-      transform: ${({ open }) => (open ? 'translateX(20px)' : 'translateX(0)')};
     }
 
     :nth-child(3) {
@@ -46,7 +46,7 @@ const SwitchButton = ({
 }: {
   isOpen: boolean;
   onClick: () => void;
-  className: string;
+  className?: string;
 }) => (
   <StyledButton className={className} open={isOpen} onClick={onClick}>
     <div />
