@@ -106,9 +106,24 @@ describe('TimeInput', () => {
   });
 
   describe('onChange', () => {
-    it('is called for last input change', () => {
+    it('is called when input changes', () => {
       const onChange = jest.fn();
       render({ onChange });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[2];
+      fireEvent.click(input);
+      fireEvent.keyPress(input, {
+        key: '5',
+        charCode: 53,
+      });
+      expect(onChange).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('onFinish', () => {
+    it('is called for last input change', () => {
+      const onFinish = jest.fn();
+      render({ onFinish });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       const input = inputs[inputs.length - 1];
       fireEvent.click(input);
@@ -116,25 +131,12 @@ describe('TimeInput', () => {
         key: '5',
         charCode: 53,
       });
-      expect(onChange).toHaveBeenCalled();
+      expect(onFinish).toHaveBeenCalledTimes(1);
     });
 
-    it('is called upon enter', () => {
-      const onChange = jest.fn();
-      const value = 10;
-      render({ onChange, value });
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const input = inputs[2];
-      fireEvent.keyDown(input, {
-        key: 'Enter',
-        charCode: 13,
-      });
-      expect(onChange).toHaveBeenCalledWith(value);
-    });
-
-    it('is not called for other than last inputs', () => {
-      const onChange = jest.fn();
-      render({ onChange });
+    it('is not called for other than last input change', () => {
+      const onFinish = jest.fn();
+      render({ onFinish });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       const input = inputs[2];
       fireEvent.click(input);
@@ -142,7 +144,7 @@ describe('TimeInput', () => {
         key: '5',
         charCode: 53,
       });
-      expect(onChange).not.toHaveBeenCalled();
+      expect(onFinish).not.toHaveBeenCalled();
     });
   });
 });

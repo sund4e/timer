@@ -17,7 +17,6 @@ const Wrapper = styled.div`
 const TimerApp = () => {
   const [notify, setNotify] = useState<(() => void) | null>(null);
   const [restart, setRestart] = useState(true);
-  const [isFocused, setIsFocused] = useState(true);
 
   function onTimeEnd() {
     if (notify) {
@@ -32,8 +31,7 @@ const TimerApp = () => {
         onTimeEnd={onTimeEnd}
         isActive={true}
         initialTime={1200}
-        isFocused={isFocused}
-        setIsFocused={setIsFocused}
+        initialIsFocused={true}
       />
       <SideMenu>
         <NotificationToggle

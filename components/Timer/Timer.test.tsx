@@ -11,9 +11,8 @@ fdescribe('Timer', () => {
       initialTime: 10,
       onTimeEnd: () => {},
       isActive: true,
-      isFocused: true,
-      setIsFocused: () => {},
       restart: false,
+      initialIsFocused: false,
       ...override,
     };
     const rendered = renderElement(<Timer {...defaultProps} />);
@@ -31,7 +30,7 @@ fdescribe('Timer', () => {
   });
   it('if active runs timer when not focused', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: true, isFocused: false });
+    render({ initialTime, isActive: true, initialIsFocused: false });
     expect(getElementWithText('00:00:10')).toBeDefined();
     act(() => {
       jest.advanceTimersByTime(1000);
@@ -41,7 +40,7 @@ fdescribe('Timer', () => {
 
   it('if not active does not run timer', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: false, isFocused: false });
+    render({ initialTime, isActive: false, initialIsFocused: false });
     expect(getElementWithText('00:00:10')).toBeDefined();
     act(() => {
       jest.advanceTimersByTime(1000);
@@ -51,7 +50,7 @@ fdescribe('Timer', () => {
 
   it('if focused does not run timer', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: true, isFocused: true });
+    render({ initialTime, isActive: true, initialIsFocused: true });
     expect(getElementWithText('00:00:10')).toBeDefined();
     act(() => {
       jest.advanceTimersByTime(1000);
@@ -64,7 +63,6 @@ fdescribe('Timer', () => {
     const { rerender } = render({
       initialTime: 3,
       isActive: true,
-      isFocused: false,
       onTimeEnd,
     });
     expect(getElementWithText('00:00:03')).toBeDefined();
@@ -76,7 +74,7 @@ fdescribe('Timer', () => {
 
   it('runs timer after value input even if new value is the same as inital', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: true, isFocused: true });
+    render({ initialTime, isActive: true });
     const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
     const lastInput = inputs[inputs.length - 1];
     fireEvent.click(lastInput);
@@ -94,7 +92,7 @@ fdescribe('Timer', () => {
   describe('restart', () => {
     it('true runs timer again after finishing', () => {
       const initialTime = 10;
-      render({ initialTime, isActive: true, isFocused: false, restart: true });
+      render({ initialTime, isActive: true, restart: true });
       expect(getElementWithText('00:00:10')).toBeDefined();
       act(() => {
         jest.advanceTimersByTime(10000);
@@ -104,12 +102,35 @@ fdescribe('Timer', () => {
 
     it('false stops timer after finishing', () => {
       const initialTime = 10;
-      render({ initialTime, isActive: true, isFocused: false, restart: false });
+      render({ initialTime, isActive: true, restart: false });
       expect(getElementWithText('00:00:10')).toBeDefined();
       act(() => {
         jest.advanceTimersByTime(10000);
       });
       expect(getElementWithText('00:00:00')).toBeDefined();
+    });
+  });
+
+  describe('Enter', () => {
+    it('starts timer', () => {
+      const initialTime = 10;
+      render({
+        initialTime,
+        isActive: true,
+        restart: false,
+        initialIsFocused: true,
+      });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[2];
+      fireEvent.keyDown(input, {
+        key: 'Enter',
+        charCode: 13,
+      });
+      expect(getElementWithText('00:00:10')).toBeDefined();
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+      expect(getElementWithText('00:00:09')).toBeDefined();
     });
   });
 });

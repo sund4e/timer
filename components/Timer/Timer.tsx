@@ -1,15 +1,13 @@
 import TimeInput, { Input } from '../TimeInput';
-import NotificationToggle from '../NotificationToggle';
-import Toggle from '../Toggle';
 import useTimer from '../../hooks/useTimer';
 import { useEffect, useState, useRef, MutableRefObject } from 'react';
+import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 export type Props = {
   onTimeEnd: () => void;
   isActive: boolean;
   initialTime: number;
-  isFocused: boolean;
-  setIsFocused: (isFocused: boolean) => void;
+  initialIsFocused: boolean;
   restart: boolean;
 };
 
@@ -17,12 +15,16 @@ const Timer = ({
   onTimeEnd,
   isActive,
   initialTime,
-  isFocused,
-  setIsFocused,
   restart,
+  initialIsFocused,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
-  const { time, start, pause, reset } = useTimer(startTime, hanldeEnd);
+  const [isFocused, setIsFocused] = useState(initialIsFocused);
+  const { time, start, pause } = useTimer(startTime, hanldeEnd);
+
+  useKeyPressCallBack('Enter', () => {
+    onFinish();
+  });
 
   useEffect(() => {
     if (isFocused || !isActive) {
@@ -34,7 +36,7 @@ const Timer = ({
 
   function hanldeEnd() {
     if (restart) {
-      reset();
+      start();
     }
     onTimeEnd();
   }
@@ -44,13 +46,13 @@ const Timer = ({
   };
 
   const onChange = (seconds: number) => {
-    if (startTime === seconds) {
-      start();
-    } else {
-      setStartTime(seconds);
-    }
-    setIsFocused(false);
+    setStartTime(seconds);
   };
+
+  function onFinish() {
+    console.log('setisFocused: false');
+    setIsFocused(false);
+  }
 
   return (
     <TimeInput
@@ -59,6 +61,7 @@ const Timer = ({
       isFocused={isFocused}
       onFocus={onFocus}
       initalFocus={Input.minutes}
+      onFinish={onFinish}
     />
   );
 };

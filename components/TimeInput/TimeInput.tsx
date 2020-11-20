@@ -36,6 +36,7 @@ export type Props = {
   isFocused: boolean;
   onFocus: () => void;
   initalFocus: Input;
+  onFinish: () => void;
 };
 
 const Inputs = {
@@ -68,17 +69,13 @@ const TimeInput = ({
   onFocus,
   initalFocus,
   isFocused,
+  onFinish,
 }: Props) => {
   const [time, setTime] = useState(getHms(value));
   const [isInvalid, setIsInvalid] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(
     Inputs[initalFocus].indexes[0]
   );
-  const [isReady, setIsReady] = useState(false);
-
-  useKeyPressCallBack('Enter', () => {
-    setIsReady(true);
-  });
 
   useKeyPressCallBack('ArrowRight', () => {
     setFocusedIndex((previousIndex) => {
@@ -93,13 +90,6 @@ const TimeInput = ({
       return isValidIndex(newIndex) ? newIndex : previousIndex;
     });
   });
-
-  useEffect(() => {
-    if (isReady) {
-      onChange(getSeconds(time));
-      setIsReady(false);
-    }
-  }, [isReady]);
 
   useEffect(() => {
     setTime(getHms(value));
@@ -129,11 +119,13 @@ const TimeInput = ({
       }
       setIsInvalid(false);
     }
+    onChange(getSeconds(newTime));
 
     if (Indexes.includes(nextIndex)) {
       setFocusedIndex(nextIndex);
     } else {
-      onChange(getSeconds(newTime));
+      setFocusedIndex(0);
+      onFinish();
     }
   };
 

@@ -4,12 +4,8 @@ const useTimer = (startTime: number, onTimeEnd: () => void) => {
   const [time, setTime] = useState(startTime);
   const timer = useRef<number>();
 
-  useEffect(() => {
-    setTime(startTime);
-    clearTimeout(timer.current);
-  }, [startTime]);
-
   const nextTick = () => {
+    clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       setTime(time - 1);
     }, 1000);
@@ -31,14 +27,11 @@ const useTimer = (startTime: number, onTimeEnd: () => void) => {
   };
 
   const start = () => {
+    setTime(startTime);
     nextTick();
   };
 
-  const reset = () => {
-    setTime(startTime);
-  };
-
-  return { time, start, pause, reset };
+  return { time, start, pause };
 };
 
 export default useTimer;
