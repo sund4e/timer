@@ -11,7 +11,6 @@ const StyledInput = styled.div`
   &:focus {
     outline: none;
   }
-  -webkit-transition: ${({ theme }: { theme: Theme }) => theme.transition}s;
   transition: ${({ theme }: { theme: Theme }) => theme.transition}s;
 `;
 

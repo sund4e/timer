@@ -28,7 +28,6 @@ const StyledNumberInput = styled(NumberInput)`
   }) =>
     isInvalid ? theme.colors.accent : isFocused ? theme.colors.highlight : ''};
   transition: ${({ theme }) => theme.transition}s;
-  -webkit-transition: ${({ theme }) => theme.transition}s;
 `;
 
 export type Props = {
