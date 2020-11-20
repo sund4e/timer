@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 
 const useKeyPressCallBack = (key: string, callback: () => void) => {
-  const pressHandler = ({ key: keyPressed }: { key: string }) => {
-    if (key === keyPressed) {
+  const pressHandler = (e: KeyboardEvent) => {
+    if (key === e.key) {
+      e.preventDefault();
       callback();
     }
   };
