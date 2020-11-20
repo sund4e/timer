@@ -1,7 +1,11 @@
 import { fireEvent, screen, act, getNodeText } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import Timer, { Props } from './Timer';
-import { getElementWithText } from '../../tests/helpers';
+import {
+  getElementWithText,
+  changeInputValue,
+  enter,
+} from '../../tests/helpers';
 
 jest.useFakeTimers();
 
@@ -72,23 +76,6 @@ fdescribe('Timer', () => {
     expect(onTimeEnd).toHaveBeenCalledTimes(1);
   });
 
-  it('runs timer after value input even if new value is the same as inital', () => {
-    const initialTime = 10;
-    render({ initialTime, isActive: true });
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    const lastInput = inputs[inputs.length - 1];
-    fireEvent.click(lastInput);
-    fireEvent.keyPress(lastInput, {
-      key: '0',
-      charCode: 49,
-    });
-    expect(getElementWithText('00:00:10')).toBeDefined();
-    act(() => {
-      jest.advanceTimersByTime(1000);
-    });
-    expect(getElementWithText('00:00:09')).toBeDefined();
-  });
-
   describe('restart', () => {
     it('true runs timer again after finishing', () => {
       const initialTime = 10;
@@ -120,17 +107,30 @@ fdescribe('Timer', () => {
         restart: false,
         initialIsFocused: true,
       });
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const input = inputs[2];
-      fireEvent.keyDown(input, {
-        key: 'Enter',
-        charCode: 13,
-      });
+      enter();
       expect(getElementWithText('00:00:10')).toBeDefined();
       act(() => {
         jest.advanceTimersByTime(1000);
       });
       expect(getElementWithText('00:00:09')).toBeDefined();
+    });
+
+    it('continues timer from the same value if no change in the value', () => {
+      const initialTime = 10;
+      render({ initialTime, isActive: true });
+      expect(getElementWithText('00:00:10')).toBeDefined();
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+      expect(getElementWithText('00:00:09')).toBeDefined();
+
+      changeInputValue(2, 0);
+      enter();
+
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+      expect(getElementWithText('00:00:08')).toBeDefined();
     });
   });
 });

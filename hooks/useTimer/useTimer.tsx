@@ -1,3 +1,4 @@
+import { fireEvent } from '@testing-library/dom';
 import { useState, useEffect, useRef } from 'react';
 
 const useTimer = (startTime: number, onTimeEnd: () => void) => {
@@ -10,6 +11,10 @@ const useTimer = (startTime: number, onTimeEnd: () => void) => {
       setTime(time - 1);
     }, 1000);
   };
+
+  useEffect(() => {
+    setTime(startTime);
+  }, [startTime]);
 
   useEffect(() => {
     if (time === 0) {
@@ -27,7 +32,9 @@ const useTimer = (startTime: number, onTimeEnd: () => void) => {
   };
 
   const start = () => {
-    setTime(startTime);
+    if (time === 0) {
+      setTime(startTime);
+    }
     nextTick();
   };
 

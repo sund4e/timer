@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 
 export const getElementWithText = (text: string): HTMLElement | undefined => {
   try {
@@ -14,4 +14,21 @@ export const getElementWithText = (text: string): HTMLElement | undefined => {
   } catch {
     return undefined;
   }
+};
+
+export const changeInputValue = (inputInxed: number, value: number) => {
+  const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+  const lastInput = inputs[inputInxed];
+  fireEvent.click(lastInput);
+  fireEvent.keyPress(lastInput, {
+    key: value.toString(),
+    charCode: 49,
+  });
+};
+
+export const enter = () => {
+  fireEvent.keyDown(document, {
+    key: 'Enter',
+    charCode: 13,
+  });
 };

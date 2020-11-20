@@ -50,7 +50,6 @@ const Timer = ({
   };
 
   function onFinish() {
-    console.log('setisFocused: false');
     setIsFocused(false);
   }
 
