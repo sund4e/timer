@@ -1,7 +1,6 @@
 import TimeInput, { Input } from '../TimeInput';
 import useTimer from '../../hooks/useTimer';
 import { useEffect, useState, useRef, MutableRefObject } from 'react';
-import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 export type Props = {
   onTimeEnd: () => void;
@@ -27,10 +26,6 @@ const Timer = ({
     restart
   );
 
-  useKeyPressCallBack('Enter', () => {
-    onFinish();
-  });
-
   function hanldeEnd() {
     onTimeEnd();
   }
@@ -41,11 +36,8 @@ const Timer = ({
 
   const onChange = (seconds: number) => {
     setStartTime(seconds);
-  };
-
-  function onFinish() {
     setIsFocused(false);
-  }
+  };
 
   return (
     <TimeInput
@@ -54,7 +46,6 @@ const Timer = ({
       isFocused={isFocused}
       onFocus={onFocus}
       initalFocus={Input.minutes}
-      onFinish={onFinish}
     />
   );
 };

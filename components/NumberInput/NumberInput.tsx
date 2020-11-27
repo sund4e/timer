@@ -4,7 +4,7 @@ import SingleInput from '../SingleInput/SingleInput';
 export type Props = {
   onChange: (value: number) => void;
   value: number;
-  focusIndex: number | undefined;
+  focusIndex: number | null;
   size: number;
   onClick: (index: number) => void;
   className?: string;
@@ -38,8 +38,7 @@ const NumberInput = ({
   const inputValue = getValueAsArray(value, size);
 
   const onChangeInput = (newValue: number) => {
-    console.log('newValue', newValue, 'focusIndex', focusIndex);
-    if (focusIndex === undefined) return;
+    if (focusIndex === null) return;
     const newNumber = parseInt(
       Object.assign([], inputValue, { [focusIndex]: newValue }).join('')
     );
