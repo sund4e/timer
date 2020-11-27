@@ -20,24 +20,18 @@ const Timer = ({
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
   const [isFocused, setIsFocused] = useState(initialIsFocused);
-  const { time, start, pause } = useTimer(startTime, hanldeEnd);
+  const { time } = useTimer(
+    startTime,
+    hanldeEnd,
+    !isFocused && isActive,
+    restart
+  );
 
   useKeyPressCallBack('Enter', () => {
     onFinish();
   });
 
-  useEffect(() => {
-    if (isFocused || !isActive) {
-      pause();
-    } else {
-      start();
-    }
-  }, [isFocused, isActive]);
-
   function hanldeEnd() {
-    if (restart) {
-      start();
-    }
     onTimeEnd();
   }
 

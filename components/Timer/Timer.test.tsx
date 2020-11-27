@@ -77,7 +77,7 @@ fdescribe('Timer', () => {
       const initialTime = 10;
       render({ initialTime, isActive: true, restart: true });
       expect(getTime()).toEqual('00:00:10');
-      advanceSeconds(initialTime);
+      advanceSeconds(initialTime + 1);
       expect(getTime()).toEqual('00:00:10');
     });
 
@@ -142,7 +142,7 @@ fdescribe('Timer', () => {
       render({ initialTime, isActive: true });
       changeInputValue(5, 2);
       advanceSeconds(1);
-      expect(getTime()).toEqual('00:00:14');
+      expect(getTime()).toEqual('00:00:11');
     });
   });
 });

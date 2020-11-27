@@ -1,14 +1,24 @@
 import { fireEvent } from '@testing-library/dom';
 import { useState, useEffect, useRef } from 'react';
 
-const useTimer = (startTime: number, onTimeEnd: () => void) => {
+const useTimer = (
+  startTime: number,
+  onTimeEnd: () => void,
+  isRunning: boolean,
+  restart: boolean
+) => {
   const [time, setTime] = useState(startTime);
   const timer = useRef<number>();
 
   const nextTick = () => {
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
-      setTime(time - 1);
+      if (time === 0) {
+        onTimeEnd();
+        if (restart) setTime(startTime);
+      } else {
+        setTime(time - 1);
+      }
     }, 1000);
   };
 
@@ -17,28 +27,17 @@ const useTimer = (startTime: number, onTimeEnd: () => void) => {
   }, [startTime]);
 
   useEffect(() => {
-    if (time === 0) {
-      onTimeEnd();
-    } else {
+    if (isRunning) {
       nextTick();
+    } else {
+      clearTimeout(timer.current);
     }
     return () => {
       clearTimeout(timer.current);
     };
-  }, [time]);
+  }, [time, isRunning]);
 
-  const pause = () => {
-    clearTimeout(timer.current);
-  };
-
-  const start = () => {
-    if (time === 0) {
-      setTime(startTime);
-    }
-    nextTick();
-  };
-
-  return { time, start, pause };
+  return { time };
 };
 
 export default useTimer;
