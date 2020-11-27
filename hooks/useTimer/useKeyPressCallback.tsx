@@ -14,7 +14,7 @@ const useKeyPressCallBack = (key: string, callback: () => void) => {
     return () => {
       window.removeEventListener('keydown', pressHandler);
     };
-  }, []);
+  });
 };
 
 export default useKeyPressCallBack;
