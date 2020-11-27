@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SingleInput from '../SingleInput/SingleInput';
 
 export type Props = {
-  onChange: (value: number, inputReady: boolean) => void;
+  onChange: (value: number) => void;
   value: number;
   focusIndex: number | undefined;
   size: number;
@@ -38,13 +38,12 @@ const NumberInput = ({
   const inputValue = getValueAsArray(value, size);
 
   const onChangeInput = (newValue: number) => {
+    console.log('newValue', newValue, 'focusIndex', focusIndex);
     if (focusIndex === undefined) return;
     const newNumber = parseInt(
       Object.assign([], inputValue, { [focusIndex]: newValue }).join('')
     );
-    const nextIndex = focusIndex + 1;
-    const inputReady = nextIndex === inputValue.length;
-    onChange(newNumber, inputReady);
+    onChange(newNumber);
   };
 
   const onClickInput = (index: number) => () => {

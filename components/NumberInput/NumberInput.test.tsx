@@ -31,7 +31,7 @@ describe('NumberInput', () => {
       key: '2',
       charCode: 50,
     });
-    expect(onChange).toHaveBeenCalledWith(21, false);
+    expect(onChange).toHaveBeenCalledWith(21);
   });
 
   it('calls onChange correctly when changing last input', () => {
@@ -43,7 +43,7 @@ describe('NumberInput', () => {
       key: '2',
       charCode: 50,
     });
-    expect(onChange).toHaveBeenCalledWith(12, true);
+    expect(onChange).toHaveBeenCalledWith(12);
   });
 
   it('does not allow inputting letters', () => {
