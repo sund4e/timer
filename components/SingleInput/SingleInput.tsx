@@ -41,15 +41,6 @@ const SingleInput = ({
     }
   }, [isFocused]);
 
-  const onChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
-    const newValue = event.currentTarget.value;
-    const newTime = parseInt(newValue[1]);
-
-    if (!isNaN(newTime)) {
-      onChange(newTime);
-    }
-  };
-
   const onClickInput = () => {
     onClick();
   };
@@ -65,7 +56,6 @@ const SingleInput = ({
     <StyledInput
       className={className}
       ref={input}
-      onChange={onChangeInput}
       isFocused={isFocused}
       onClick={onClickInput}
       tabIndex={0}
