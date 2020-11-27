@@ -20,16 +20,16 @@ export type Props = {
 };
 
 const FocusInput = ({ value, onChange, indexes, maxValue }: Props) => {
-  const { focusIndex, setFocusIndex } = useFocusIndex();
+  const { focusIndex: globalFocusIndex, setFocusIndex } = useFocusIndex();
   const [isInvalid, setIsInvalid] = useState(false);
 
   const onChangeInput = (newValue: number) => {
-    if (!focusIndex) return;
+    if (globalFocusIndex === null) return;
     if (newValue > maxValue) {
       setIsInvalid(true);
     } else {
       if (isInvalid) setIsInvalid(false);
-      setFocusIndex(focusIndex + 1);
+      setFocusIndex(globalFocusIndex + 1);
     }
     onChange(newValue);
   };
@@ -38,13 +38,20 @@ const FocusInput = ({ value, onChange, indexes, maxValue }: Props) => {
     setFocusIndex(indexes[index]);
   };
 
+  const focusIndex =
+    globalFocusIndex !== null
+      ? indexes.indexOf(globalFocusIndex) < 0
+        ? null
+        : indexes.indexOf(globalFocusIndex)
+      : null;
+
   return (
     <StyledNumberInput
-      isInvalid={isInvalid && focusIndex !== undefined}
+      isInvalid={isInvalid && focusIndex !== null}
       value={value}
       onChange={onChangeInput}
       onClick={onClick}
-      focusIndex={focusIndex && indexes.indexOf(focusIndex)}
+      focusIndex={focusIndex}
       size={indexes.length}
     />
   );

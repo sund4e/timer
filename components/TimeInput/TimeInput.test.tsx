@@ -1,7 +1,8 @@
-import { act, fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import TimeInput, { Props } from './TimeInput';
 import { Input } from './timeConverters';
+import { changeInputValue, enter, getTime } from '../../tests/helpers';
 
 jest.useFakeTimers();
 
@@ -63,7 +64,7 @@ describe('TimeInput', () => {
     });
 
     it('focuses next input after finishing one', () => {
-      render();
+      render({ initalFocus: Input.hours });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       fireEvent.keyPress(inputs[0], {
         key: '1',
@@ -106,7 +107,7 @@ describe('TimeInput', () => {
   });
 
   describe('onChange', () => {
-    it('is called when input changes', () => {
+    it('is not called when changed input is not the last', () => {
       const onChange = jest.fn();
       render({ onChange });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
@@ -116,35 +117,26 @@ describe('TimeInput', () => {
         key: '5',
         charCode: 53,
       });
+      expect(onChange).not.toHaveBeenCalledTimes(1);
+    });
+    it('is called when last input changes', () => {
+      const onChange = jest.fn();
+      render({ onChange });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const input = inputs[5];
+      fireEvent.click(input);
+      fireEvent.keyPress(input, {
+        key: '5',
+        charCode: 53,
+      });
       expect(onChange).toHaveBeenCalledTimes(1);
     });
-  });
 
-  describe('onFinish', () => {
-    it('is called for last input change', () => {
-      const onFinish = jest.fn();
-      render({ onFinish });
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const input = inputs[inputs.length - 1];
-      fireEvent.click(input);
-      fireEvent.keyPress(input, {
-        key: '5',
-        charCode: 53,
-      });
-      expect(onFinish).toHaveBeenCalledTimes(1);
-    });
-
-    it('is not called for other than last input change', () => {
-      const onFinish = jest.fn();
-      render({ onFinish });
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const input = inputs[2];
-      fireEvent.click(input);
-      fireEvent.keyPress(input, {
-        key: '5',
-        charCode: 53,
-      });
-      expect(onFinish).not.toHaveBeenCalled();
+    it('is called on enter', () => {
+      const onChange = jest.fn();
+      render({ onChange, isFocused: true });
+      enter();
+      expect(onChange).toHaveBeenCalledTimes(1);
     });
   });
 });
