@@ -14,10 +14,12 @@ export const FocusContextProvider = ({
   children,
   initialIndex,
   maxIndex,
+  onFocus,
 }: {
   children: React.ReactNode;
-  initialIndex: number;
+  initialIndex: number | null;
   maxIndex: number;
+  onFocus: () => void;
 }) => {
   const [focusIndex, setFocusIndex] = useState<number | null>(initialIndex);
 
@@ -41,6 +43,9 @@ export const FocusContextProvider = ({
     if (newIndex && newIndex > maxIndex) {
       setFocusIndex(null);
     } else {
+      if (newIndex !== null) {
+        onFocus();
+      }
       setFocusIndex(newIndex);
     }
   };

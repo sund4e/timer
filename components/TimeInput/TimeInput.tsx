@@ -64,8 +64,6 @@ const TimeInput = ({ value, onChange, onFocus, isFocused }: Props) => {
   useEffect(() => {
     if (focusIndex === null) {
       onChange(getSeconds(time));
-    } else {
-      onFocus();
     }
   }, [focusIndex]);
 
@@ -101,11 +99,12 @@ const TimeInput = ({ value, onChange, onFocus, isFocused }: Props) => {
 };
 
 const TimeInputWithFocus = (props: Props) => {
-  const { initalFocus } = props;
+  const { initalFocus, isFocused, onFocus } = props;
   return (
     <FocusContextProvider
-      initialIndex={Inputs[initalFocus].indexes[0]}
+      initialIndex={isFocused ? Inputs[initalFocus].indexes[0] : null}
       maxIndex={Math.max(...Indexes)}
+      onFocus={onFocus}
     >
       <TimeInput {...props} />
     </FocusContextProvider>
