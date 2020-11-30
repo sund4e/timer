@@ -45,9 +45,15 @@ const FocusInput = ({ value, onChange, indexes, maxValue }: Props) => {
         : indexes.indexOf(globalFocusIndex)
       : null;
 
+  useEffect(() => {
+    if (!focusIndex) {
+      setIsInvalid(false);
+    }
+  }, [focusIndex]);
+
   return (
-    <StyledNumberInput
-      isInvalid={isInvalid && focusIndex !== null}
+    <NumberInput
+      invalidFocus={isInvalid}
       value={value}
       onChange={onChangeInput}
       onClick={onClick}
