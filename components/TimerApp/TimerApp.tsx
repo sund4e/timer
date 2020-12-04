@@ -24,8 +24,13 @@ const TimerApp = () => {
   const [notify, setNotify] = useState<(() => void) | null>(null);
   const [restart, setRestart] = useState(true);
   const [isFocused, setIsFocused] = useState(true);
+  const [playSound, setPlaySound] = useState(true);
 
   function onTimeEnd() {
+    if (playSound) {
+      const audio = new Audio('/bell.wav');
+      audio.play();
+    }
     if (notify) {
       notify();
     }
@@ -46,6 +51,7 @@ const TimerApp = () => {
         setIsFocused={setIsFocused}
       />
       <SideMenu>
+        <Toggle isOn={playSound} setIsOn={setPlaySound} label={'Sound'} />
         <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
         <Toggle
           isOn={restart}
