@@ -10,17 +10,19 @@ export const FocusContext = createContext<FocusContextType>({
   setFocusIndex: () => {},
 });
 
+export type Props = {
+  children: React.ReactNode;
+  initialIndex: number | null;
+  maxIndex: number;
+  onFocus: () => void;
+};
+
 export const FocusContextProvider = ({
   children,
   initialIndex,
   maxIndex,
   onFocus,
-}: {
-  children: React.ReactNode;
-  initialIndex: number | null;
-  maxIndex: number;
-  onFocus: () => void;
-}) => {
+}: Props) => {
   const [focusIndex, setFocusIndex] = useState<number | null>(initialIndex);
 
   useKeyPressCallBack('ArrowRight', () => {

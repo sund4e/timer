@@ -4,7 +4,7 @@ import NumberInput from '../NumberInput/NumberInput';
 import { Theme } from '../../styles/theme';
 import { getHms, Input, getSeconds } from './timeConverters';
 import FocusInput from './FocusInput';
-import { FocusContextProvider, useFocusIndex } from './FocusContext';
+import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 const Wrapper = styled.div`

@@ -4,7 +4,7 @@ import NumberInput from '../NumberInput/NumberInput';
 import { Theme } from '../../styles/theme';
 import { getHms, Input, getSeconds } from './timeConverters';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
-import { useFocusIndex } from './FocusContext';
+import { useFocusIndex } from '../FocusContext';
 
 const StyledNumberInput = styled(NumberInput)`
   ${({ theme, isInvalid }: { theme: Theme; isInvalid: boolean }) =>
