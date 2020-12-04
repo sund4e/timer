@@ -12,6 +12,7 @@ const createContextGetter = (overrideProps?: Partial<Props>) => {
     initialIndex: 0,
     maxIndex: 5,
     onFocus: () => {},
+    allowFocus: true,
     ...overrideProps,
   };
 
@@ -34,11 +35,23 @@ const createContextGetter = (overrideProps?: Partial<Props>) => {
 };
 
 describe('FocusContext', () => {
-  it('sets inital index', () => {
-    const initialIndex = 2;
-    const getContext = createContextGetter({ initialIndex });
-    const { focusIndex } = getContext();
-    expect(focusIndex).toEqual(initialIndex);
+  describe('focusIndex', () => {
+    it('is inital index', () => {
+      const initialIndex = 2;
+      const getContext = createContextGetter({ initialIndex });
+      const { focusIndex } = getContext();
+      expect(focusIndex).toEqual(initialIndex);
+    });
+
+    it('is null if allowFocus is false', () => {
+      const initialIndex = 2;
+      const getContext = createContextGetter({
+        initialIndex,
+        allowFocus: false,
+      });
+      const { focusIndex } = getContext();
+      expect(focusIndex).toEqual(null);
+    });
   });
 
   describe('setFocusIndex', () => {

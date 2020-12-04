@@ -6,7 +6,8 @@ export type Props = {
   onTimeEnd: () => void;
   isActive: boolean;
   initialTime: number;
-  initialIsFocused: boolean;
+  isFocused: boolean;
+  setIsFocused: (isFocused: boolean) => void;
   restart: boolean;
   className?: string;
 };
@@ -16,11 +17,11 @@ const Timer = ({
   isActive,
   initialTime,
   restart,
-  initialIsFocused,
+  isFocused,
+  setIsFocused,
   className,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
-  const [isFocused, setIsFocused] = useState(initialIsFocused);
   const { time } = useTimer(
     startTime,
     hanldeEnd,

@@ -1,24 +1,24 @@
 import { fireEvent, screen, act, getNodeText } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import Timer, { Props } from './Timer';
-import { changeInputValue, enter, getTime } from '../../tests/helpers';
+import {
+  changeInputValue,
+  enter,
+  getTime,
+  advanceSeconds,
+} from '../../tests/helpers';
 
 jest.useFakeTimers();
 
-const advanceSeconds = (seconds: number) => {
-  act(() => {
-    jest.advanceTimersByTime(seconds * 1000);
-  });
-};
-
-fdescribe('Timer', () => {
+describe('Timer', () => {
   const render = (override?: Partial<Props>) => {
     const defaultProps = {
       initialTime: 10,
       onTimeEnd: () => {},
       isActive: true,
       restart: false,
-      initialIsFocused: false,
+      isFocused: false,
+      setIsFocused: () => {},
       ...override,
     };
     const rendered = renderElement(<Timer {...defaultProps} />);
@@ -36,7 +36,7 @@ fdescribe('Timer', () => {
   });
   it('if active runs timer when not focused', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: true, initialIsFocused: false });
+    render({ initialTime, isActive: true, isFocused: false });
     expect(getTime()).toEqual('00:00:10');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:00:09');
@@ -44,7 +44,7 @@ fdescribe('Timer', () => {
 
   it('if not active does not run timer', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: false, initialIsFocused: false });
+    render({ initialTime, isActive: false, isFocused: false });
     expect(getTime()).toEqual('00:00:10');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:00:10');
@@ -52,7 +52,7 @@ fdescribe('Timer', () => {
 
   it('if focused does not run timer', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: true, initialIsFocused: true });
+    render({ initialTime, isActive: true, isFocused: true });
     expect(getTime()).toEqual('00:00:10');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:00:10');
@@ -97,7 +97,7 @@ fdescribe('Timer', () => {
         initialTime,
         isActive: true,
         restart: false,
-        initialIsFocused: true,
+        isFocused: false,
       });
       enter();
       expect(getTime()).toEqual('00:00:10');

@@ -1,4 +1,4 @@
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, act } from '@testing-library/react';
 
 export const getTime = (): string | null => {
   return screen.getByTestId('time').textContent;
@@ -18,5 +18,11 @@ export const enter = () => {
   fireEvent.keyDown(document, {
     key: 'Enter',
     charCode: 13,
+  });
+};
+
+export const advanceSeconds = (seconds: number) => {
+  act(() => {
+    jest.advanceTimersByTime(seconds * 1000);
   });
 };

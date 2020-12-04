@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 export type FocusContextType = {
@@ -14,7 +14,8 @@ export type Props = {
   children: React.ReactNode;
   initialIndex: number | null;
   maxIndex: number;
-  onFocus: () => void;
+  onFocus?: () => void;
+  allowFocus: boolean;
 };
 
 export const FocusContextProvider = ({
@@ -22,8 +23,15 @@ export const FocusContextProvider = ({
   initialIndex,
   maxIndex,
   onFocus,
+  allowFocus,
 }: Props) => {
   const [focusIndex, setFocusIndex] = useState<number | null>(initialIndex);
+
+  useEffect(() => {
+    if (!allowFocus) {
+      setFocusIndex(null);
+    }
+  }, [allowFocus]);
 
   useKeyPressCallBack('ArrowRight', () => {
     setFocusIndex((previousIndex) => {
@@ -45,7 +53,7 @@ export const FocusContextProvider = ({
     if (newIndex && newIndex > maxIndex) {
       setFocusIndex(null);
     } else {
-      if (newIndex !== null) {
+      if (newIndex !== null && onFocus) {
         onFocus();
       }
       setFocusIndex(newIndex);

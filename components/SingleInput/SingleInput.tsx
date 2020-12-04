@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, MouseEvent } from 'react';
 import { Theme } from '../../styles/theme';
 
 const StyledInput = styled.div`
@@ -40,7 +40,8 @@ const SingleInput = ({
     }
   }, [isFocused]);
 
-  const onClickInput = () => {
+  const onClickInput = (event: MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
     onClick();
   };
 

@@ -5,6 +5,7 @@ import Toggle from '../Toggle';
 import { useState } from 'react';
 import SideMenu from '../SideMenu';
 import { Theme } from '../../styles/theme';
+import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 
 const StyledTimer = styled(Timer)`
   font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big}vw;
@@ -22,6 +23,7 @@ const Wrapper = styled.div`
 const TimerApp = () => {
   const [notify, setNotify] = useState<(() => void) | null>(null);
   const [restart, setRestart] = useState(true);
+  const [isFocused, setIsFocused] = useState(true);
 
   function onTimeEnd() {
     if (notify) {
@@ -29,14 +31,19 @@ const TimerApp = () => {
     }
   }
 
+  const onClickWrapper = () => {
+    setIsFocused(false);
+  };
+
   return (
-    <Wrapper>
+    <Wrapper onClick={onClickWrapper}>
       <StyledTimer
         restart={restart}
         onTimeEnd={onTimeEnd}
         isActive={true}
         initialTime={1200}
-        initialIsFocused={true}
+        isFocused={isFocused}
+        setIsFocused={setIsFocused}
       />
       <SideMenu>
         <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />

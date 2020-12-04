@@ -99,6 +99,7 @@ const TimeInputWithFocus = (props: Props) => {
   const { initalFocus, isFocused, onFocus } = props;
   return (
     <FocusContextProvider
+      allowFocus={isFocused}
       initialIndex={isFocused ? Inputs[initalFocus].indexes[0] : null}
       maxIndex={Math.max(...Indexes)}
       onFocus={onFocus}
