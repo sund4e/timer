@@ -17,16 +17,13 @@ const Wrapper = styled.div`
   transition: ${({ theme }) => theme.transition}s;
 `;
 
-const StyledSpan = styled.span`
-  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big}vw;
-`;
-
 export type Props = {
   value: number;
   onChange: (seconds: number) => void;
   isFocused: boolean;
   onFocus: () => void;
   initalFocus: Input;
+  className?: string;
 };
 
 const Inputs = {
@@ -49,7 +46,7 @@ const Indexes = Object.values(Inputs).reduce<number[]>(
   []
 );
 
-const TimeInput = ({ value, onChange, onFocus, isFocused }: Props) => {
+const TimeInput = ({ value, onChange, className, isFocused }: Props) => {
   const [time, setTime] = useState(getHms(value));
   const { focusIndex, setFocusIndex } = useFocusIndex();
 
@@ -76,19 +73,19 @@ const TimeInput = ({ value, onChange, onFocus, isFocused }: Props) => {
   };
 
   return (
-    <Wrapper isFocused={isFocused} data-testid="time">
+    <Wrapper isFocused={isFocused} data-testid="time" className={className}>
       <FocusInput
         {...Inputs[Input.hours]}
         value={time[Input.hours]}
         onChange={onChangeInput(Input.hours)}
       />
-      <StyledSpan>:</StyledSpan>
+      <span>:</span>
       <FocusInput
         {...Inputs[Input.minutes]}
         value={time[Input.minutes]}
         onChange={onChangeInput(Input.minutes)}
       />
-      <StyledSpan>:</StyledSpan>
+      <span>:</span>
       <FocusInput
         {...Inputs[Input.seconds]}
         value={time[Input.seconds]}

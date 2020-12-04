@@ -21,7 +21,7 @@ export const theme: Theme = {
     light: '#E8E8E8',
   },
   fontSizes: {
-    big: 8,
+    big: 10,
     medium: 2,
   },
   transition: 0.4,

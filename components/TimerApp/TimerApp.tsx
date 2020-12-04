@@ -4,6 +4,11 @@ import NotificationToggle from '../NotificationToggle';
 import Toggle from '../Toggle';
 import { useState } from 'react';
 import SideMenu from '../SideMenu';
+import { Theme } from '../../styles/theme';
+
+const StyledTimer = styled(Timer)`
+  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big}vw;
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,7 +31,7 @@ const TimerApp = () => {
 
   return (
     <Wrapper>
-      <Timer
+      <StyledTimer
         restart={restart}
         onTimeEnd={onTimeEnd}
         isActive={true}

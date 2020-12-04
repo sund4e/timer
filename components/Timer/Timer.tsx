@@ -8,6 +8,7 @@ export type Props = {
   initialTime: number;
   initialIsFocused: boolean;
   restart: boolean;
+  className?: string;
 };
 
 const Timer = ({
@@ -16,6 +17,7 @@ const Timer = ({
   initialTime,
   restart,
   initialIsFocused,
+  className,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
   const [isFocused, setIsFocused] = useState(initialIsFocused);
@@ -41,6 +43,7 @@ const Timer = ({
 
   return (
     <TimeInput
+      className={className}
       value={time}
       onChange={onChange}
       isFocused={isFocused}
