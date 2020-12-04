@@ -34,10 +34,7 @@ const TimerApp = () => {
         initialIsFocused={true}
       />
       <SideMenu>
-        <NotificationToggle
-          setNotify={(notify) => setNotify(() => notify)}
-          initialShow={true}
-        />
+        <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
         <Toggle
           isOn={restart}
           setIsOn={setRestart}

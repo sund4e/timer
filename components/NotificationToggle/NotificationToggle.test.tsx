@@ -14,21 +14,17 @@ class NotificationMock {
 }
 
 describe('NotificationToggle', () => {
+  let notify = () => {};
+  const setNotify = (passed: () => void) => (notify = passed);
+
   const render = (override?: Partial<Props>) => {
     const defaultProps = {
-      setNotify: () => {},
+      setNotify,
       initialShow: true,
       ...override,
     };
     return renderElement(<Toggle {...defaultProps} />);
   };
-
-  let notify = () => {};
-  const setNotify = (passed: () => void) => (notify = passed);
-  const renderOn = (props?: Partial<Props>) =>
-    render({ setNotify, initialShow: true, ...props });
-  const renderOff = (props?: Partial<Props>) =>
-    render({ setNotify, initialShow: false, ...props });
 
   beforeEach(() => {
     //@ts-ignore
@@ -42,23 +38,23 @@ describe('NotificationToggle', () => {
     expect(setNotify).toHaveBeenCalled();
   });
 
-  describe('notify', () => {
-    describe('with initialShow', () => {
-      it('triggers notification when true', () => {
-        renderOn();
-        notify();
-        expect(notification).toHaveBeenCalled();
-      });
+  describe('when notification permission is granted', () => {
+    beforeAll(() => {
+      NotificationMock.permission = 'granted';
+    });
 
-      it('does not trigger notification when false', () => {
-        renderOff();
-        notify();
-        expect(notification).not.toHaveBeenCalled();
-      });
+    afterAll(() => {
+      NotificationMock.permission = 'default';
+    });
+
+    it('triggers notification by default', () => {
+      render();
+      notify();
+      expect(notification).toHaveBeenCalled();
     });
 
     it('does not trigger notification if notifications turned off', () => {
-      renderOn();
+      render();
       const toggle = screen.getByRole('checkbox');
       fireEvent.click(toggle);
       notify();
@@ -66,25 +62,18 @@ describe('NotificationToggle', () => {
     });
 
     it('triggers notification if notifications turned on', () => {
-      renderOff();
+      render();
       const toggle = screen.getByRole('checkbox');
+      fireEvent.click(toggle);
       fireEvent.click(toggle);
       notify();
       expect(notification).toHaveBeenCalled();
     });
   });
 
-  describe('When notification permissions are denied', () => {
-    beforeAll(() => {
-      NotificationMock.permission = 'denied';
-    });
-
-    afterAll(() => {
-      NotificationMock.permission = 'granted';
-    });
-
+  describe('When notification permissions are not granted', () => {
     it('does not ask for permission if notifications are turned off', () => {
-      renderOff();
+      render();
       expect(NotificationMock.requestPermission).not.toHaveBeenCalled();
     });
 
@@ -92,7 +81,7 @@ describe('NotificationToggle', () => {
       NotificationMock.requestPermission = jest
         .fn()
         .mockImplementation(() => Promise.resolve());
-      renderOff();
+      render();
       const toggle = screen.getByRole('checkbox');
       fireEvent.click(toggle);
       expect(NotificationMock.requestPermission).toHaveBeenCalled();
@@ -102,8 +91,10 @@ describe('NotificationToggle', () => {
       NotificationMock.requestPermission = jest
         .fn()
         .mockImplementation(() => Promise.resolve('granted'));
+      render();
+      const toggle = screen.getByRole('checkbox');
       await act(async () => {
-        renderOn();
+        fireEvent.click(toggle);
       });
       notify();
       expect(notification).toHaveBeenCalled();
@@ -114,7 +105,7 @@ describe('NotificationToggle', () => {
         .fn()
         .mockImplementation(() => Promise.resolve('denied'));
       await act(async () => {
-        renderOff();
+        render();
       });
       notify();
       expect(notification).not.toHaveBeenCalled();
