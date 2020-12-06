@@ -29,13 +29,7 @@ describe('TimeInput', () => {
   it('renders value', () => {
     const value = 6574;
     render({ value });
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    expect(inputs[0]).toHaveTextContent('0');
-    expect(inputs[1]).toHaveTextContent('1');
-    expect(inputs[2]).toHaveTextContent('4');
-    expect(inputs[3]).toHaveTextContent('9');
-    expect(inputs[4]).toHaveTextContent('3');
-    expect(inputs[5]).toHaveTextContent('4');
+    expect(getTime()).toEqual('01:49:34');
   });
 
   it('updates value', () => {
@@ -44,8 +38,7 @@ describe('TimeInput', () => {
       <TimeInput {...defaultProps} value={value} />
     );
     rerender(<TimeInput {...defaultProps} value={value + 1} />);
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    expect(inputs[5]).toHaveTextContent('5');
+    expect(getTime()).toEqual('01:49:35');
   });
 
   describe('Focusing', () => {
@@ -66,14 +59,8 @@ describe('TimeInput', () => {
     it('focuses next input after finishing one', () => {
       render({ initalFocus: Input.hours });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      fireEvent.keyPress(inputs[0], {
-        key: '1',
-        charCode: 49,
-      });
-      fireEvent.keyPress(inputs[1], {
-        key: '5',
-        charCode: 53,
-      });
+      changeInputValue(0, 1);
+      changeInputValue(1, 5);
       expect(inputs[2] === document.activeElement).toBeTruthy();
     });
 
@@ -110,25 +97,13 @@ describe('TimeInput', () => {
     it('is not called when changed input is not the last', () => {
       const onChange = jest.fn();
       render({ onChange });
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const input = inputs[2];
-      fireEvent.click(input);
-      fireEvent.keyPress(input, {
-        key: '5',
-        charCode: 53,
-      });
+      changeInputValue(2, 5);
       expect(onChange).not.toHaveBeenCalledTimes(1);
     });
     it('is called when last input changes', () => {
       const onChange = jest.fn();
       render({ onChange });
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const input = inputs[5];
-      fireEvent.click(input);
-      fireEvent.keyPress(input, {
-        key: '5',
-        charCode: 53,
-      });
+      changeInputValue(5, 5);
       expect(onChange).toHaveBeenCalledTimes(1);
     });
 

@@ -5,7 +5,6 @@ import Toggle from '../Toggle';
 import { useState } from 'react';
 import SideMenu from '../SideMenu';
 import { Theme } from '../../styles/theme';
-import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 
 const StyledTimer = styled(Timer)`
   font-size: min(15vw, ${({ theme }: { theme: Theme }) =>
