@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, MouseEvent as ReactMouseEvent } from 'react';
 import SwitchButton from '../SwitchButton';
 
 const Menu = styled.div`
@@ -7,6 +7,7 @@ const Menu = styled.div`
   right: 0;
   top: 0;
   height: 100%;
+  width: 300px;
   transition: transform 0.4s ease-in-out;
   transform: translateX(
     ${({ isOpen }: { isOpen: boolean }) => (isOpen ? 0 : 100)}%
@@ -42,12 +43,23 @@ export type Props = {
 const SideMenu = ({ children, className }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const onClickButton = (
+    event: ReactMouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    setIsOpen(!isOpen);
+  };
+
+  const onClickMenu = (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+  };
+
   return (
     <>
-      <Menu isOpen={isOpen} className={className}>
+      <Menu isOpen={isOpen} className={className} onClick={onClickMenu}>
         {children}
       </Menu>
-      <StyledButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
+      <StyledButton isOpen={isOpen} onClick={onClickButton} />
     </>
   );
 };

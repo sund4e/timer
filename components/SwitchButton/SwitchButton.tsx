@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { MouseEvent as ReactMouseEvent } from 'react';
 
 const StyledButton = styled.button`
   display: flex;
@@ -45,7 +46,7 @@ const SwitchButton = ({
   className,
 }: {
   isOpen: boolean;
-  onClick: () => void;
+  onClick: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
   className?: string;
 }) => (
   <StyledButton className={className} open={isOpen} onClick={onClick}>
