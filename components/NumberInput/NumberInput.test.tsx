@@ -10,6 +10,7 @@ describe('NumberInput', () => {
       onChange: () => {},
       focusIndex: 0,
       onClick: () => {},
+      invalidFocus: false,
       ...override,
     };
     return renderElement(<NumberInput {...defaultProps} />);
@@ -19,18 +20,15 @@ describe('NumberInput', () => {
     render({ value });
     const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
     expect(inputs.length).toEqual(2);
-    expect(inputs[0]).toHaveTextContent('4');
-    expect(inputs[1]).toHaveTextContent('5');
+    expect(inputs[0].value).toEqual('4');
+    expect(inputs[1].value).toEqual('5');
   });
 
   it('calls onChange correctly when changing other than last input', () => {
     const onChange = jest.fn();
     render({ onChange, value: 11, focusIndex: 0 });
     const inputs = screen.getAllByRole('textbox');
-    fireEvent.keyPress(inputs[0], {
-      key: '2',
-      charCode: 50,
-    });
+    fireEvent.change(inputs[0], { target: { value: '2' } });
     expect(onChange).toHaveBeenCalledWith(21);
   });
 
@@ -38,11 +36,7 @@ describe('NumberInput', () => {
     const onChange = jest.fn();
     render({ onChange, value: 11, focusIndex: 1 });
     const inputs = screen.getAllByRole('textbox');
-    fireEvent.click(inputs[1]);
-    fireEvent.keyPress(inputs[1], {
-      key: '2',
-      charCode: 50,
-    });
+    fireEvent.change(inputs[1], { target: { value: '2' } });
     expect(onChange).toHaveBeenCalledWith(12);
   });
 
@@ -50,11 +44,8 @@ describe('NumberInput', () => {
     const onChange = jest.fn();
     render({ value: 22, onChange });
     const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    fireEvent.keyPress(inputs[0], {
-      key: 'a',
-      charCode: 65,
-    });
-    expect(inputs[0]).toHaveTextContent('2');
+    fireEvent.change(inputs[0], { target: { value: 'a' } });
+    expect(inputs[0].value).toEqual('2');
     expect(onChange).not.toHaveBeenCalled();
   });
 
@@ -68,10 +59,7 @@ describe('NumberInput', () => {
     it('focuses second input if 1', () => {
       render({ focusIndex: 1 });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      fireEvent.keyPress(inputs[0], {
-        key: '2',
-        charCode: 50,
-      });
+      fireEvent.change(inputs[0], { target: { value: '2' } });
       expect(inputs[1] === document.activeElement).toEqual(true);
     });
 
