@@ -1,8 +1,13 @@
 import styled from 'styled-components';
-import { useRef, useEffect, MouseEvent as ReactMouseEvent } from 'react';
+import {
+  useRef,
+  useEffect,
+  MouseEvent as ReactMouseEvent,
+  ChangeEvent,
+} from 'react';
 import { Theme } from '../../styles/theme';
 
-const StyledInput = styled.div`
+const StyledInput = styled.input`
   opacity: ${({ isFocused }: { isFocused: boolean }) => (isFocused ? 0.5 : 1)};
   border-style: none;
   caret-color: transparents;
@@ -10,7 +15,12 @@ const StyledInput = styled.div`
   &:focus {
     outline: none;
   }
+  height: 1em;
+  width: 0.6em;
+  font-size: inherit;
+  color: inherit;
   transition: ${({ theme }: { theme: Theme }) => theme.transition}s;
+  caret-color: transparent;
 `;
 
 export type Props = {
@@ -40,13 +50,23 @@ const SingleInput = ({
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    input.current?.setSelectionRange(0, 0);
+  });
+
   const onClickInput = (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
+    input.current?.setSelectionRange(0, 0);
     onClick();
   };
 
-  const onKeyPress = (event: React.KeyboardEvent) => {
-    const number = parseInt(event.key);
+  const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+    //TODO: Cursor is for some reason moved back to original if no timeout. Look into better way of preventing
+    setTimeout(() => {
+      input.current?.setSelectionRange(0, 0);
+    });
+
+    const number = parseInt(event.target.value[0]);
     if (!isNaN(number)) {
       onChange(number);
     }
@@ -54,16 +74,17 @@ const SingleInput = ({
 
   return (
     <StyledInput
+      type="tel"
       className={className}
       ref={input}
       isFocused={isFocused}
       onClick={onClickInput}
       tabIndex={0}
-      onKeyPress={onKeyPress}
+      onChange={onChangeInput}
       role="textbox"
-    >
-      {value}
-    </StyledInput>
+      value={value}
+      size={1}
+    />
   );
 };
 

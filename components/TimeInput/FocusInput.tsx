@@ -6,12 +6,6 @@ import { getHms, Input, getSeconds } from './timeConverters';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import { useFocusIndex } from '../FocusContext';
 
-const StyledNumberInput = styled(NumberInput)`
-  ${({ theme, isInvalid }: { theme: Theme; isInvalid: boolean }) =>
-    isInvalid ? `color: ${theme.colors.accent}` : ''};
-  transition: ${({ theme }) => theme.transition}s;
-`;
-
 export type Props = {
   value: number;
   onChange: (seconds: number) => void;
