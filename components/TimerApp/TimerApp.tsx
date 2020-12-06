@@ -11,6 +11,23 @@ const StyledTimer = styled(Timer)`
   font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big}vw;
 `;
 
+const Header = styled.h1`
+  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.medium}rem;
+  margin-bottom: ${({ theme }: { theme: Theme }) =>
+    theme.fontSizes.medium / 5}rem;
+`;
+
+const SubHeader = styled.h2`
+  font-size: ${({ theme }: { theme: Theme }) =>
+    theme.fontSizes.medium * 0.5}rem;
+  margin-bottom: ${({ theme }: { theme: Theme }) =>
+    theme.fontSizes.medium / 5}rem;
+`;
+
+const Text = styled.p`
+  margin-top: ${({ theme }: { theme: Theme }) => theme.fontSizes.medium / 5}rem;
+`;
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -51,6 +68,9 @@ const TimerApp = () => {
         setIsFocused={setIsFocused}
       />
       <SideMenu>
+        <Header>Timer</Header>
+        <Text>Simple, yet beautiful online timer to do great things.</Text>
+        <SubHeader>Settings</SubHeader>
         <Toggle isOn={playSound} setIsOn={setPlaySound} label={'Sound'} />
         <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
         <Toggle

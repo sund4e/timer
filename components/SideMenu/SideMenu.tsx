@@ -30,7 +30,7 @@ const Menu = styled.div`
 `;
 
 const StyledButton = styled(SwitchButton)`
-  margin: 10px;
+  margin: 20px;
   position: fixed;
   right: 0px;
 `;
