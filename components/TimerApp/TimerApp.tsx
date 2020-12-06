@@ -7,7 +7,7 @@ import SideMenu from '../SideMenu';
 import { Theme } from '../../styles/theme';
 
 const StyledTimer = styled(Timer)`
-  font-size: min(15vw, ${({ theme }: { theme: Theme }) =>
+  font-size: min(18vw, ${({ theme }: { theme: Theme }) =>
     theme.fontSizes.big}rem);
   max-fontSize
 `;
@@ -38,10 +38,15 @@ const Wrapper = styled.div`
   overflow: hidden;
 `;
 
-const TimerApp = () => {
+export type Props = {
+  initialTime: number;
+  isActive: boolean;
+};
+
+const TimerApp = ({ initialTime = 0, isActive = true }: Props) => {
   const [notify, setNotify] = useState<(() => void) | null>(null);
   const [restart, setRestart] = useState(true);
-  const [isFocused, setIsFocused] = useState(true);
+  const [isFocused, setIsFocused] = useState(false);
   const [playSound, setPlaySound] = useState(true);
 
   function onTimeEnd() {
@@ -63,8 +68,8 @@ const TimerApp = () => {
       <StyledTimer
         restart={restart}
         onTimeEnd={onTimeEnd}
-        isActive={true}
-        initialTime={1200}
+        isActive={isActive}
+        initialTime={initialTime}
         isFocused={isFocused}
         setIsFocused={setIsFocused}
       />
