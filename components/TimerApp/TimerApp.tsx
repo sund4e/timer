@@ -8,7 +8,9 @@ import { Theme } from '../../styles/theme';
 import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 
 const StyledTimer = styled(Timer)`
-  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.big}vw;
+  font-size: min(15vw, ${({ theme }: { theme: Theme }) =>
+    theme.fontSizes.big}rem);
+  max-fontSize
 `;
 
 const Header = styled.h1`
