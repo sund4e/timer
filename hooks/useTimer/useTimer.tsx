@@ -1,43 +1,51 @@
-import { fireEvent } from '@testing-library/dom';
 import { useState, useEffect, useRef } from 'react';
 
 const useTimer = (
-  startTime: number,
+  time: number,
   onTimeEnd: () => void,
   isRunning: boolean,
   restart: boolean
 ) => {
-  const [time, setTime] = useState(startTime);
+  const [timeLeft, setTimeLeft] = useState(time);
   const timer = useRef<number>();
 
-  const nextTick = () => {
+  const startTimer = () => {
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      if (time === 0) {
+    const startTime = Date.now();
+    timer.current = setInterval(() => {
+      const timeGone = Math.round((Date.now() - startTime) / 1000);
+      if (timeGone === time) {
         onTimeEnd();
-        if (restart) setTime(startTime);
+        clearTimeout(timer.current);
+        if (restart) startTimer();
       } else {
-        setTime(time - 1);
+        setTimeLeft(time - timeGone);
       }
-    }, 1000);
+    }, 100);
   };
 
   useEffect(() => {
-    setTime(startTime);
-  }, [startTime]);
+    setTimeLeft(time);
+    if (isRunning) {
+      startTimer();
+    }
+  }, [time]);
 
   useEffect(() => {
     if (isRunning) {
-      nextTick();
+      startTimer();
     } else {
       clearTimeout(timer.current);
     }
+  }, [isRunning]);
+
+  useEffect(() => {
     return () => {
       clearTimeout(timer.current);
     };
-  }, [time, isRunning]);
+  }, []);
 
-  return { time };
+  return { time: timeLeft };
 };
 
 export default useTimer;
