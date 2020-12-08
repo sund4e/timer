@@ -22,7 +22,7 @@ const Home = () => {
       </Head>
       <Container>
         {/* <Title>{time}</Title> */}
-        <TimerApp />
+        <TimerApp initialTime={0} isActive={true} />
       </Container>
     </div>
   );
