@@ -14,7 +14,9 @@ const useTimer = (
     const startTime = Date.now();
     timer.current = setInterval(() => {
       const timeGone = Math.round((Date.now() - startTime) / 1000);
-      setTimeLeft(time - timeGone);
+      if (time >= timeGone) {
+        setTimeLeft(time - timeGone);
+      }
     }, 100);
   };
 
