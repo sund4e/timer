@@ -14,15 +14,19 @@ const useTimer = (
     const startTime = Date.now();
     timer.current = setInterval(() => {
       const timeGone = Math.round((Date.now() - startTime) / 1000);
-      if (timeGone === time) {
-        onTimeEnd();
-        clearTimeout(timer.current);
-        if (restart) startTimer();
-      } else {
-        setTimeLeft(time - timeGone);
-      }
+      setTimeLeft(time - timeGone);
     }, 100);
   };
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      onTimeEnd();
+      clearTimeout(timer.current);
+      timer.current = setTimeout(() => {
+        if (restart) startTimer();
+      }, 1000);
+    }
+  }, [timeLeft]);
 
   useEffect(() => {
     setTimeLeft(time);
