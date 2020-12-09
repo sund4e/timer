@@ -1,10 +1,9 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
-import { fireEvent, screen } from '@testing-library/react';
-import { getTime, advanceSeconds } from '../../tests/helpers';
+import { act, fireEvent, screen } from '@testing-library/react';
+import { getTime } from '../../tests/helpers';
+import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
-
-jest.useFakeTimers();
 
 const render = (override?: Partial<Props>) => {
   const props = {
@@ -15,6 +14,9 @@ const render = (override?: Partial<Props>) => {
   return renderElement(<TimerApp {...props} />);
 };
 describe('TimerApp', () => {
+  beforeEach(() => {
+    mockTime();
+  });
   it('does runs timer if active', () => {
     render({ isActive: true });
     expect(getTime()).toEqual('00:20:00');
@@ -27,7 +29,7 @@ describe('TimerApp', () => {
     advanceSeconds(1);
     expect(getTime()).toEqual('00:20:00');
   });
-  it('clicking outside of timer start the timer', () => {
+  it('clicking outside of timer starts the timer', () => {
     const { container } = render();
     expect(getTime()).toEqual('00:20:00');
     const wrapper = container.firstChild as ChildNode;

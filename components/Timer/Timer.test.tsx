@@ -1,14 +1,8 @@
 import { fireEvent, screen, act, getNodeText } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import Timer, { Props } from './Timer';
-import {
-  changeInputValue,
-  enter,
-  getTime,
-  advanceSeconds,
-} from '../../tests/helpers';
-
-jest.useFakeTimers();
+import { changeInputValue, enter, getTime } from '../../tests/helpers';
+import { advanceSeconds, mockTime } from '../../tests/timerMock';
 
 describe('Timer', () => {
   const render = (override?: Partial<Props>) => {
@@ -28,6 +22,10 @@ describe('Timer', () => {
         rendered.rerender(<Timer {...defaultProps} {...props} />),
     };
   };
+
+  beforeEach(() => {
+    mockTime();
+  });
 
   it('renders intial time', () => {
     const initialTime = 10;
@@ -60,15 +58,13 @@ describe('Timer', () => {
 
   it('calls onTimeEnd', () => {
     const onTimeEnd = jest.fn();
-    const { rerender } = render({
+    render({
       initialTime: 3,
       isActive: true,
       onTimeEnd,
     });
     expect(getTime()).toEqual('00:00:03');
-    act(() => {
-      jest.runAllTimers();
-    });
+    advanceSeconds(3);
     expect(onTimeEnd).toHaveBeenCalledTimes(1);
   });
 

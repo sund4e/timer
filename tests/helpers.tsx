@@ -22,9 +22,3 @@ export const enter = () => {
     charCode: 13,
   });
 };
-
-export const advanceSeconds = (seconds: number) => {
-  act(() => {
-    jest.advanceTimersByTime(seconds * 1000);
-  });
-};
