@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Timer from '../Timer';
 import NotificationToggle from '../NotificationToggle';
 import Toggle from '../Toggle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SideMenu from '../SideMenu';
 import { Theme } from '../../styles/theme';
 
@@ -48,10 +48,14 @@ const TimerApp = ({ initialTime = 0, isActive = true }: Props) => {
   const [restart, setRestart] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const [playSound, setPlaySound] = useState(true);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    setAudio(new Audio('/bell.wav'));
+  }, []);
 
   function onTimeEnd() {
-    if (playSound) {
-      const audio = new Audio('/bell.wav');
+    if (playSound && audio) {
       audio.play();
     }
     if (notify) {
