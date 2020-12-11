@@ -4,20 +4,15 @@ import Container from '../components/Container';
 import useTimer from '../hooks/useTimer';
 import TimerApp from '../components/TimerApp';
 
-const Title = styled.h1`
-  font-size: 50px;
-  color: ${({ theme }) => theme.colors.primary};
-`;
-
 const Home = () => {
-  const handleEnd = () => {
-    console.log('END');
-  };
-  // const time = useTimer(10, handleEnd);
   return (
     <div>
       <Head>
-        <title>Timer</title>
+        <title>Aika Timer</title>
+        <meta name="description">
+          Simple, yet beautiful online timer. Fullscreen countdown and ability
+          to set recurring reminders. Free and no ads.
+        </meta>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>
