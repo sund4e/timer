@@ -23,7 +23,6 @@ const Home = () => {
         ></script>
       </Head>
       <Container>
-        {/* <Title>{time}</Title> */}
         <TimerApp initialTime={0} isActive={true} />
       </Container>
     </div>

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, memo } from 'react';
 import NumberInput from '../NumberInput/NumberInput';
 import { Theme } from '../../styles/theme';
 import { getHms, Input, getSeconds } from './timeConverters';
@@ -57,4 +57,4 @@ const FocusInput = ({ value, onChange, indexes, maxValue }: Props) => {
   );
 };
 
-export default FocusInput;
+export default memo(FocusInput);
