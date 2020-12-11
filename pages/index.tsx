@@ -19,6 +19,7 @@ const Home = () => {
           async
           defer
           data-website-id="f3044ce1-5436-4a7d-9477-15b05eb0e6ef"
+          data-domains="aika.app"
           src="https://umami-kappa.vercel.app/umami.js"
         ></script>
       </Head>
