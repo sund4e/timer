@@ -1,23 +1,54 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
-const StyledContainer = styled.div`
+const MainContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
   height: 100vh;
-  background-color: #a2a8b3;
-  background-image: url(${({ image }: { image: any }) => image});
-  background-size: cover;
   color: ${({ theme }) => theme.colors.primary};
 `;
 
+const BackgroundContainer = styled.div`
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  z-index: -1;
+`;
+
 const Container = ({ children }: { children: React.ReactNode }) => {
-  const [imageUrl, setImageUrl] = useState('./luirojarvi_small.jpg');
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    setImageUrl('./luirojarvi.jpg');
+    setIsLoading(false);
   }, []);
-  return <StyledContainer image={imageUrl}>{children}</StyledContainer>;
+  return (
+    <div>
+      <BackgroundContainer>
+        {isLoading && (
+          <Image
+            alt="Sokosti"
+            src="/sokosti_small.jpg"
+            layout="fill"
+            objectFit="cover"
+            quality={100}
+            priority={true}
+          />
+        )}
+        {!isLoading && (
+          <Image
+            alt="Sokosti"
+            src="/sokosti.jpg"
+            layout="fill"
+            objectFit="cover"
+            quality={100}
+          />
+        )}
+      </BackgroundContainer>
+      <MainContainer>{children}</MainContainer>
+    </div>
+  );
 };
 
 export default Container;
