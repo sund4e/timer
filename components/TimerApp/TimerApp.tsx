@@ -48,10 +48,19 @@ const TimerApp = ({ initialTime = 0, isActive = true }: Props) => {
   const [restart, setRestart] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const [playSound, setPlaySound] = useState(true);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    //preload the audio after render
+    const audio = new Audio('/bell.wav');
+    audio.addEventListener('canplaythrough', () => {
+      setAudio(audio);
+    });
+  }, []);
 
   function onTimeEnd() {
-    if (playSound) {
-      const audio = new Audio('/bell.wav');
+    if (playSound && audio) {
+      audio.currentTime = 0;
       audio.play();
     }
     if (notify) {
