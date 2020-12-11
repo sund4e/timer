@@ -19,32 +19,24 @@ const BackgroundContainer = styled.div`
 `;
 
 const Container = ({ children }: { children: React.ReactNode }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
   return (
     <div>
       <BackgroundContainer>
-        {isLoading && (
-          <Image
-            alt="Sokosti"
-            src="/sokosti_small.jpg"
-            layout="fill"
-            objectFit="cover"
-            quality={100}
-            priority={true}
-          />
-        )}
-        {!isLoading && (
-          <Image
-            alt="Sokosti"
-            src="/sokosti.jpg"
-            layout="fill"
-            objectFit="cover"
-            quality={100}
-          />
-        )}
+        <Image
+          alt="Sokosti"
+          src="/sokosti_small.jpg"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          priority={true}
+        />
+        <Image
+          alt="Sokosti"
+          src="/sokosti.jpg"
+          layout={'fill'}
+          objectFit="cover"
+          quality={100}
+        />
       </BackgroundContainer>
       <MainContainer>{children}</MainContainer>
     </div>
