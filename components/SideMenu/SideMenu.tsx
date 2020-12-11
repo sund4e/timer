@@ -23,7 +23,7 @@ const Menu = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.8;
+    opacity: 1;
     background-color: ${({ theme }) => theme.colors.light};
     z-index: -1;
   }

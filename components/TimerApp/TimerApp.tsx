@@ -83,8 +83,10 @@ const TimerApp = ({ initialTime = 0, isActive = true }: Props) => {
         setIsFocused={setIsFocused}
       />
       <SideMenu>
-        <Header>Timer</Header>
-        <Text>Simple, yet beautiful online timer to do great things.</Text>
+        <Header>Aika Timer</Header>
+        <Text>
+          Simple online timer. Use for a single alert or recurring reminders.
+        </Text>
         <SubHeader>Settings</SubHeader>
         <Toggle isOn={playSound} setIsOn={setPlaySound} label={'Sound'} />
         <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
