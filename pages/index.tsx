@@ -9,10 +9,11 @@ const Home = () => {
     <div>
       <Head>
         <title>Aika Timer</title>
-        <meta name="description">
-          Simple, yet beautiful online timer. Fullscreen countdown and ability
-          to set recurring reminders. Free and no ads.
-        </meta>
+        <meta
+          name="description"
+          content="Simple, yet beautiful online timer. Fullscreen countdown and ability
+          to set recurring reminders. Free and no ads."
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>
