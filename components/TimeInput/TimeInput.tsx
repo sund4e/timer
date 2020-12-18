@@ -55,7 +55,11 @@ const TimeInput = ({ value, onChange, className, isFocused }: Props) => {
   }, [value]);
 
   useKeyPressCallBack('Enter', () => {
-    setFocusIndex(null);
+    if (focusIndex !== null) {
+      setFocusIndex(null);
+    } else {
+      setFocusIndex(0);
+    }
   });
 
   useEffect(() => {

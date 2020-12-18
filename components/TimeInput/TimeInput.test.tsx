@@ -85,12 +85,21 @@ describe('TimeInput', () => {
     });
   });
 
-  it('calls onFocus upon clicking input', () => {
-    const onFocus = jest.fn();
-    render({ onFocus });
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    fireEvent.click(inputs[2]);
-    expect(onFocus).toHaveBeenCalled();
+  describe('onFocus', () => {
+    it('is called upon clicking input', () => {
+      const onFocus = jest.fn();
+      render({ onFocus });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      fireEvent.click(inputs[2]);
+      expect(onFocus).toHaveBeenCalled();
+    });
+
+    it('is called when unfocused and enter is hit', () => {
+      const onFocus = jest.fn();
+      render({ onFocus, isFocused: false });
+      enter();
+      expect(onFocus).toHaveBeenCalled();
+    });
   });
 
   describe('onChange', () => {
