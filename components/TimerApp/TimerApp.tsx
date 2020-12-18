@@ -91,7 +91,8 @@ const TimerApp = ({
       <SideMenu>
         <Header>Aika Timer</Header>
         <Text>
-          Simple online timer. Use for a single alert or recurring reminders.
+          "Aika" is Finnish and means time. It's also a simple, yet beautiful
+          online timer with alerts and ability to set recurring reminders.
         </Text>
         <SubHeader>Settings</SubHeader>
         <Toggle isOn={playSound} setIsOn={setPlaySound} label={'Sound'} />
