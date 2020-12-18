@@ -41,9 +41,14 @@ const Wrapper = styled.div`
 export type Props = {
   initialTime: number;
   isActive: boolean;
+  setTitleTime: (seconds: number) => void;
 };
 
-const TimerApp = ({ initialTime = 0, isActive = true }: Props) => {
+const TimerApp = ({
+  initialTime = 0,
+  isActive = true,
+  setTitleTime,
+}: Props) => {
   const [notify, setNotify] = useState<(() => void) | null>(null);
   const [restart, setRestart] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
@@ -81,6 +86,7 @@ const TimerApp = ({ initialTime = 0, isActive = true }: Props) => {
         initialTime={initialTime}
         isFocused={isFocused}
         setIsFocused={setIsFocused}
+        setTitleTime={setTitleTime}
       />
       <SideMenu>
         <Header>Aika Timer</Header>

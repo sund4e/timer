@@ -10,6 +10,7 @@ export type Props = {
   setIsFocused: (isFocused: boolean) => void;
   restart: boolean;
   className?: string;
+  setTitleTime: (seconds: number) => void;
 };
 
 const Timer = ({
@@ -20,6 +21,7 @@ const Timer = ({
   isFocused,
   setIsFocused,
   className,
+  setTitleTime,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
   const { time } = useTimer(
@@ -28,6 +30,12 @@ const Timer = ({
     !isFocused && isActive,
     restart
   );
+
+  useEffect(() => {
+    if (isActive) {
+      setTitleTime(time);
+    }
+  }, [time, isActive]);
 
   function hanldeEnd() {
     onTimeEnd();

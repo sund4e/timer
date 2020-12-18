@@ -9,6 +9,7 @@ const render = (override?: Partial<Props>) => {
   const props = {
     initialTime: 20 * 60,
     isActive: true,
+    setTitleTime: () => {},
     ...override,
   };
   return renderElement(<TimerApp {...props} />);
@@ -36,6 +37,15 @@ describe('TimerApp', () => {
     fireEvent.click(wrapper);
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
+  });
+
+  it('calls setTitleTime with time', () => {
+    const setTitleTime = jest.fn();
+    const initialTime = 10;
+    render({ isActive: true, setTitleTime, initialTime });
+    expect(setTitleTime).toHaveBeenCalledWith(initialTime);
+    advanceSeconds(1);
+    expect(setTitleTime).toHaveBeenCalledWith(initialTime - 1);
   });
   // Test that enter does not open side menu
   // Test that enter selects timeinput

@@ -13,6 +13,7 @@ describe('Timer', () => {
       restart: false,
       isFocused: false,
       setIsFocused: () => {},
+      setTitleTime: () => {},
       ...override,
     };
     const rendered = renderElement(<Timer {...defaultProps} />);

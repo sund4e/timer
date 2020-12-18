@@ -1,2 +1,2 @@
 export { default } from './TimeInput';
-export { Input } from './timeConverters';
+export { Input, getHms } from './timeConverters';
