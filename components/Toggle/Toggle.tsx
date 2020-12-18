@@ -94,7 +94,12 @@ const Toggle = ({ isOn, setIsOn, label }: Props) => {
   return (
     <Wrapper>
       <ToggleButton>
-        <Input type="checkbox" checked={isOn} onChange={onChange} />
+        <Input
+          type="checkbox"
+          data-testid="toggle"
+          checked={isOn}
+          onChange={onChange}
+        />
         <Span />
       </ToggleButton>
       <Text isOn={isOn}>{label}</Text>

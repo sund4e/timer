@@ -55,7 +55,7 @@ describe('NotificationToggle', () => {
 
     it('does not trigger notification if notifications turned off', () => {
       render();
-      const toggle = screen.getByRole('checkbox');
+      const toggle = screen.getByTestId('toggle');
       fireEvent.click(toggle);
       notify();
       expect(notification).not.toHaveBeenCalled();
@@ -63,7 +63,7 @@ describe('NotificationToggle', () => {
 
     it('triggers notification if notifications turned on', () => {
       render();
-      const toggle = screen.getByRole('checkbox');
+      const toggle = screen.getByTestId('toggle');
       fireEvent.click(toggle);
       fireEvent.click(toggle);
       notify();
@@ -82,7 +82,7 @@ describe('NotificationToggle', () => {
         .fn()
         .mockImplementation(() => Promise.resolve());
       render();
-      const toggle = screen.getByRole('checkbox');
+      const toggle = screen.getByTestId('toggle');
       fireEvent.click(toggle);
       expect(NotificationMock.requestPermission).toHaveBeenCalled();
     });
@@ -92,7 +92,7 @@ describe('NotificationToggle', () => {
         .fn()
         .mockImplementation(() => Promise.resolve('granted'));
       render();
-      const toggle = screen.getByRole('checkbox');
+      const toggle = screen.getByTestId('toggle');
       await act(async () => {
         fireEvent.click(toggle);
       });
