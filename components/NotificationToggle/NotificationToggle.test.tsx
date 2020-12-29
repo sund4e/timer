@@ -53,6 +53,12 @@ describe('NotificationToggle', () => {
       expect(notification).toHaveBeenCalled();
     });
 
+    it('renders toggle on', () => {
+      render();
+      const toggle = screen.getByTestId('toggle') as HTMLInputElement;
+      expect(toggle.checked).toBeTruthy();
+    });
+
     it('does not trigger notification if notifications turned off', () => {
       render();
       const toggle = screen.getByTestId('toggle');
@@ -77,6 +83,12 @@ describe('NotificationToggle', () => {
       expect(NotificationMock.requestPermission).not.toHaveBeenCalled();
     });
 
+    it('renders toggle off', () => {
+      render();
+      const toggle = screen.getByTestId('toggle') as HTMLInputElement;
+      expect(toggle.checked).toBeFalsy();
+    });
+
     it('asks for permission when notifications are turned on', () => {
       NotificationMock.requestPermission = jest
         .fn()
@@ -87,28 +99,48 @@ describe('NotificationToggle', () => {
       expect(NotificationMock.requestPermission).toHaveBeenCalled();
     });
 
-    it('allows notifications if permissions are granted', async () => {
-      NotificationMock.requestPermission = jest
-        .fn()
-        .mockImplementation(() => Promise.resolve('granted'));
-      render();
-      const toggle = screen.getByTestId('toggle');
-      await act(async () => {
-        fireEvent.click(toggle);
+    describe('when permissions are granted', () => {
+      beforeAll(async () => {
+        NotificationMock.requestPermission = jest
+          .fn()
+          .mockImplementation(() => Promise.resolve('granted'));
+        render();
+        const toggle = screen.getByTestId('toggle');
+        await act(async () => {
+          fireEvent.click(toggle);
+        });
       });
-      notify();
-      expect(notification).toHaveBeenCalled();
+
+      it('switches toggle on', async () => {
+        const toggle = screen.getByTestId('toggle') as HTMLInputElement;
+        expect(toggle.checked).toBeTruthy();
+      });
+      it('allows notifications', async () => {
+        notify();
+        expect(notification).toHaveBeenCalled();
+      });
     });
 
-    it('does not allow notifications if permissions are not granted', async () => {
-      NotificationMock.requestPermission = jest
-        .fn()
-        .mockImplementation(() => Promise.resolve('denied'));
-      await act(async () => {
+    describe('when permissions are not granted', () => {
+      beforeAll(async () => {
+        NotificationMock.requestPermission = jest
+          .fn()
+          .mockImplementation(() => Promise.resolve('denied'));
         render();
+        const toggle = screen.getByTestId('toggle');
+        await act(async () => {
+          fireEvent.click(toggle);
+        });
       });
-      notify();
-      expect(notification).not.toHaveBeenCalled();
+
+      it('does not swtich toggle on', async () => {
+        const toggle = screen.getByTestId('toggle') as HTMLInputElement;
+        expect(toggle.checked).toBeFalsy();
+      });
+      it('does not allow notifications', async () => {
+        notify();
+        expect(notification).not.toHaveBeenCalled();
+      });
     });
   });
 });

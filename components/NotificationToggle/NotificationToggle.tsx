@@ -11,33 +11,42 @@ const NotificationToggle = ({ setNotify }: Props) => {
   const [isBrowserSupported, setIsBrowserSupported] = useState(false);
 
   useEffect(() => {
-    if (showNotification && isBrowserSupported) {
-      if (Notification.permission !== 'granted') {
-        setIsDenied(true);
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            setIsDenied(false);
-          }
-        });
-      }
-    }
-  }, [showNotification, isBrowserSupported]);
-
-  useEffect(() => {
     if ('Notification' in window) {
       setIsBrowserSupported(true);
 
       if (Notification.permission === 'granted') {
         setShowNotification(true);
+      } else if (Notification.permission === 'denied') {
+        setIsDenied(true);
       }
     }
   }, []);
 
+  const changeShowNotification = (showNotification: boolean) => {
+    if (showNotification && isBrowserSupported) {
+      if (Notification.permission === 'granted') {
+        setShowNotification(true);
+      } else {
+        setShowNotification(false);
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            setShowNotification(true);
+            setIsDenied(false);
+          } else if (permission === 'denied') {
+            setIsDenied(true);
+          }
+        });
+      }
+    } else {
+      setShowNotification(false);
+    }
+  };
+
   const notify = useCallback(() => {
-    if (showNotification && !isDenied && isBrowserSupported) {
+    if (showNotification && isBrowserSupported) {
       new Notification(`Time's up!`);
     }
-  }, [showNotification, isDenied, isBrowserSupported]);
+  }, [showNotification, isBrowserSupported]);
 
   useEffect(() => {
     setNotify(notify);
@@ -47,7 +56,7 @@ const NotificationToggle = ({ setNotify }: Props) => {
     <Toggle
       label={'Notifications'}
       isOn={showNotification}
-      setIsOn={setShowNotification}
+      setIsOn={(isOn: boolean) => changeShowNotification(isOn)}
     />
   ) : (
     <></>
