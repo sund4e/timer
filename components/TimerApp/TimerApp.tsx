@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Timer from '../Timer';
 import NotificationToggle from '../NotificationToggle';
 import Toggle from '../Toggle';
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect } from 'react';
 import SideMenu from '../SideMenu';
 import { Theme } from '../../styles/theme';
 
@@ -44,67 +44,65 @@ export type Props = {
   setTitleTime: (seconds: number) => void;
 };
 
-const TimerApp = ({
-  initialTime = 0,
-  isActive = true,
-  setTitleTime,
-}: Props) => {
-  const [notify, setNotify] = useState<(() => void) | null>(null);
-  const [restart, setRestart] = useState(true);
-  const [isFocused, setIsFocused] = useState(false);
-  const [playSound, setPlaySound] = useState(true);
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+const TimerApp = memo(
+  ({ initialTime = 0, isActive = true, setTitleTime }: Props) => {
+    const [notify, setNotify] = useState<(() => void) | null>(null);
+    const [restart, setRestart] = useState(true);
+    const [isFocused, setIsFocused] = useState(false);
+    const [playSound, setPlaySound] = useState(true);
+    const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
-  useEffect(() => {
-    //preload the audio after render
-    const audio = new Audio('/bell.wav');
-    audio.addEventListener('canplaythrough', () => {
-      setAudio(audio);
-    });
-  }, []);
+    useEffect(() => {
+      //preload the audio after render
+      const audio = new Audio('/bell.wav');
+      audio.addEventListener('canplaythrough', () => {
+        setAudio(audio);
+      });
+    }, []);
 
-  function onTimeEnd() {
-    if (playSound && audio) {
-      audio.currentTime = 0;
-      audio.play();
+    function onTimeEnd() {
+      if (playSound && audio) {
+        audio.currentTime = 0;
+        audio.play();
+      }
+      if (notify) {
+        notify();
+      }
     }
-    if (notify) {
-      notify();
-    }
-  }
 
-  const onClickWrapper = () => {
-    setIsFocused(false);
-  };
+    const onClickWrapper = () => {
+      setIsFocused(false);
+    };
 
-  return (
-    <Wrapper onClick={onClickWrapper}>
-      <StyledTimer
-        restart={restart}
-        onTimeEnd={onTimeEnd}
-        isActive={isActive}
-        initialTime={initialTime}
-        isFocused={isFocused}
-        setIsFocused={setIsFocused}
-        setTitleTime={setTitleTime}
-      />
-      <SideMenu>
-        <Header>Aika Timer</Header>
-        <Text>
-          "Aika" is Finnish and means time. It's also a simple, yet beautiful
-          online timer with alerts and ability to set recurring reminders.
-        </Text>
-        <SubHeader>Settings</SubHeader>
-        <Toggle isOn={playSound} setIsOn={setPlaySound} label={'Sound'} />
-        <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
-        <Toggle
-          isOn={restart}
-          setIsOn={setRestart}
-          label={'Restart timer when done'}
+    return (
+      <Wrapper onClick={onClickWrapper}>
+        <StyledTimer
+          restart={restart}
+          onTimeEnd={onTimeEnd}
+          isActive={isActive}
+          initialTime={initialTime}
+          isFocused={isFocused}
+          setIsFocused={setIsFocused}
+          setTitleTime={setTitleTime}
         />
-      </SideMenu>
-    </Wrapper>
-  );
-};
+        <SideMenu>
+          <Header>Aika Timer</Header>
+          <Text>
+            "Aika" is Finnish and means time. It's also a simple, yet beautiful
+            online timer with alerts and ability to set recurring reminders.
+          </Text>
+          <SubHeader>Settings</SubHeader>
+          <Toggle isOn={playSound} setIsOn={setPlaySound} label={'Sound'} />
+          <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
+          <Toggle
+            isOn={restart}
+            setIsOn={setRestart}
+            label={'Restart timer when done'}
+          />
+        </SideMenu>
+      </Wrapper>
+    );
+  }
+);
 
 export default TimerApp;
