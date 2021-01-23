@@ -1,0 +1,8 @@
+{
+  "routes": [
+    {
+      "src": "/bell.wav",
+      "headers": { "cache-control": "max-age=604800" }
+    }
+  ]
+}
