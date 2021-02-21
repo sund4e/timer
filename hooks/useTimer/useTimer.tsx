@@ -16,6 +16,8 @@ const useTimer = (
       const timeGone = Math.round((Date.now() - startTime) / 1000);
       if (time >= timeGone) {
         setTimeLeft(time - timeGone);
+      } else {
+        setTimeLeft(0);
       }
     }, 100);
   };

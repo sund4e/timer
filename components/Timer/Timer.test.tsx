@@ -70,6 +70,18 @@ describe('Timer', () => {
       expect(onTimeEnd).toHaveBeenCalledTimes(1);
     });
 
+    it('is called even if timer is over time', () => {
+      const onTimeEnd = jest.fn();
+      render({
+        initialTime: 3,
+        isActive: true,
+        onTimeEnd,
+      });
+      expect(getTime()).toEqual('00:00:03');
+      advanceSeconds(9);
+      expect(onTimeEnd).toHaveBeenCalledTimes(1);
+    });
+
     it('is not called if initial time is 0', () => {
       const onTimeEnd = jest.fn();
       render({
