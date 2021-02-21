@@ -21,7 +21,7 @@ const useTimer = (
   };
 
   useEffect(() => {
-    if (timeLeft === 0) {
+    if (timeLeft === 0 && time !== 0) {
       onTimeEnd();
       clearTimeout(timer.current);
       timer.current = setTimeout(() => {

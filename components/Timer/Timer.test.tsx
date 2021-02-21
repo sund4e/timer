@@ -57,16 +57,28 @@ describe('Timer', () => {
     expect(getTime()).toEqual('00:00:10');
   });
 
-  it('calls onTimeEnd', () => {
-    const onTimeEnd = jest.fn();
-    render({
-      initialTime: 3,
-      isActive: true,
-      onTimeEnd,
+  describe('onTimeEnd', () => {
+    it('is called when timer runs to end', () => {
+      const onTimeEnd = jest.fn();
+      render({
+        initialTime: 3,
+        isActive: true,
+        onTimeEnd,
+      });
+      expect(getTime()).toEqual('00:00:03');
+      advanceSeconds(3);
+      expect(onTimeEnd).toHaveBeenCalledTimes(1);
     });
-    expect(getTime()).toEqual('00:00:03');
-    advanceSeconds(3);
-    expect(onTimeEnd).toHaveBeenCalledTimes(1);
+
+    it('is not called if initial time is 0', () => {
+      const onTimeEnd = jest.fn();
+      render({
+        initialTime: 0,
+        isActive: true,
+        onTimeEnd,
+      });
+      expect(onTimeEnd).not.toHaveBeenCalled();
+    });
   });
 
   describe('restart', () => {
