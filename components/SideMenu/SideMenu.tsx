@@ -16,15 +16,19 @@ const Menu = styled.div`
   padding-top: ${({ theme }) => theme.fontSizes.medium * 2}rem;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(10px);
+  color: ${({ theme }) => theme.colors.primary};
   &:before {
+    opacity: 0.2;
+    background-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0px 0px 100px ${({ theme }) => theme.colors.light} inset;
+    border-left: 0.5px solid rgba(255, 255, 255, 0.7);
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 1;
-    background-color: ${({ theme }) => theme.colors.light};
     z-index: -1;
   }
 `;
