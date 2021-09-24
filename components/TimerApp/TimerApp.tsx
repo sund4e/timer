@@ -102,7 +102,7 @@ const TimerApp = memo(
                 Notifications{' '}
                 {isDenied && (
                   <Tooltip>
-                    Can't enable notifications since they are disabled in
+                    Can't enable notifications since they are disabled in the
                     browser settings
                   </Tooltip>
                 )}
