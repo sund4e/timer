@@ -5,6 +5,7 @@ import Toggle from '../Toggle';
 import { memo, useState, useEffect } from 'react';
 import SideMenu from '../SideMenu';
 import { Theme } from '../../styles/theme';
+import Tooltip from '../Tooltip';
 
 const StyledTimer = styled(Timer)`
   font-size: min(18vw, ${({ theme }: { theme: Theme }) =>
@@ -92,13 +93,14 @@ const TimerApp = memo(
             online timer with alerts and ability to set recurring reminders.
           </Text>
           <SubHeader>Settings</SubHeader>
-          <Toggle isOn={playSound} setIsOn={setPlaySound} label={'Sound'} />
-          <NotificationToggle setNotify={(notify) => setNotify(() => notify)} />
-          <Toggle
-            isOn={restart}
-            setIsOn={setRestart}
-            label={'Restart timer when done'}
-          />
+          <Toggle isOn={playSound} setIsOn={setPlaySound}>
+            Sound
+          </Toggle>
+          <NotificationToggle setNotify={(notify) => setNotify(() => notify)}>
+          </NotificationToggle>
+          <Toggle isOn={restart} setIsOn={setRestart}>
+            Restart timer when done
+          </Toggle>
         </SideMenu>
       </Wrapper>
     );

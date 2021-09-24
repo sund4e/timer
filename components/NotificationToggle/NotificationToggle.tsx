@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import Toggle from '../Toggle';
+import Tooltip from '../Tooltip';
 
 export type Props = {
   setNotify: (notify: () => void) => void;
+  children: (isDenied: boolean) => React.ReactNode;
 };
 
-const NotificationToggle = ({ setNotify }: Props) => {
+const NotificationToggle = ({ setNotify, children }: Props) => {
   const [showNotification, setShowNotification] = useState(false);
   const [isDenied, setIsDenied] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(false);
@@ -54,10 +56,11 @@ const NotificationToggle = ({ setNotify }: Props) => {
 
   return isBrowserSupported ? (
     <Toggle
-      label={'Notifications'}
       isOn={showNotification}
       setIsOn={(isOn: boolean) => changeShowNotification(isOn)}
-    />
+    >
+      {children(isDenied)}
+    </Toggle>
   ) : (
     <></>
   );

@@ -84,10 +84,10 @@ const Text = styled.div`
 export type Props = {
   isOn: boolean;
   setIsOn: (isOn: boolean) => void;
-  label: string;
+  children: React.ReactNode;
 };
 
-const Toggle = ({ isOn, setIsOn, label }: Props) => {
+const Toggle = ({ isOn, setIsOn, children }: Props) => {
   const onChange = () => {
     setIsOn(!isOn);
   };
@@ -102,7 +102,7 @@ const Toggle = ({ isOn, setIsOn, label }: Props) => {
         />
         <Span />
       </ToggleButton>
-      <Text isOn={isOn}>{label}</Text>
+      <Text isOn={isOn}>{children}</Text>
     </Wrapper>
   );
 };
