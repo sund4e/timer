@@ -97,6 +97,17 @@ const TimerApp = memo(
             Sound
           </Toggle>
           <NotificationToggle setNotify={(notify) => setNotify(() => notify)}>
+            {(isDenied) => (
+              <>
+                Notifications{' '}
+                {isDenied && (
+                  <Tooltip>
+                    Can't enable notifications since they are disabled in
+                    browser settings
+                  </Tooltip>
+                )}
+              </>
+            )}
           </NotificationToggle>
           <Toggle isOn={restart} setIsOn={setRestart}>
             Restart timer when done
