@@ -9,6 +9,7 @@ export type Theme = {
   fontSizes: {
     big: number;
     medium: number;
+    small: number;
   };
   transition: number;
 };
@@ -23,6 +24,7 @@ export const theme: Theme = {
   fontSizes: {
     big: 10,
     medium: 2,
+    small: 0.75,
   },
   transition: 0.4,
 };
