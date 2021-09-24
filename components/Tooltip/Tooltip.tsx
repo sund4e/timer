@@ -41,8 +41,6 @@ const Tooltip = ({ children }: Props) => {
     };
   }, []);
 
-  console.log(parentPosition);
-
   return (
     <>
       <TooltipIcon
