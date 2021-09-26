@@ -42,6 +42,7 @@ const Container = ({ children }: { children: React.ReactNode }) => {
               src={'/sokosti.jpg'}
               blurDataUrl={'/sokosti_small.jpg'}
               placeholder={'blur'}
+              // @ts-ignore
               layout={'fill'}
               objectFit="cover"
               loading={'eager'}
