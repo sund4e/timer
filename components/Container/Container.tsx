@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import Image from 'next/image';
+// import sokosti from '../../public/sokosti.jpg';
 
 const MainContainer = styled.div`
   display: flex;
@@ -18,28 +19,41 @@ const BackgroundContainer = styled.div`
   z-index: -1;
 `;
 
+//background-image: url(${({ image }: { image: string }) => image});
+
 const Container = ({ children }: { children: React.ReactNode }) => {
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   fetch('/sokosti.jpg')
+  //     .then((res) => res.blob())
+  //     .then((imageBlob) => {
+  //       setBackgroundImage(URL.createObjectURL(imageBlob));
+  //     });
+  // }, []);
+
   return (
-    <div>
-      <BackgroundContainer>
-        <Image
-          alt="Sokosti"
-          src="/sokosti_small.jpg"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-          priority={true}
-        />
-        <Image
-          alt="Sokosti"
-          src="/sokosti.jpg"
-          layout={'fill'}
-          objectFit="cover"
-          quality={100}
-        />
-      </BackgroundContainer>
-      <MainContainer>{children}</MainContainer>
-    </div>
+    <>
+      {true ? (
+        <div>
+          <BackgroundContainer>
+            <Image
+              alt="Sokosti"
+              src={'/sokosti.jpg'}
+              blurDataUrl={'/sokosti_small.jpg'}
+              placeholder={'blur'}
+              layout={'fill'}
+              objectFit="cover"
+              loading={'eager'}
+              quality={100}
+            />
+          </BackgroundContainer>
+          <MainContainer>{children}</MainContainer>
+        </div>
+      ) : (
+        'loading...'
+      )}
+    </>
   );
 };
 
