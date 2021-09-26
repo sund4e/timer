@@ -22,39 +22,23 @@ const BackgroundContainer = styled.div`
 //background-image: url(${({ image }: { image: string }) => image});
 
 const Container = ({ children }: { children: React.ReactNode }) => {
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   fetch('/sokosti.jpg')
-  //     .then((res) => res.blob())
-  //     .then((imageBlob) => {
-  //       setBackgroundImage(URL.createObjectURL(imageBlob));
-  //     });
-  // }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <>
-      {true ? (
-        <div>
-          <BackgroundContainer>
-            <Image
-              alt="Sokosti"
-              src={'/sokosti.jpg'}
-              blurDataUrl={'/sokosti_small.jpg'}
-              placeholder={'blur'}
-              // @ts-ignore
-              layout={'fill'}
-              objectFit="cover"
-              loading={'eager'}
-              quality={100}
-            />
-          </BackgroundContainer>
-          <MainContainer>{children}</MainContainer>
-        </div>
-      ) : (
-        'loading...'
-      )}
-    </>
+    <div>
+      <BackgroundContainer>
+        <Image
+          alt="Sokosti"
+          src={'/sokosti.jpg'}
+          onLoad={() => setIsLoading(true)}
+          layout={'fill'}
+          objectFit="cover"
+          loading={'eager'}
+          quality={100}
+        />
+      </BackgroundContainer>
+      {isLoading ? <MainContainer>{children}</MainContainer> : 'loading...'}
+    </div>
   );
 };
 
