@@ -21,7 +21,7 @@ const Home = () => {
   return (
     <div>
       <Head>
-        <title>{toTimeString(time)} - Aika Timer</title>
+        <title>{`${toTimeString(time)} - Aika Timer`}</title>
         <meta
           name="description"
           content="Simple, yet beautiful online timer. Fullscreen countdown and ability
