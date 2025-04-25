@@ -32,6 +32,7 @@ const Wrapper = styled.div<{
 
 const Span = styled.div<{
   theme: Theme;
+  $isOn: boolean;
 }>`
   position: relative;
   cursor: pointer;
@@ -44,8 +45,8 @@ const Span = styled.div<{
   background-color: ${({ theme }) => theme.colors.highlight};
   transition: ${({ theme }) => theme.transition}s;
   border-radius: 34px;
-  opacity: 0.5;
-  :before {
+  opacity: ${({ $isOn }) => ($isOn ? 1 : 0.5)};
+  &:before {
     border-radius: 50%;
     position: absolute;
     content: '';
@@ -55,6 +56,15 @@ const Span = styled.div<{
     bottom: ${({ theme }) => getToggleButtonMargin(theme)}rem;
     background-color: ${({ theme }) => theme.colors.light};
     transition: ${({ theme }) => theme.transition}s;
+    -webkit-transform: translateX(
+      ${({ theme, $isOn }) => ($isOn ? getToggleButtonTranslate(theme) : 0)}rem
+    );
+    -ms-transform: translateX(
+      ${({ theme, $isOn }) => ($isOn ? getToggleButtonTranslate(theme) : 0)}rem
+    );
+    transform: translateX(
+      ${({ theme, $isOn }) => ($isOn ? getToggleButtonTranslate(theme) : 0)}rem
+    );
   }
 `;
 
@@ -62,18 +72,6 @@ const Input = styled.input<{
   theme: Theme;
 }>`
   display: none;
-  :checked + ${Span} {
-    opacity: 1;
-  }
-  :checked + ${Span}:before {
-    -webkit-transform: translateX(
-      ${({ theme }) => getToggleButtonTranslate(theme)}rem
-    );
-    -ms-transform: translateX(
-      ${({ theme }) => getToggleButtonTranslate(theme)}rem
-    );
-    transform: translateX(${({ theme }) => getToggleButtonTranslate(theme)}rem);
-  }
   :focus + ${Span} {
     box-shadow: 0 0 1px ${({ theme }) => theme.colors.highlight};
   }
@@ -109,7 +107,7 @@ const Toggle = ({ isOn, setIsOn, children }: Props) => {
           checked={isOn}
           onChange={onChange}
         />
-        <Span />
+        <Span $isOn={isOn} />
       </ToggleButton>
       <Text $isOn={isOn}>{children}</Text>
     </Wrapper>
