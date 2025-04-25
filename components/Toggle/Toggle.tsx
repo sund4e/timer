@@ -22,13 +22,17 @@ const ToggleButton = styled.label`
   display: inline-block;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{
+  theme: Theme;
+}>`
   height: ${({ theme }) => getToggleHeight(theme)}rem;
   padding: ${({ theme }) => getPadding(theme)}rem;
   display: flex;
 `;
 
-const Span = styled.div`
+const Span = styled.div<{
+  theme: Theme;
+}>`
   position: relative;
   cursor: pointer;
   width: ${({ theme }) => getToggleWidth(theme)}rem;
@@ -54,7 +58,9 @@ const Span = styled.div`
   }
 `;
 
-const Input = styled.input`
+const Input = styled.input<{
+  theme: Theme;
+}>`
   display: none;
   :checked + ${Span} {
     opacity: 1;
@@ -73,11 +79,14 @@ const Input = styled.input`
   }
 `;
 
-const Text = styled.div`
+const Text = styled.div<{
+  isOn: boolean;
+  theme: Theme;
+}>`
   padding-left: ${({ theme }) => getPadding(theme)}rem;
   line-height: ${({ theme }) => getToggleHeight(theme)}rem;
   vertical-align: middle;
-  opacity: ${({ isOn }: { isOn: boolean }) => (isOn ? 1 : 0.5)};
+  opacity: ${({ isOn }) => (isOn ? 1 : 0.5)};
   transition: ${({ theme }) => theme.transition}s;
 `;
 
