@@ -80,13 +80,13 @@ const Input = styled.input<{
 `;
 
 const Text = styled.div<{
-  isOn: boolean;
+  $isOn: boolean;
   theme: Theme;
 }>`
   padding-left: ${({ theme }) => getPadding(theme)}rem;
   line-height: ${({ theme }) => getToggleHeight(theme)}rem;
   vertical-align: middle;
-  opacity: ${({ isOn }) => (isOn ? 1 : 0.5)};
+  opacity: ${({ $isOn }) => ($isOn ? 1 : 0.5)};
   transition: ${({ theme }) => theme.transition}s;
 `;
 
@@ -111,7 +111,7 @@ const Toggle = ({ isOn, setIsOn, children }: Props) => {
         />
         <Span />
       </ToggleButton>
-      <Text isOn={isOn}>{children}</Text>
+      <Text $isOn={isOn}>{children}</Text>
     </Wrapper>
   );
 };

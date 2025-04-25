@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 import { useState, MouseEvent as ReactMouseEvent } from 'react';
 import SwitchButton from '../SwitchButton';
+import { Theme } from '../../styles/theme';
 
-const Menu = styled.div`
+const Menu = styled.div<{
+  $isOpen: boolean;
+  theme: Theme;
+}>`
   position: fixed;
   right: 0;
   top: 0;
@@ -10,7 +14,7 @@ const Menu = styled.div`
   width: 300px;
   transition: transform 0.4s ease-in-out;
   transform: translateX(
-    ${({ isOpen }: { isOpen: boolean }) => (isOpen ? 0 : 100)}%
+    ${({ $isOpen }: { $isOpen: boolean }) => ($isOpen ? 0 : 100)}%
   );
   padding: ${({ theme }) => theme.fontSizes.medium}rem;
   padding-top: ${({ theme }) => theme.fontSizes.medium * 2}rem;
@@ -60,7 +64,7 @@ const SideMenu = ({ children, className }: Props) => {
 
   return (
     <>
-      <Menu isOpen={isOpen} className={className} onClick={onClickMenu}>
+      <Menu $isOpen={isOpen} className={className} onClick={onClickMenu}>
         {children}
       </Menu>
       <StyledButton isOpen={isOpen} onClick={onClickButton} />

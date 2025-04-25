@@ -1,19 +1,21 @@
 import styled from 'styled-components';
 import { useState, useEffect, useRef, useContext } from 'react';
-import NumberInput from '../NumberInput/NumberInput';
 import { Theme } from '../../styles/theme';
 import { getHms, Input, getSeconds } from './timeConverters';
 import FocusInput from './FocusInput';
 import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{
+  theme: Theme;
+  $isFocused: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: ${({ theme, isFocused }: { theme: Theme; isFocused: boolean }) =>
-    isFocused ? theme.colors.highlight : ''};
+  color: ${({ theme, $isFocused }: { theme: Theme; $isFocused: boolean }) =>
+    $isFocused ? theme.colors.highlight : ''};
   transition: ${({ theme }) => theme.transition}s;
 `;
 
@@ -77,7 +79,7 @@ const TimeInput = ({ value, onChange, className, isFocused }: Props) => {
   };
 
   return (
-    <Wrapper isFocused={isFocused} data-testid="time" className={className}>
+    <Wrapper $isFocused={isFocused} data-testid="time" className={className}>
       <FocusInput
         {...Inputs[Input.hours]}
         value={time[Input.hours]}

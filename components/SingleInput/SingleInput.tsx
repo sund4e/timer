@@ -7,8 +7,11 @@ import {
 } from 'react';
 import { Theme } from '../../styles/theme';
 
-const StyledInput = styled.input`
-  opacity: ${({ isFocused }: { isFocused: boolean }) => (isFocused ? 0.5 : 1)};
+const StyledInput = styled.input<{
+  theme: Theme;
+  $isFocused: boolean;
+}>`
+  opacity: ${({ $isFocused }: { $isFocused: boolean }) => ($isFocused ? 0.5 : 1)};
   border-style: none;
   caret-color: transparents;
   background-color: transparent;
@@ -77,7 +80,7 @@ const SingleInput = ({
       type="tel"
       className={className}
       ref={input}
-      isFocused={isFocused}
+      $isFocused={isFocused}
       onClick={onClickInput}
       tabIndex={0}
       onChange={onChangeInput}
