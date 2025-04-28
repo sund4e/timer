@@ -8,26 +8,22 @@ import { Theme } from '../../styles/theme';
 import Tooltip from '../Tooltip';
 
 const StyledTimer = styled(Timer)`
-  font-size: min(18vw, ${({ theme }: { theme: Theme }) =>
-    theme.fontSizes.big}rem);
+  font-size: min(18vw, ${({ theme }) => theme.fontSizes.big}rem);
   max-fontSize
 `;
 
 const Header = styled.h1`
-  font-size: ${({ theme }: { theme: Theme }) => theme.fontSizes.medium}rem;
-  margin-bottom: ${({ theme }: { theme: Theme }) =>
-    theme.fontSizes.medium / 5}rem;
+  font-size: ${({ theme }) => theme.fontSizes.medium}rem;
+  margin-bottom: ${({ theme }) => theme.fontSizes.medium / 5}rem;
 `;
 
 const SubHeader = styled.h2`
-  font-size: ${({ theme }: { theme: Theme }) =>
-    theme.fontSizes.medium * 0.5}rem;
-  margin-bottom: ${({ theme }: { theme: Theme }) =>
-    theme.fontSizes.medium / 5}rem;
+  font-size: ${({ theme }) => theme.fontSizes.medium * 0.5}rem;
+  margin-bottom: ${({ theme }) => theme.fontSizes.medium / 5}rem;
 `;
 
 const Text = styled.p`
-  margin-top: ${({ theme }: { theme: Theme }) => theme.fontSizes.medium / 5}rem;
+  margin-top: ${({ theme }) => theme.fontSizes.medium / 5}rem;
 `;
 
 const Wrapper = styled.div`

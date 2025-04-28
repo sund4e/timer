@@ -7,14 +7,13 @@ import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 const Wrapper = styled.div<{
-  theme: Theme;
   $isFocused: boolean;
 }>`
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: ${({ theme, $isFocused }: { theme: Theme; $isFocused: boolean }) =>
+  color: ${({ theme, $isFocused }) =>
     $isFocused ? theme.colors.highlight : ''};
   transition: ${({ theme }) => theme.transition}s;
 `;
