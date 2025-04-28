@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import SingleInput from '../SingleInput/SingleInput';
-import { Theme } from '../../styles/theme';
 
 const ValidatedSingleInput = styled(SingleInput)<{
   $isInvalid: boolean;

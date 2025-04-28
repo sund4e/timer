@@ -11,7 +11,7 @@ const StyledInput = styled.input<{
   theme: Theme;
   $isFocused: boolean;
 }>`
-  opacity: ${({ $isFocused }: { $isFocused: boolean }) => ($isFocused ? 0.5 : 1)};
+  opacity: ${({ $isFocused }) => ($isFocused ? 0.5 : 1)};
   border-style: none;
   caret-color: transparents;
   background-color: transparent;
@@ -22,7 +22,7 @@ const StyledInput = styled.input<{
   width: 0.6em;
   font-size: inherit;
   color: inherit;
-  transition: ${({ theme }: { theme: Theme }) => theme.transition}s;
+  transition: ${({ theme }) => theme.transition}s;
   caret-color: transparent;
 `;
 
