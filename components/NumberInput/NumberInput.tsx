@@ -2,9 +2,11 @@ import styled from 'styled-components';
 import SingleInput from '../SingleInput/SingleInput';
 import { Theme } from '../../styles/theme';
 
-const ValidatedSingleInput = styled(SingleInput)`
-  ${({ theme, isInvalid }: { theme: Theme; isInvalid: boolean }) =>
-    isInvalid ? `color: ${theme.colors.accent}` : ''};
+const ValidatedSingleInput = styled(SingleInput)<{
+  $isInvalid: boolean;
+}>`
+  ${({ theme, $isInvalid }) =>
+    $isInvalid ? `color: ${theme.colors.accent}` : ''};
   transition: ${({ theme }) => theme.transition}s;
 `;
 
@@ -63,7 +65,7 @@ const NumberInput = ({
       {inputValue.map((num: number, index: number) => {
         return (
           <ValidatedSingleInput
-            isInvalid={invalidFocus && focusIndex === index}
+            $isInvalid={invalidFocus && focusIndex === index}
             className={className}
             key={index}
             onChange={onChangeInput}
