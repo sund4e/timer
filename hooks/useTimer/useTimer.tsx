@@ -7,10 +7,10 @@ const useTimer = (
   restart: boolean
 ) => {
   const [timeLeft, setTimeLeft] = useState(time);
-  const timer = useRef<number>();
+  const timer = useRef<NodeJS.Timeout | null>(null);
 
   const startTimer = () => {
-    clearTimeout(timer.current);
+    timer.current && clearTimeout(timer.current);
     const startTime = Date.now();
     timer.current = setInterval(() => {
       const timeGone = Math.round((Date.now() - startTime) / 1000);
@@ -25,7 +25,7 @@ const useTimer = (
   useEffect(() => {
     if (timeLeft === 0 && time !== 0) {
       onTimeEnd();
-      clearTimeout(timer.current);
+      timer.current && clearTimeout(timer.current);
       timer.current = setTimeout(() => {
         if (restart) startTimer();
       }, 1000);
@@ -43,13 +43,13 @@ const useTimer = (
     if (isRunning) {
       startTimer();
     } else {
-      clearTimeout(timer.current);
+      timer.current && clearTimeout(timer.current);
     }
   }, [isRunning]);
 
   useEffect(() => {
     return () => {
-      clearTimeout(timer.current);
+      timer.current && clearTimeout(timer.current);
     };
   }, []);
 
