@@ -4,6 +4,7 @@ import {
   useEffect,
   MouseEvent as ReactMouseEvent,
   ChangeEvent,
+  useCallback
 } from 'react';
 import { Theme } from '../../styles/theme';
 
@@ -54,26 +55,29 @@ const SingleInput = ({
   }, [isFocused]);
 
   useEffect(() => {
-    input.current?.setSelectionRange(0, 0);
-  });
+    if (isFocused && input.current) {
+        input.current.setSelectionRange(0, 0);
+    }
+  }, [isFocused]);
 
-  const onClickInput = (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
+  const onClickInput = useCallback((event: ReactMouseEvent<HTMLInputElement, MouseEvent>) => {
     event.stopPropagation();
-    input.current?.setSelectionRange(0, 0);
+    if (input.current) {
+        input.current.setSelectionRange(0, 0);
+    }
     onClick();
-  };
+  }, [onClick]);
 
-  const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-    //TODO: Cursor is for some reason moved back to original if no timeout. Look into better way of preventing
+  const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setTimeout(() => {
-      input.current?.setSelectionRange(0, 0);
+        if(input.current) input.current.setSelectionRange(0, 0);
     });
 
     const number = parseInt(event.target.value[0]);
     if (!isNaN(number)) {
       onChange(number);
     }
-  };
+  }, [onChange]);
 
   return (
     <StyledInput

@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import SingleInput from '../SingleInput/SingleInput';
+import { Theme } from '../../styles/theme';
+import { useCallback } from 'react';
 
 const ValidatedSingleInput = styled(SingleInput)<{
   $isInvalid: boolean;
@@ -47,17 +49,17 @@ const NumberInput = ({
 }: Props) => {
   const inputValue = getValueAsArray(value, size);
 
-  const onChangeInput = (newValue: number) => {
-    if (focusIndex === null) return;
+  const onChangeInput = useCallback((index: number) => (newValue: number) => {
+    const currentInputValue = getValueAsArray(value, size);
     const newNumber = parseInt(
-      Object.assign([], inputValue, { [focusIndex]: newValue }).join('')
+      Object.assign([], currentInputValue, { [index]: newValue }).join('')
     );
     onChange(newNumber);
-  };
+  }, [onChange, value, size]);
 
-  const onClickInput = (index: number) => () => {
+  const onClickInput = useCallback((index: number) => () => {
     onClick(index);
-  };
+  }, [onClick]);
 
   return (
     <>
@@ -67,7 +69,7 @@ const NumberInput = ({
             $isInvalid={invalidFocus && focusIndex === index}
             className={className}
             key={index}
-            onChange={onChangeInput}
+            onChange={onChangeInput(index)}
             value={num}
             isFocused={focusIndex === index}
             onClick={onClickInput(index)}

@@ -8,8 +8,7 @@ import { Theme } from '../../styles/theme';
 import Tooltip from '../Tooltip';
 
 const StyledTimer = styled(Timer)`
-  font-size: min(18vw, ${({ theme }) => theme.fontSizes.big}rem);
-  max-fontSize
+  font-size: min(16vw, ${({ theme }) => theme.fontSizes.big}rem);
 `;
 
 const Header = styled.h1`

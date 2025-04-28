@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import NumberInput from '../NumberInput/NumberInput';
 import { Theme } from '../../styles/theme';
 import { getHms, Input, getSeconds } from './timeConverters';
@@ -17,27 +17,33 @@ const FocusInput = ({ value, onChange, indexes, maxValue }: Props) => {
   const { focusIndex: globalFocusIndex, setFocusIndex } = useFocusIndex();
   const [isInvalid, setIsInvalid] = useState(false);
 
-  const onChangeInput = (newValue: number) => {
-    if (globalFocusIndex === null) return;
+  const onChangeInput = useCallback((newValue: number) => {
     if (newValue > maxValue) {
       setIsInvalid(true);
     } else {
       if (isInvalid) setIsInvalid(false);
-      setFocusIndex(globalFocusIndex + 1);
+      if (globalFocusIndex) setFocusIndex(globalFocusIndex + 1);
     }
     onChange(newValue);
-  };
+  }, [maxValue, isInvalid, globalFocusIndex, onChange, setFocusIndex]);
 
-  const onClick = (index: number) => {
+  useEffect(() => {
+    if (!globalFocusIndex) {
+      setIsInvalid(false);
+    }
+  }, [globalFocusIndex]);
+
+  const onClick = useCallback((index: number) => {
     setFocusIndex(indexes[index]);
-  };
+  }, [setFocusIndex, indexes]);
 
-  const focusIndex =
-    globalFocusIndex !== null
+  const focusIndex = useMemo(() => {
+    return globalFocusIndex !== null
       ? indexes.indexOf(globalFocusIndex) < 0
         ? null
         : indexes.indexOf(globalFocusIndex)
       : null;
+  }, [globalFocusIndex, indexes]);
 
   useEffect(() => {
     if (!focusIndex) {
