@@ -18,8 +18,8 @@ const StyledInput = styled.input<{
   &:focus {
     outline: none;
   }
-  height: 1em;
-  width: 0.6em;
+  text-align: center;
+  padding: 0;
   font-size: inherit;
   color: inherit;
   transition: ${({ theme }) => theme.transition}s;
