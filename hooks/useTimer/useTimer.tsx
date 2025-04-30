@@ -7,7 +7,7 @@ const useTimer = (
   restart: boolean
 ) => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
-  const intervalRef = useRef<number | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
   const initialTimeRef = useRef<number>(initialTime);
 
@@ -31,7 +31,7 @@ const useTimer = (
 
     if (initialTime <= 0) return;
 
-    intervalRef.current = window.setInterval(() => {
+    intervalRef.current = setInterval(() => {
       const elapsedSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
       const currentInitial = initialTimeRef.current;
 
