@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import { useState, useEffect, useRef, useContext } from 'react';
-import { Theme } from '../../styles/theme';
+import { useState, useEffect, } from 'react';
 import { getHms, Input, getSeconds } from './timeConverters';
-import FocusInput from './FocusInput';
 import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
+import NumberInput from '../NumberInput/NumberInput';
 
 const Wrapper = styled.div<{
   $isFocused: boolean;
@@ -47,7 +46,12 @@ const Indexes = Object.values(Inputs).reduce<number[]>(
   []
 );
 
-const TimeInput = ({ value, onChange, className, isFocused }: Props) => {
+const TimeInput = ({
+  value,
+  onChange,
+  className,
+  isFocused,
+}: Props) => {
   const [time, setTime] = useState(getHms(value));
   const { focusIndex, setFocusIndex } = useFocusIndex();
 
@@ -63,38 +67,39 @@ const TimeInput = ({ value, onChange, className, isFocused }: Props) => {
     }
   });
 
-  useEffect(() => {
-    if (focusIndex === null) {
-      onChange(getSeconds(time));
-    }
-  }, [focusIndex]);
-
-  const onChangeInput = (inputName: Input) => (newValue: number) => {
-    const newTime = {
-      ...time,
-      [inputName]: newValue,
-    };
-    setTime(newTime);
+  const handleTimeChange = (inputType: Input) => (newValue: number) => {
+      const newTime = { ...time, [inputType]: newValue };
+      setTime(newTime);
+      onChange(getSeconds(newTime)); 
   };
 
   return (
     <Wrapper $isFocused={isFocused} data-testid="time" className={className}>
-      <FocusInput
-        {...Inputs[Input.hours]}
-        value={time[Input.hours]}
-        onChange={onChangeInput(Input.hours)}
+      <NumberInput 
+          value={time.hours}
+          indexes={[0, 1]}
+          maxValue={99}
+          size={2}
+          onChange={handleTimeChange(Input.hours)} 
+          className={className} 
       />
       <span>:</span>
-      <FocusInput
-        {...Inputs[Input.minutes]}
-        value={time[Input.minutes]}
-        onChange={onChangeInput(Input.minutes)}
+      <NumberInput 
+          value={time.minutes}
+          indexes={[2, 3]}
+          maxValue={59}
+          size={2}
+          onChange={handleTimeChange(Input.minutes)} 
+          className={className}
       />
       <span>:</span>
-      <FocusInput
-        {...Inputs[Input.seconds]}
-        value={time[Input.seconds]}
-        onChange={onChangeInput(Input.seconds)}
+      <NumberInput 
+          value={time.seconds}
+          indexes={[4, 5]}
+          maxValue={59}
+          size={2}
+          onChange={handleTimeChange(Input.seconds)} 
+          className={className}
       />
     </Wrapper>
   );
