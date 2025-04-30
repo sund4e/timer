@@ -98,7 +98,10 @@ describe('Timer', () => {
       const initialTime = 10;
       render({ initialTime, isActive: true, restart: true });
       expect(getTime()).toEqual('00:00:10');
-      advanceSeconds(initialTime + 1);
+
+      act(() => {
+        advanceSeconds(initialTime);
+      });
       expect(getTime()).toEqual('00:00:10');
     });
 
