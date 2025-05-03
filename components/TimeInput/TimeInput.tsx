@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import { useState, useEffect, useRef } from 'react';
 import { getHms, Input, getSeconds } from './timeConverters';
-import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
-import NumberInput from '../NumberInput/NumberInput';
 import SingleInput from '../SingleInput/SingleInput';
 import React from 'react';
 
@@ -24,6 +22,7 @@ export type Props = {
   onChange: (seconds: number) => void;
   isFocused: boolean;
   onFocus: () => void;
+  onBlur: () => void;
   className?: string;
 };
 
@@ -44,8 +43,9 @@ const TimeInput = ({
   value,
   onChange,
   className,
-  isFocused,
   onFocus,
+  onBlur,
+  isFocused
 }: Props) => {
   const [time, setTime] = useState(getDigits(value));
   const maxValues = [9, 9, 5, 9, 5, 9];
@@ -69,11 +69,23 @@ const TimeInput = ({
     }
   }
 
+  useEffect(() => {  
+    if (isFocused) {
+      if (!(document.activeElement instanceof HTMLInputElement)) {
+        inputRefs[2]?.current?.focus();
+      }
+    } else {
+      if (document.activeElement instanceof HTMLInputElement) {
+        document.activeElement.blur();
+      }
+    }
+  }, [isFocused]);
+
   useKeyPressCallBack('Enter', () => {
     if (document.activeElement instanceof HTMLInputElement) {
-      onReady();
+      onBlur();
     } else {
-      inputRefs[2]?.current?.focus();
+      onFocus();
     }
   });
 
@@ -89,7 +101,7 @@ const TimeInput = ({
   };
 
   return (
-    <Wrapper $isFocused={isFocused} data-testid="time" className={className}>
+    <Wrapper $isFocused={isFocused} data-testid="time" className={className} onBlur={onBlur} onFocus={onFocus}>
       {time.map((digit, index) => (
         <React.Fragment key={index}>
           <SingleInput

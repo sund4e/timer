@@ -66,12 +66,8 @@ const TimerApp = memo(
       }
     }
 
-    const onClickWrapper = () => {
-      setIsFocused(false);
-    };
-
     return (
-      <Wrapper onClick={onClickWrapper}>
+      <Wrapper>
         <StyledTimer
           restart={restart}
           onTimeEnd={onTimeEnd}

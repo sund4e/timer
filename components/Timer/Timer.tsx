@@ -1,6 +1,7 @@
 import TimeInput, { Input } from '../TimeInput';
 import useTimer from '../../hooks/useTimer';
-import { useEffect, useState, useRef, MutableRefObject } from 'react';
+import { useEffect, useState } from 'react';
+import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 export type Props = {
   onTimeEnd: () => void;
@@ -45,6 +46,10 @@ const Timer = ({
     setIsFocused(true);
   };
 
+  const onBlur = () => {
+    setIsFocused(false);
+  };
+
   const onChange = (seconds: number) => {
     setStartTime(seconds);
     setIsFocused(false);
@@ -57,6 +62,7 @@ const Timer = ({
       onChange={onChange}
       isFocused={isFocused}
       onFocus={onFocus}
+      onBlur={onBlur}
     />
   );
 };
