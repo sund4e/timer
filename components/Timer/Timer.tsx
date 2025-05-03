@@ -57,7 +57,6 @@ const Timer = ({
       onChange={onChange}
       isFocused={isFocused}
       onFocus={onFocus}
-      initalFocus={Input.minutes}
     />
   );
 };

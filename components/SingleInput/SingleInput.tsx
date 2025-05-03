@@ -4,20 +4,21 @@ import {
   useEffect,
   MouseEvent as ReactMouseEvent,
   ChangeEvent,
-  useCallback
+  useCallback,
+  useState
 } from 'react';
 import { Theme } from '../../styles/theme';
 
 const StyledInput = styled.input<{
-  theme: Theme;
-  $isFocused: boolean;
+  $isInvalid: boolean;
 }>`
-  opacity: ${({ $isFocused }) => ($isFocused ? 0.5 : 1)};
+  opacity: 1;
   border-style: none;
   caret-color: transparents;
   background-color: transparent;
   &:focus {
     outline: none;
+    opacity: 0.5;
   }
   text-align: center;
   padding: 0;
@@ -25,48 +26,33 @@ const StyledInput = styled.input<{
   color: inherit;
   transition: ${({ theme }) => theme.transition}s;
   caret-color: transparent;
+  ${({ theme, $isInvalid }) =>
+    $isInvalid ? `color: ${theme.colors.accent}` : ''};
 `;
 
 export type Props = {
   value: number;
   onChange: (newValue: number) => void;
-  isFocused: boolean;
-  onClick: () => void;
   className?: string;
+  maxValue?: number;
+  ref?: React.RefObject<HTMLInputElement | null>;
 };
 
 const SingleInput = ({
   value,
   onChange,
-  isFocused,
-  onClick,
   className,
+  maxValue,
+  ref
 }: Props) => {
-  const input = useRef<HTMLInputElement>(null);
+  const input = ref || useRef<HTMLInputElement>(null);
+  const [isValid, setIsValid] = useState(true);
 
-  useEffect(() => {
+  const onFocus = useCallback(() => {
     if (input.current) {
-      if (isFocused) {
-        input.current.focus();
-      } else {
-        input.current.blur();
-      }
+      input.current.setSelectionRange(0, 0);
     }
-  }, [isFocused]);
-
-  useEffect(() => {
-    if (isFocused && input.current) {
-        input.current.setSelectionRange(0, 0);
-    }
-  }, [isFocused]);
-
-  const onClickInput = useCallback((event: ReactMouseEvent<HTMLInputElement, MouseEvent>) => {
-    event.stopPropagation();
-    if (input.current) {
-        input.current.setSelectionRange(0, 0);
-    }
-    onClick();
-  }, [onClick]);
+  }, [input.current]);
 
   const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setTimeout(() => {
@@ -74,9 +60,13 @@ const SingleInput = ({
     });
 
     const number = parseInt(event.target.value[0]);
-    if (!isNaN(number)) {
+    if (isNaN(number) || maxValue && number > maxValue) {
+      setIsValid(false);
+    } else {
       onChange(number);
+      setIsValid(true);
     }
+
   }, [onChange]);
 
   return (
@@ -84,8 +74,9 @@ const SingleInput = ({
       type="tel"
       className={className}
       ref={input}
-      $isFocused={isFocused}
-      onClick={onClickInput}
+      onFocus={onFocus}
+      onClick={onFocus}
+      $isInvalid={!isValid}
       tabIndex={0}
       onChange={onChangeInput}
       role="textbox"

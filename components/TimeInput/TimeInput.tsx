@@ -1,9 +1,11 @@
 import styled from 'styled-components';
-import { useState, useEffect, } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getHms, Input, getSeconds } from './timeConverters';
 import { FocusContextProvider, useFocusIndex } from '../FocusContext';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import NumberInput from '../NumberInput/NumberInput';
+import SingleInput from '../SingleInput/SingleInput';
+import React from 'react';
 
 const Wrapper = styled.div<{
   $isFocused: boolean;
@@ -22,101 +24,85 @@ export type Props = {
   onChange: (seconds: number) => void;
   isFocused: boolean;
   onFocus: () => void;
-  initalFocus: Input;
   className?: string;
 };
 
-const Inputs = {
-  [Input.hours]: {
-    indexes: [0, 1],
-    maxValue: 99,
-  },
-  [Input.minutes]: {
-    indexes: [2, 3],
-    maxValue: 59,
-  },
-  [Input.seconds]: {
-    indexes: [4, 5],
-    maxValue: 59,
-  },
+const getDigits = (seconds: number) => {
+  const hms = getHms(seconds);
+  return [Math.floor(hms.hours / 10), hms.hours % 10, Math.floor(hms.minutes / 10), hms.minutes % 10, Math.floor(hms.seconds / 10), hms.seconds % 10];
 };
 
-const Indexes = Object.values(Inputs).reduce<number[]>(
-  (arr, input) => [...arr, ...input.indexes],
-  []
-);
+const getSecondsFromDigits = (digits: number[]) => {
+  return getSeconds({
+    [Input.hours]: digits[0] * 10 + digits[1],
+    [Input.minutes]: digits[2] * 10 + digits[3],
+    [Input.seconds]: digits[4] * 10 + digits[5],
+  });
+};
 
 const TimeInput = ({
   value,
   onChange,
   className,
   isFocused,
+  onFocus,
 }: Props) => {
-  const [time, setTime] = useState(getHms(value));
-  const { focusIndex, setFocusIndex } = useFocusIndex();
+  const [time, setTime] = useState(getDigits(value));
+  const maxValues = [9, 9, 5, 9, 5, 9];
+  const inputRef0 = useRef<HTMLInputElement>(null);
+  const inputRef1 = useRef<HTMLInputElement>(null);
+  const inputRef2 = useRef<HTMLInputElement>(null);
+  const inputRef3 = useRef<HTMLInputElement>(null);
+  const inputRef4 = useRef<HTMLInputElement>(null);
+  const inputRef5 = useRef<HTMLInputElement>(null);
+  const inputRefs = [inputRef0, inputRef1, inputRef2, inputRef3, inputRef4, inputRef5];
 
   useEffect(() => {
-    setTime(getHms(value));
+    setTime(getDigits(value));
   }, [value]);
 
+  const onReady = () => {
+    onChange(getSecondsFromDigits(time));
+    
+    if (document.activeElement instanceof HTMLInputElement) {
+      document.activeElement.blur();
+    }
+  }
+
   useKeyPressCallBack('Enter', () => {
-    if (focusIndex !== null) {
-      setFocusIndex(null);
+    if (document.activeElement instanceof HTMLInputElement) {
+      onReady();
     } else {
-      setFocusIndex(0);
+      inputRefs[2]?.current?.focus();
     }
   });
 
-  const handleTimeChange = (inputType: Input) => (newValue: number) => {
-      const newTime = { ...time, [inputType]: newValue };
+  const handleTimeChange = (index: number) => (newValue: number) => {
+      const newTime = time.map((digit, i) => i === index ? newValue : digit);
       setTime(newTime);
-      onChange(getSeconds(newTime)); 
+      const nextIndex = index + 1;
+      if (inputRefs[nextIndex]) {
+        inputRefs[nextIndex]?.current?.focus();
+      } else {
+        onReady();
+      }
   };
 
   return (
     <Wrapper $isFocused={isFocused} data-testid="time" className={className}>
-      <NumberInput 
-          value={time.hours}
-          indexes={[0, 1]}
-          maxValue={99}
-          size={2}
-          onChange={handleTimeChange(Input.hours)} 
-          className={className} 
-      />
-      <span>:</span>
-      <NumberInput 
-          value={time.minutes}
-          indexes={[2, 3]}
-          maxValue={59}
-          size={2}
-          onChange={handleTimeChange(Input.minutes)} 
-          className={className}
-      />
-      <span>:</span>
-      <NumberInput 
-          value={time.seconds}
-          indexes={[4, 5]}
-          maxValue={59}
-          size={2}
-          onChange={handleTimeChange(Input.seconds)} 
-          className={className}
-      />
+      {time.map((digit, index) => (
+        <React.Fragment key={index}>
+          <SingleInput
+            ref={inputRefs[index]}
+            maxValue={maxValues[index]}
+            onChange={handleTimeChange(index)} 
+            value={digit}
+          />
+          {(index === 1 || index === 3) && <span>:</span>}
+        </React.Fragment>
+      ))}
     </Wrapper>
   );
 };
 
-const TimeInputWithFocus = (props: Props) => {
-  const { initalFocus, isFocused, onFocus } = props;
-  return (
-    <FocusContextProvider
-      allowFocus={isFocused}
-      initialIndex={isFocused ? Inputs[initalFocus].indexes[0] : null}
-      maxIndex={Math.max(...Indexes)}
-      onFocus={onFocus}
-    >
-      <TimeInput {...props} />
-    </FocusContextProvider>
-  );
-};
-
-export default TimeInputWithFocus;
+export default TimeInput;
