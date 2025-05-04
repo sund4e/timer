@@ -107,14 +107,14 @@ const TimeInput = ({
   });
 
   const handleTimeChange = useCallback((index: number) => (newValue: number) => {
-      const newTime = time.map((digit, i) => i === index ? newValue : digit);
-      setTime(newTime);
-      const nextIndex = index + 1;
-      if (inputRefs[nextIndex]) {
-        inputRefs[nextIndex]?.current?.focus();
-      } else {
-        onChange(getSecondsFromDigits(newTime));
-      }
+    const newTime = time.map((digit, i) => i === index ? newValue : digit);
+    setTime(newTime);
+    const nextIndex = index + 1;
+    if (inputRefs[nextIndex]) {
+      inputRefs[nextIndex]?.current?.focus();
+    } else {
+      onChange(getSecondsFromDigits(newTime));
+    }
   }, [time, inputRefs]);
 
   const handleFocusCapture = useCallback(() => {

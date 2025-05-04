@@ -33,6 +33,7 @@ describe('Timer', () => {
     render({ initialTime });
     expect(getTime()).toEqual('00:00:10');
   });
+  
   it('if active runs timer when not focused', () => {
     const initialTime = 10;
     render({ initialTime, isActive: true, isFocused: false });
