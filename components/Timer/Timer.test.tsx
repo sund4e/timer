@@ -33,7 +33,7 @@ describe('Timer', () => {
     render({ initialTime });
     expect(getTime()).toEqual('00:00:10');
   });
-  
+
   it('if active runs timer when not focused', () => {
     const initialTime = 10;
     render({ initialTime, isActive: true, isFocused: false });
@@ -168,6 +168,16 @@ describe('Timer', () => {
       changeInputValue(5, 2);
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:11');
+    });
+
+    it('does not start timer if edited number was not valid', () => {
+      const initialTime = 0;
+      render({ initialTime, isActive: true });
+      changeInputValue(2, 9);
+      enter();
+      expect(getTime()).toEqual('00:90:00');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:90:00');
     });
   });
 });
