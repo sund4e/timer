@@ -30,13 +30,21 @@ describe('TimerApp', () => {
     advanceSeconds(1);
     expect(getTime()).toEqual('00:20:00');
   });
+
   it('clicking outside of timer starts the timer', () => {
-    const { container } = render();
+    render();
     expect(getTime()).toEqual('00:20:00');
-    const wrapper = container.firstChild as ChildNode;
-    fireEvent.click(wrapper);
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
+
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    fireEvent.focus(inputs[2]);
+    advanceSeconds(1);
+    expect(getTime()).toEqual('00:19:59');
+
+    fireEvent.blur(inputs[2]);
+    advanceSeconds(1);
+    expect(getTime()).toEqual('00:19:58');
   });
 
   it('calls setTitleTime with time', () => {

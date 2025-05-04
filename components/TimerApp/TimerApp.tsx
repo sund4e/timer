@@ -27,10 +27,10 @@ const Text = styled.p`
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: column;
   height: 100%;
-  align-items: stretch;
+  align-items: center;
   overflow: hidden;
 `;
 

@@ -11,7 +11,6 @@ const Wrapper = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
   color: ${({ theme, $isFocused }) =>
     $isFocused ? theme.colors.highlight : ''};
   transition: ${({ theme }) => theme.transition}s;

@@ -39,8 +39,9 @@ const Menu = styled.div<{
 
 const StyledButton = styled(SwitchButton)`
   margin: 20px;
-  position: fixed;
-  right: 0px;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
 `;
 
 export type Props = {
