@@ -66,7 +66,6 @@ const useTimer = (
         intervalRef.current = null;
       }
     }
-
     prevIsRunningRef.current = isRunning;
 
     return () => {
@@ -76,9 +75,6 @@ const useTimer = (
       }
     };
   }, [isRunning, startTimer, timeLeftSeconds]);
-
-  const resumeTimer = useCallback(() => {
-  }, []);
 
   return { time: timeLeftSeconds };
 };
