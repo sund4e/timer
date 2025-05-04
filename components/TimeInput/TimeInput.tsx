@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, FocusEvent } from 'react';
 import { getHms, Input, getSeconds } from './timeConverters';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import SingleInput from '../SingleInput/SingleInput';
@@ -48,7 +48,9 @@ const TimeInput = ({
   isFocused
 }: Props) => {
   const [time, setTime] = useState(getDigits(value));
+  const [internallyFocused, setInternallyFocused] = useState(false);
   const maxValues = [9, 9, 5, 9, 5, 9];
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef0 = useRef<HTMLInputElement>(null);
   const inputRef1 = useRef<HTMLInputElement>(null);
   const inputRef2 = useRef<HTMLInputElement>(null);
@@ -61,31 +63,30 @@ const TimeInput = ({
     setTime(getDigits(value));
   }, [value]);
 
-  const onReady = () => {
+  const onReady = useCallback(() => {
     onChange(getSecondsFromDigits(time));
-    
-    if (document.activeElement instanceof HTMLInputElement) {
-      document.activeElement.blur();
-    }
-  }
+  }, [onChange, time]);
 
   useEffect(() => {  
     if (isFocused) {
-      if (!(document.activeElement instanceof HTMLInputElement && inputRefs.some(ref => ref.current === document.activeElement))) {
-        inputRefs[2]?.current?.focus();
-      }
+       if (!internallyFocused && !(wrapperRef.current?.contains(document.activeElement))) {
+        inputRefs[2]?.current?.focus(); 
+       }
     } else {
-      if (document.activeElement instanceof HTMLInputElement && inputRefs.some(ref => ref.current === document.activeElement)) {
-        document.activeElement.blur();
+      if (internallyFocused && wrapperRef.current?.contains(document.activeElement)) {
+         if (document.activeElement instanceof HTMLElement) {
+           document.activeElement.blur();
+         }
       }
     }
-  }, [isFocused, inputRefs]);
+    setInternallyFocused(isFocused); 
+  }, [isFocused, internallyFocused, inputRefs]);
 
   useKeyPressCallBack('Enter', () => {
-    if (document.activeElement instanceof HTMLInputElement) {
-      document.activeElement.blur();
+    if (internallyFocused) {
+      onReady();
     } else {
-      inputRefs[2]?.current?.focus();
+      onFocus(); 
     }
   });
 
@@ -109,7 +110,7 @@ const TimeInput = ({
     }
   });
 
-  const handleTimeChange = (index: number) => (newValue: number) => {
+  const handleTimeChange = useCallback((index: number) => (newValue: number) => {
       const newTime = time.map((digit, i) => i === index ? newValue : digit);
       setTime(newTime);
       const nextIndex = index + 1;
@@ -118,10 +119,34 @@ const TimeInput = ({
       } else {
         onReady();
       }
-  };
+  }, [time, inputRefs, onReady]);
+
+  const handleFocusCapture = useCallback(() => {
+    if (!internallyFocused) {
+      setInternallyFocused(true);
+      onFocus();
+    }
+  }, [internallyFocused, onFocus]);
+
+  const handleBlurCapture = useCallback((event: FocusEvent<HTMLDivElement>) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.relatedTarget as Node)) {
+        if (internallyFocused) {
+           setInternallyFocused(false);
+           onBlur(); 
+        }
+    }
+  }, [internallyFocused, onBlur]);
 
   return (
-    <Wrapper $isFocused={isFocused} data-testid="time" className={className} onBlur={onBlur} onFocus={onFocus}>
+    <Wrapper 
+      ref={wrapperRef}
+      $isFocused={isFocused} 
+      data-testid="time" 
+      className={className} 
+      onFocusCapture={handleFocusCapture}
+      onBlurCapture={handleBlurCapture}
+      tabIndex={-1}
+    >
       {time.map((digit, index) => (
         <React.Fragment key={index}>
           <SingleInput
