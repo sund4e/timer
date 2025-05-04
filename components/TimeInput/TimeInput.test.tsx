@@ -184,4 +184,29 @@ describe('TimeInput', () => {
       expect(onChange).toHaveBeenCalledWith(getSecondsFromDigits([0, 1, 4, 9, 5, 4]));
     });
   });
+
+  describe('invalid input', () => {
+    it('does not move focus to next input', () => {
+      const onChange = jest.fn();
+      render({ onChange });
+      changeInputValue(2, 9);
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      expect(inputs[2] === document.activeElement).toBeTruthy();
+    });
+
+    it('does not call onChange', () => {
+      const onChange = jest.fn();
+      render({ onChange });
+      changeInputValue(2, 9);
+      expect(onChange).not.toHaveBeenCalledTimes(1);
+    });
+
+    it('renders invalid value', () => {
+      const onChange = jest.fn();
+      render({ onChange });
+      changeInputValue(2, 9);
+      expect(getTime()).toEqual('01:99:34');
+    });
+
+  });
 });
