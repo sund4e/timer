@@ -198,6 +198,7 @@ describe('TimeInput', () => {
       const onChange = jest.fn();
       render({ onChange });
       changeInputValue(2, 9);
+      enter();
       expect(onChange).not.toHaveBeenCalledTimes(1);
     });
 
@@ -206,6 +207,15 @@ describe('TimeInput', () => {
       render({ onChange });
       changeInputValue(2, 9);
       expect(getTime()).toEqual('01:99:34');
+    });
+
+    it('does not call onBlur when invalid', () => {
+      const onBlur = jest.fn();
+      render({ onBlur });
+      const inputs = screen.getAllByRole('textbox');
+      changeInputValue(2, 9);
+      fireEvent.blur(inputs[2]);
+      expect(onBlur).toHaveBeenCalledTimes(0);
     });
 
   });

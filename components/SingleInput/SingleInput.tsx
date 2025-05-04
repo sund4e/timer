@@ -60,10 +60,10 @@ const SingleInput = ({
     });
 
     const number = parseInt(event.target.value[0]);
+    onChange(number);
     if (isNaN(number) || maxValue && number > maxValue) {
       setIsValid(false);
     } else {
-      onChange(number);
       setIsValid(true);
     }
 

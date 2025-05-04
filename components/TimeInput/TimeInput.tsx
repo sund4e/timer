@@ -39,6 +39,13 @@ export const getSecondsFromDigits = (digits: number[]) => {
   });
 };
 
+const maxValues = [9, 9, 5, 9, 5, 9];
+const isValidTime = (time: number[]) => {
+  return time.every((digit, index) => 
+    !isNaN(digit) && digit >= 0 && digit <= maxValues[index]
+  );
+};
+
 const TimeInput = ({
   value,
   onChange,
@@ -49,7 +56,6 @@ const TimeInput = ({
 }: Props) => {
   const [time, setTime] = useState(getDigits(value));
   const [internallyFocused, setInternallyFocused] = useState(false);
-  const maxValues = [9, 9, 5, 9, 5, 9];
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef0 = useRef<HTMLInputElement>(null);
   const inputRef1 = useRef<HTMLInputElement>(null);
@@ -79,7 +85,7 @@ const TimeInput = ({
   }, [isFocused, internallyFocused, inputRefs]);
 
   useKeyPressCallBack('Enter', () => {
-    if (internallyFocused) {
+    if (internallyFocused && isValidTime(time)) {
       onChange(getSecondsFromDigits(time));
     } else {
       onFocus(); 
@@ -109,6 +115,9 @@ const TimeInput = ({
   const handleTimeChange = useCallback((index: number) => (newValue: number) => {
     const newTime = time.map((digit, i) => i === index ? newValue : digit);
     setTime(newTime);
+    if (!isValidTime(newTime)) {
+      return;
+    }
     const nextIndex = index + 1;
     if (inputRefs[nextIndex]) {
       inputRefs[nextIndex]?.current?.focus();
@@ -126,12 +135,12 @@ const TimeInput = ({
 
   const handleBlurCapture = useCallback((event: FocusEvent<HTMLDivElement>) => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.relatedTarget as Node)) {
-        if (internallyFocused) {
+        if (internallyFocused && isValidTime(time)) {
            setInternallyFocused(false);
            onBlur(); 
         }
     }
-  }, [internallyFocused, onBlur]);
+  }, [internallyFocused, onBlur, time]);
 
   return (
     <Wrapper 
