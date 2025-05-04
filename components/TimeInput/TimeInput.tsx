@@ -136,7 +136,8 @@ const TimeInput = ({
     if (wrapperRef.current && !wrapperRef.current.contains(event.relatedTarget as Node)) {
         if (internallyFocused && isValidTime(time)) {
            setInternallyFocused(false);
-           onBlur(); 
+           onBlur();
+           onChange(getSecondsFromDigits(time)); 
         }
     }
   }, [internallyFocused, onBlur, time]);

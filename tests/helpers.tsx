@@ -12,7 +12,7 @@ export const getTime = (): string | null => {
 export const changeInputValue = (inputInxed: number, value: number) => {
   const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
   const input = inputs[inputInxed];
-  fireEvent.click(input);
+  fireEvent.focus(input);
   fireEvent.change(input, { target: { value } });
 };
 

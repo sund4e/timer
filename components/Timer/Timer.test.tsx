@@ -11,8 +11,7 @@ describe('Timer', () => {
       onTimeEnd: () => {},
       isActive: true,
       restart: false,
-      isFocused: false,
-      setIsFocused: () => {},
+      initalFocus: false,
       setTitleTime: () => {},
       ...override,
     };
@@ -36,7 +35,7 @@ describe('Timer', () => {
 
   it('if active runs timer when not focused', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: true, isFocused: false });
+    render({ initialTime, isActive: true, initialFocus: false });
     expect(getTime()).toEqual('00:00:10');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:00:09');
@@ -44,7 +43,7 @@ describe('Timer', () => {
 
   it('if not active does not run timer', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: false, isFocused: false });
+    render({ initialTime, isActive: false, initialFocus: false });
     expect(getTime()).toEqual('00:00:10');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:00:10');
@@ -52,7 +51,7 @@ describe('Timer', () => {
 
   it('if focused does not run timer', () => {
     const initialTime = 10;
-    render({ initialTime, isActive: true, isFocused: true });
+    render({ initialTime, isActive: true, initialFocus: true });
     expect(getTime()).toEqual('00:00:10');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:00:10');
@@ -122,7 +121,7 @@ describe('Timer', () => {
         initialTime,
         isActive: true,
         restart: false,
-        isFocused: false,
+        initialFocus: true,
       });
       enter();
       expect(getTime()).toEqual('00:00:10');
@@ -132,7 +131,7 @@ describe('Timer', () => {
 
     it('continues timer from the same value if no change in the value', () => {
       const initialTime = 10;
-      render({ initialTime, isActive: true });
+      render({ initialTime, isActive: true, initialFocus: false });
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
@@ -148,14 +147,26 @@ describe('Timer', () => {
   describe('Editing time', () => {
     it('does not start timer if edited number was not the last', () => {
       const initialTime = 0;
-      render({ initialTime, isActive: true });
+      const { rerender } = render({
+        initialTime,
+        isActive: true,
+        initialFocus: false,
+      });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const targetInput = inputs[4];
+
+      // fireEvent.focus(targetInput);
+      // rerender({ isFocused: true });
+
       changeInputValue(4, 2);
+
       advanceSeconds(1);
+
       expect(getTime()).toEqual('00:00:20');
     });
 
     it('starts timer if edited number was the last', () => {
-      const initialTime = 0; //
+      const initialTime = 0;
       render({ initialTime, isActive: true });
       changeInputValue(5, 2);
       advanceSeconds(1);
