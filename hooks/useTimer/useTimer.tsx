@@ -1,79 +1,86 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const useTimer = (
-  initialTime: number,
+  initialTimeSeconds: number,
   onTimeEnd: () => void,
   isRunning: boolean,
   restart: boolean
 ) => {
-  const [timeLeft, setTimeLeft] = useState(initialTime);
+  const [timeLeftSeconds, setTimeLeftSeconds] = useState(initialTimeSeconds);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const startTimeRef = useRef<number>(0);
-  const initialTimeRef = useRef<number>(initialTime);
-
   const onTimeEndRef = useRef(onTimeEnd);
+  const prevInitialTimeRef = useRef(initialTimeSeconds);
+  const prevIsRunningRef = useRef(isRunning);
+  const timeEndedRef = useRef(initialTimeSeconds <= 0);
+
   useEffect(() => {
     onTimeEndRef.current = onTimeEnd;
   }, [onTimeEnd]);
 
-  const clearTimerInterval = useCallback(() => {
-    if (intervalRef.current !== null) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+  useEffect(() => {
+    if (initialTimeSeconds !== prevInitialTimeRef.current) {
+      setTimeLeftSeconds(initialTimeSeconds);
+      prevInitialTimeRef.current = initialTimeSeconds;
+      timeEndedRef.current = initialTimeSeconds <= 0;
     }
+  }, [initialTimeSeconds]);
+
+  const intervalCallback = useCallback(() => {
+    setTimeLeftSeconds((prevTime) => Math.max(0, prevTime - 1));
   }, []);
 
   const startTimer = useCallback(() => {
-    clearTimerInterval();
-    initialTimeRef.current = initialTime;
-    setTimeLeft(initialTime);
-    startTimeRef.current = Date.now();
-
-    if (initialTime <= 0) return;
-
-    intervalRef.current = setInterval(() => {
-      const elapsedSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
-      const currentInitial = initialTimeRef.current;
-
-      if (currentInitial > elapsedSeconds) {
-        setTimeLeft(currentInitial - elapsedSeconds);
-      } else {
-        setTimeLeft(0);
-        clearTimerInterval();
-        onTimeEndRef.current();
-
-        if (restart) {
-          startTimer();
-        }
-      }
-    }, 1000);
-  }, [initialTime, restart, clearTimerInterval]);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    timeEndedRef.current = false;
+    intervalRef.current = setInterval(intervalCallback, 1000);
+  }, [intervalCallback]);
 
   useEffect(() => {
-    if (isRunning) {
-      if (intervalRef.current === null) {
+    if (timeLeftSeconds <= 0) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+
+      if (!timeEndedRef.current) {
+        onTimeEndRef.current();
+        timeEndedRef.current = true;
+      }
+
+      if (restart && prevIsRunningRef.current) {
+        setTimeLeftSeconds(initialTimeSeconds);
+      }
+    }
+  }, [timeLeftSeconds, restart, initialTimeSeconds, onTimeEndRef]);
+
+  useEffect(() => {
+    if (isRunning && timeLeftSeconds > 0) {
+      if (!prevIsRunningRef.current || !intervalRef.current) {
         startTimer();
       }
     } else {
-      clearTimerInterval();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     }
-  }, [isRunning, startTimer, clearTimerInterval]);
 
-  useEffect(() => {
-    setTimeLeft(initialTime);
-    initialTimeRef.current = initialTime;
-    if (isRunning) {
-      startTimer();
-    } else {
-      clearTimerInterval();
-    }
-  }, [initialTime]);
+    prevIsRunningRef.current = isRunning;
 
-  useEffect(() => {
-    return clearTimerInterval;
-  }, [clearTimerInterval]);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isRunning, startTimer, timeLeftSeconds]);
 
-  return { time: timeLeft };
+  const resumeTimer = useCallback(() => {
+  }, []);
+
+  return { time: timeLeftSeconds };
 };
 
 export default useTimer;
