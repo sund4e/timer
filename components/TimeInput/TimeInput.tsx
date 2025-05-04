@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getHms, Input, getSeconds } from './timeConverters';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import SingleInput from '../SingleInput/SingleInput';
@@ -71,21 +71,41 @@ const TimeInput = ({
 
   useEffect(() => {  
     if (isFocused) {
-      if (!(document.activeElement instanceof HTMLInputElement)) {
+      if (!(document.activeElement instanceof HTMLInputElement && inputRefs.some(ref => ref.current === document.activeElement))) {
         inputRefs[2]?.current?.focus();
       }
     } else {
-      if (document.activeElement instanceof HTMLInputElement) {
+      if (document.activeElement instanceof HTMLInputElement && inputRefs.some(ref => ref.current === document.activeElement)) {
         document.activeElement.blur();
       }
     }
-  }, [isFocused]);
+  }, [isFocused, inputRefs]);
 
   useKeyPressCallBack('Enter', () => {
     if (document.activeElement instanceof HTMLInputElement) {
-      onBlur();
+      document.activeElement.blur();
     } else {
-      onFocus();
+      inputRefs[2]?.current?.focus();
+    }
+  });
+
+  const findFocusedIndex = useCallback(() => {
+    return inputRefs.findIndex(ref => ref.current === document.activeElement);
+  }, [inputRefs]);
+
+  useKeyPressCallBack('ArrowRight', () => {
+    const currentIndex = findFocusedIndex();
+    const nextIndex = currentIndex + 1;
+    if (currentIndex !== -1 && nextIndex < inputRefs.length) {
+      inputRefs[nextIndex]?.current?.focus();
+    }
+  });
+
+  useKeyPressCallBack('ArrowLeft', () => {
+    const currentIndex = findFocusedIndex();
+    const prevIndex = currentIndex - 1;
+    if (currentIndex !== -1 && prevIndex >= 0) {
+      inputRefs[prevIndex]?.current?.focus();
     }
   });
 
