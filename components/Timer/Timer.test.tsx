@@ -154,7 +154,7 @@ describe('Timer', () => {
     });
 
     it('starts timer if edited number was the last', () => {
-      const initialTime = 0;
+      const initialTime = 0; //
       render({ initialTime, isActive: true });
       changeInputValue(5, 2);
       advanceSeconds(1);

@@ -31,7 +31,7 @@ const getDigits = (seconds: number) => {
   return [Math.floor(hms.hours / 10), hms.hours % 10, Math.floor(hms.minutes / 10), hms.minutes % 10, Math.floor(hms.seconds / 10), hms.seconds % 10];
 };
 
-const getSecondsFromDigits = (digits: number[]) => {
+export const getSecondsFromDigits = (digits: number[]) => {
   return getSeconds({
     [Input.hours]: digits[0] * 10 + digits[1],
     [Input.minutes]: digits[2] * 10 + digits[3],
@@ -63,10 +63,6 @@ const TimeInput = ({
     setTime(getDigits(value));
   }, [value]);
 
-  const onReady = useCallback(() => {
-    onChange(getSecondsFromDigits(time));
-  }, [onChange, time]);
-
   useEffect(() => {  
     if (isFocused) {
        if (!internallyFocused && !(wrapperRef.current?.contains(document.activeElement))) {
@@ -84,7 +80,7 @@ const TimeInput = ({
 
   useKeyPressCallBack('Enter', () => {
     if (internallyFocused) {
-      onReady();
+      onChange(getSecondsFromDigits(time));
     } else {
       onFocus(); 
     }
@@ -117,9 +113,9 @@ const TimeInput = ({
       if (inputRefs[nextIndex]) {
         inputRefs[nextIndex]?.current?.focus();
       } else {
-        onReady();
+        onChange(getSecondsFromDigits(newTime));
       }
-  }, [time, inputRefs, onReady]);
+  }, [time, inputRefs]);
 
   const handleFocusCapture = useCallback(() => {
     if (!internallyFocused) {

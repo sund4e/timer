@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
-import TimeInput, { Props } from './TimeInput';
+import TimeInput, { Props, getSecondsFromDigits } from './TimeInput';
 import { changeInputValue, enter, getTime } from '../../tests/helpers';
 import { act } from 'react';
 
@@ -21,6 +21,12 @@ const render = (override?: Partial<Props>) => {
   };
   return renderElement(<TimeInput {...props} />);
 };
+
+describe('getSecondsFromDigits', () => {
+  it('returns correct seconds', () => {
+    expect(getSecondsFromDigits([0, 1, 4, 9, 3, 4])).toEqual(6574);
+  });
+});
 
 describe('TimeInput', () => {
   afterEach(() => {
@@ -159,18 +165,23 @@ describe('TimeInput', () => {
       changeInputValue(2, 5);
       expect(onChange).not.toHaveBeenCalledTimes(1);
     });
-    it('is called when last input changes', () => {
+
+    it('is called correctly when last input changes', () => {
       const onChange = jest.fn();
       render({ onChange });
       changeInputValue(5, 5);
       expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(6575);
     });
 
-    it('is called on enter', () => {
+    it('is called correctly on enter', () => {
       const onChange = jest.fn();
       render({ onChange, isFocused: true });
+      expect(getTime()).toEqual('01:49:34');
+      changeInputValue(4, 5);
       enter();
       expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(getSecondsFromDigits([0, 1, 4, 9, 5, 4]));
     });
   });
 });
