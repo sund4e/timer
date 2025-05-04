@@ -1,6 +1,6 @@
 import { act, fireEvent, screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
-import Toggle, { Props } from './NotificationToggle';
+import NotificationToggle, { Props } from './NotificationToggle';
 
 const notification = jest.fn();
 
@@ -18,12 +18,13 @@ describe('NotificationToggle', () => {
   const setNotify = (passed: () => void) => (notify = passed);
 
   const render = (override?: Partial<Props>) => {
-    const defaultProps = {
+    const defaultProps: Props = {
       setNotify,
-      initialShow: true,
+      children: (isDenied: boolean) => 
+        <div data-testid="child-content">{`Denied: ${isDenied}`}</div>,
       ...override,
     };
-    return renderElement(<Toggle {...defaultProps} />);
+    return renderElement(<NotificationToggle {...defaultProps} />);
   };
 
   beforeEach(() => {
