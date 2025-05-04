@@ -119,7 +119,9 @@ const TimeInput = ({
     }
     const nextIndex = index + 1;
     if (inputRefs[nextIndex]) {
-      inputRefs[nextIndex]?.current?.focus();
+      setTimeout(() => {
+         inputRefs[nextIndex]?.current?.focus();
+      }, 0);
     } else {
       onChange(getSecondsFromDigits(newTime));
     }
