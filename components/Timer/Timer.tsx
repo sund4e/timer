@@ -1,7 +1,6 @@
-import TimeInput, { Input } from '../TimeInput';
+import TimeInput from '../TimeInput';
 import useTimer from '../../hooks/useTimer';
 import { useEffect, useState } from 'react';
-import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 export type Props = {
   onTimeEnd: () => void;
