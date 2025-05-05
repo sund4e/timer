@@ -22,3 +22,15 @@ export const enter = () => {
     charCode: 13,
   });
 };
+
+export const simulateWindowBlur = () => {
+  act(() => {
+    window.dispatchEvent(new window.FocusEvent('blur'));
+  });
+};
+
+export const simulateWindowFocus = () => {
+  act(() => {
+    window.dispatchEvent(new window.FocusEvent('focus'));
+  });
+};

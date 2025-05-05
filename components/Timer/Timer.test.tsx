@@ -3,6 +3,7 @@ import { render as renderElement } from '../../tests/render';
 import Timer, { Props } from './Timer';
 import { changeInputValue, enter, getTime } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
+import { simulateWindowBlur, simulateWindowFocus } from '../../tests/helpers';
 
 describe('Timer', () => {
   const render = (override?: Partial<Props>) => {
@@ -199,6 +200,57 @@ describe('Timer', () => {
       expect(getTime()).toEqual('00:90:00');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:90:00');
+    });
+  });
+
+  describe('Window Focus Handling', () => {
+    it('should pause timer if input was focused when window focus is lost', () => {
+      const initialTime = 60;
+      render({ initialTime, isActive: true });
+
+      const inputElements = screen.getAllByRole('textbox');
+      const lastInputElement = inputElements[inputElements.length - 1];
+
+      advanceSeconds(2);
+      expect(getTime()).toEqual('00:00:58');
+
+      act(() => {
+        fireEvent.focus(lastInputElement);
+      });
+      advanceSeconds(5);
+      expect(getTime()).toEqual('00:00:58');
+
+      simulateWindowBlur();
+
+      advanceSeconds(5);
+      expect(getTime()).toEqual('00:00:58');
+
+      simulateWindowFocus();
+      advanceSeconds(5);
+      expect(getTime()).toEqual('00:00:58');
+
+      act(() => {
+        fireEvent.blur(lastInputElement);
+      });
+      advanceSeconds(3);
+      expect(getTime()).toEqual('00:00:55');
+    });
+
+    it('should continue timer if input was not focused when window focus is lost', () => {
+      const initialTime = 60;
+      render({ initialTime, isActive: true });
+
+      advanceSeconds(3);
+      expect(getTime()).toEqual('00:00:57');
+
+      simulateWindowBlur();
+
+      advanceSeconds(10);
+      expect(getTime()).toEqual('00:00:47');
+
+      simulateWindowFocus();
+      advanceSeconds(4);
+      expect(getTime()).toEqual('00:00:43');
     });
   });
 });
