@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 const MainContainer = styled.div`

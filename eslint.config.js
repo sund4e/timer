@@ -61,6 +61,7 @@ export default [
       },
       globals: {
         ...globals.browser,
+        React: "readonly"
       },
     },
     settings: {
@@ -98,4 +99,20 @@ export default [
   // to import and spread the config object from 'eslint-config-next' if available,
   // or manually replicate its settings if not directly exportable for flat config.
   // For now, the above covers the core React/TS setup.
+
+  // Config files override (ensure they are treated as CommonJS if needed, although type:module might handle this)
+  // This might not be strictly necessary with type:module, but for clarity:
+  {
+      files: ["*.config.js", "*.config.cjs", "jest.setup.js", "setupTests.js", "jest.setup.cjs", "setupTests.cjs"], // Target .js and potential .cjs versions
+      languageOptions: {
+        // sourceType: "commonjs", // This might not be needed if globals are set
+        globals: {
+            ...globals.node
+        }
+      },
+      rules: {
+        // "no-undef": "error" // Turn off no-undef here, rely on globals.node
+        "no-undef": "off" 
+      }
+  },
 ]; 
