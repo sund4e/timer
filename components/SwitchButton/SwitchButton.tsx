@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { MouseEvent as ReactMouseEvent } from 'react';
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{
+  $isOpen: boolean;
+}>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -26,16 +28,16 @@ const StyledButton = styled.button`
     transform-origin: 1px;
 
     :first-child {
-      transform: ${({ open }) => (open ? 'rotate(45deg)' : 'rotate(0)')};
+      transform: ${({ $isOpen }) => ($isOpen ? 'rotate(45deg)' : 'rotate(0)')};
     }
 
     :nth-child(2) {
-      opacity: ${({ open }) => (open ? '0' : '1')};
+      opacity: ${({ $isOpen }) => ($isOpen ? '0' : '1')};
     }
 
     :nth-child(3) {
-      transform: ${({ open }: { open: boolean }) =>
-        open ? 'rotate(-45deg)' : 'rotate(0)'};
+      transform: ${({ $isOpen }: { $isOpen: boolean }) =>
+        $isOpen ? 'rotate(-45deg)' : 'rotate(0)'};
     }
   }
 `;
@@ -49,7 +51,7 @@ const SwitchButton = ({
   onClick: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
   className?: string;
 }) => (
-  <StyledButton className={className} open={isOpen} onClick={onClick}>
+  <StyledButton className={className} $isOpen={isOpen} onClick={onClick}>
     <div />
     <div />
     <div />

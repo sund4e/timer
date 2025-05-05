@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import QuestionIcon from '../../icons/question';
 
-const TooltipText = styled.div`
+const TooltipText = styled.div<{$parentPosition: DOMRect}>`
   background-color: ${({ theme }) => theme.colors.highlight};
   color: ${({ theme }) => theme.colors.light};
   position: absolute;
-  top: ${({ parentPosition }: { parentPosition: DOMRect }) =>
-    parentPosition.top}px;
-  left: ${({ parentPosition }: { parentPosition: DOMRect }) =>
-    parentPosition.right}px;
+  top: ${({ $parentPosition }: { $parentPosition: DOMRect }) =>
+    $parentPosition.top}px;
+  left: ${({ $parentPosition }: { $parentPosition: DOMRect }) =>
+    $parentPosition.right}px;
   padding: ${({ theme }) => theme.fontSizes.medium / 2}rem;
   font-size: ${({ theme }) => theme.fontSizes.small}rem;
   border-radius: 6px;
@@ -58,7 +58,7 @@ const Tooltip = ({ children }: Props) => {
       {show &&
         parentPosition &&
         ReactDOM.createPortal(
-          <TooltipText parentPosition={parentPosition}>{children}</TooltipText>,
+          <TooltipText $parentPosition={parentPosition}>{children}</TooltipText>,
           portalRoot.current
         )}
     </>
