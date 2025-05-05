@@ -1,6 +1,6 @@
 import TimeInput from '../TimeInput';
 import useTimer from '../../hooks/useTimer';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export type Props = {
   onTimeEnd: () => void;
@@ -11,6 +11,8 @@ export type Props = {
   className?: string;
   setTitleTime: (seconds: number) => void;
 };
+
+
 
 const Timer = ({
   onTimeEnd,
@@ -23,10 +25,39 @@ const Timer = ({
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
   const [isFocused, setIsFocused] = useState(!!initialFocus);
+  const [timerIsRunning, setTimerIsRunning] = useState(false);
+  const timerIsRunningRef = useRef(timerIsRunning);
+
+  useEffect(() => {
+    timerIsRunningRef.current = timerIsRunning;
+  }, [timerIsRunning]);
+
+  // Ensure timer does not start running if focused when chaninging window
+  useEffect(() => {
+    const handleBlur = () => {
+      if(!timerIsRunningRef.current) {
+        setTimerIsRunning(false);
+      }
+    };
+    window.addEventListener('blur', handleBlur);
+
+    return () => {
+      window.removeEventListener('blur', handleBlur);
+    };
+  }, []);
+
+  useEffect(() => {
+    if(!isFocused && isActive) {
+      setTimerIsRunning(true);
+    } else {
+      setTimerIsRunning(false);
+    }
+  }, [isFocused, isActive]);
+
   const { time } = useTimer(
     startTime,
     hanldeEnd,
-    !isFocused && isActive,
+    timerIsRunning,
     restart
   );
 
