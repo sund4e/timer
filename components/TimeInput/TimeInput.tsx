@@ -83,9 +83,16 @@ const TimeInput = ({
     setInternallyFocused(isFocused); 
   }, [isFocused, internallyFocused, inputRefs]);
 
+  const onChangeTime = useCallback((seconds: number) => {
+    if (seconds !== value) {
+      onChange(seconds);
+    }
+  }, [onChange, time]);
+
   useKeyPressCallBack('Enter', () => {
     if (internallyFocused && isValidTime(time)) {
-      onChange(getSecondsFromDigits(time));
+      onChangeTime(getSecondsFromDigits(time));
+      onBlur();
     } else {
       onFocus(); 
     }
@@ -123,9 +130,9 @@ const TimeInput = ({
          inputRefs[nextIndex]?.current?.focus();
       }, 0);
     } else {
-      onChange(getSecondsFromDigits(newTime));
+      onChangeTime(getSecondsFromDigits(newTime));
     }
-  }, [time, inputRefs]);
+  }, [time, inputRefs, onChangeTime]);
 
   const handleFocusCapture = useCallback(() => {
     if (!internallyFocused) {
@@ -139,7 +146,7 @@ const TimeInput = ({
         if (internallyFocused && isValidTime(time)) {
            setInternallyFocused(false);
            onBlur();
-           onChange(getSecondsFromDigits(time)); 
+           onChangeTime(getSecondsFromDigits(time)); 
         }
     }
   }, [internallyFocused, onBlur, time]);
