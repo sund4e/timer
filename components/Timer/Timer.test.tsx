@@ -142,6 +142,20 @@ describe('Timer', () => {
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:08');
     });
+
+    it('keeps the original restart value if no change in the value', () => {
+      const initialTime = 10;
+      render({ initialTime, isActive: true, initialFocus: false, restart: true });
+      expect(getTime()).toEqual('00:00:10');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+
+      changeInputValue(2, 0);
+      enter();
+
+      advanceSeconds(10);
+      expect(getTime()).toEqual('00:00:10');
+    });
   });
 
   describe('Editing time', () => {
@@ -153,10 +167,6 @@ describe('Timer', () => {
         initialFocus: false,
       });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const targetInput = inputs[4];
-
-      // fireEvent.focus(targetInput);
-      // rerender({ isFocused: true });
 
       changeInputValue(4, 2);
 
