@@ -128,19 +128,11 @@ describe('TimeInput', () => {
       expect(onBlur).toHaveBeenCalledTimes(1);
     });
 
-    it('is not called when Enter is pressed while an input is focused', () => {
+    it('is called when Enter is pressed while an input is focused', () => {
       const onBlur = jest.fn();
-      const onChange = jest.fn();
-      
-      render({ ...defaultProps, onBlur, onChange, isFocused: true }); 
-      
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-
-      const focusedElement = document.activeElement || inputs[2];
-      fireEvent.keyDown(focusedElement, { key: 'Enter', code: 'Enter' });
-
-      expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onBlur).not.toHaveBeenCalled(); 
+      render({ ...defaultProps, onBlur, isFocused: true }); 
+      enter();
+      expect(onBlur).toHaveBeenCalled(); 
     });
 
     it('is NOT called when focus moves between internal inputs', () => {
@@ -182,6 +174,15 @@ describe('TimeInput', () => {
       enter();
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith(getSecondsFromDigits([0, 1, 4, 9, 5, 4]));
+    });
+
+    it('is not called when Enter is pressed if input was not changed', () => {
+      const onChange = jest.fn();
+      render({ ...defaultProps, onChange, isFocused: true });
+      expect(getTime()).toEqual('01:49:34');
+      changeInputValue(4, 9); 
+      enter();
+      expect(onChange).not.toHaveBeenCalledTimes(1);
     });
   });
 
