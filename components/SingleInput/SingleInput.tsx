@@ -1,13 +1,10 @@
 import styled from 'styled-components';
 import {
   useRef,
-  useEffect,
-  MouseEvent as ReactMouseEvent,
   ChangeEvent,
   useCallback,
   useState
 } from 'react';
-import { Theme } from '../../styles/theme';
 
 const StyledInput = styled.input<{
   $isInvalid: boolean;

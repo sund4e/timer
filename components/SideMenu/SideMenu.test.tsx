@@ -1,17 +1,16 @@
-import { fireEvent, screen, act, getNodeText } from '@testing-library/react';
+import { screen} from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import SideMenu, { Props } from './SideMenu';
-import { getElementWithText } from '../../tests/helpers';
 
 jest.useFakeTimers();
 
-fdescribe('SideMenu', () => {
+describe('SideMenu', () => {
   const render = (override?: Partial<Props>) => {
     const defaultProps = {
       children: <div></div>,
       ...override,
     };
-    const rendered = renderElement(<SideMenu {...defaultProps} />);
+    renderElement(<SideMenu {...defaultProps} />);
   };
 
   it('renders children', () => {

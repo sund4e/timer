@@ -1,6 +1,6 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
-import { act, fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { getTime } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';

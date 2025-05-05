@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import Toggle from '../Toggle';
-import Tooltip from '../Tooltip';
 
 export type Props = {
   setNotify: (notify: () => void) => void;
@@ -52,7 +51,7 @@ const NotificationToggle = ({ setNotify, children }: Props) => {
 
   useEffect(() => {
     setNotify(notify);
-  }, [notify]);
+  }, [notify, setNotify]);
 
   return isBrowserSupported ? (
     <Toggle

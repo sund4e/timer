@@ -1,4 +1,4 @@
-import { fireEvent, screen, act, getNodeText } from '@testing-library/react';
+import { fireEvent, screen, act } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import Timer, { Props } from './Timer';
 import { changeInputValue, enter, getTime } from '../../tests/helpers';
@@ -162,12 +162,12 @@ describe('Timer', () => {
   describe('Editing time', () => {
     it('does not start timer if edited number was not the last', () => {
       const initialTime = 0;
-      const { rerender } = render({
+      render({
         initialTime,
         isActive: true,
         initialFocus: false,
       });
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      screen.getAllByRole('textbox') as HTMLInputElement[];
 
       changeInputValue(4, 2);
 

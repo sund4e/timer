@@ -28,7 +28,7 @@ describe('NotificationToggle', () => {
   };
 
   beforeEach(() => {
-    //@ts-ignore
+    //@ts-expect-error
     window.Notification = NotificationMock;
   });
 

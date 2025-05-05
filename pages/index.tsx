@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import styled from 'styled-components';
 import Container from '../components/Container';
 import TimerApp from '../components/TimerApp';
 import { useState } from 'react';

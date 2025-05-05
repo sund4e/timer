@@ -4,7 +4,6 @@ import NotificationToggle from '../NotificationToggle';
 import Toggle from '../Toggle';
 import { memo, useState, useEffect } from 'react';
 import SideMenu from '../SideMenu';
-import { Theme } from '../../styles/theme';
 import Tooltip from '../Tooltip';
 
 const StyledTimer = styled(Timer)`

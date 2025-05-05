@@ -1,4 +1,3 @@
-import { GetStaticProps, GetStaticPropsContext } from 'next';
 import Document, { DocumentContext } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
