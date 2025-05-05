@@ -76,8 +76,8 @@ const TimerApp = memo(
         <SideMenu>
           <Header>Aika Timer</Header>
           <Text>
-            "Aika" is Finnish and means time. It's also a simple, yet beautiful
-            online timer with alerts and ability to set recurring reminders.
+            {"\"Aika\" is Finnish and means time. It's also a simple, yet beautiful"}
+            {" online timer with alerts and ability to set recurring reminders."}
           </Text>
           <SubHeader>Settings</SubHeader>
           <Toggle isOn={playSound} setIsOn={setPlaySound}>
@@ -89,8 +89,8 @@ const TimerApp = memo(
                 Notifications{' '}
                 {isDenied && (
                   <Tooltip>
-                    Can't enable notifications since they are disabled in the
-                    browser settings
+                    {"Can't enable notifications since they are disabled in the"}
+                    {" browser settings"}
                   </Tooltip>
                 )}
               </>
@@ -104,5 +104,7 @@ const TimerApp = memo(
     );
   }
 );
+
+TimerApp.displayName = 'TimerApp';
 
 export default TimerApp;

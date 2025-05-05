@@ -28,7 +28,7 @@ describe('NotificationToggle', () => {
   };
 
   beforeEach(() => {
-    //@ts-expect-error
+    // @ts-expect-error Need to mock global Notification type
     window.Notification = NotificationMock;
   });
 

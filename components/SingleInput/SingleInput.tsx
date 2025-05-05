@@ -42,7 +42,8 @@ const SingleInput = ({
   maxValue,
   ref
 }: Props) => {
-  const input = ref || useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const input = ref || inputRef;
   const [isValid, setIsValid] = useState(true);
 
   const onFocus = useCallback(() => {

@@ -5,7 +5,6 @@ import tseslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
-import nextPlugin from "@next/eslint-plugin-next"; // Correct import for Next.js plugin rules if needed directly
 import jestPlugin from "eslint-plugin-jest";
 
 
@@ -39,6 +38,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
+        NodeJS: "readonly"
       },
     },
     rules: {
@@ -135,4 +135,13 @@ export default [
       "@typescript-eslint/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description", "ts-ignore": true, "ts-nocheck": true, "ts-check": false }] // Adjust ts-comment rule for tests
     },
   },
+
+  // Specific file rule overrides
+  {
+      files: ["styled.d.ts"],
+      rules: {
+          // Target the rule reported in the error message
+          "@typescript-eslint/no-empty-object-type": "off" 
+      }
+  }
 ]; 
