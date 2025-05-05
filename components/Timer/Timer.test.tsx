@@ -192,6 +192,20 @@ describe('Timer', () => {
       expect(getTime()).toEqual('00:00:11');
     });
 
+    it('starts timer with new time', () => {
+      const initialTime = 10;
+      render({ initialTime, isActive: true, initialFocus: true });
+      enter();
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+      changeInputValue(4, 2);
+      expect(getTime()).toEqual('00:00:29');
+      enter();
+      expect(getTime()).toEqual('00:00:29');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:28');
+    });
+
     it('does not start timer if edited number was not valid', () => {
       const initialTime = 0;
       render({ initialTime, isActive: true });
