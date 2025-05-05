@@ -8,20 +8,13 @@ const useTimer = (
 ) => {
   const [timeLeftSeconds, setTimeLeftSeconds] = useState(initialTimeSeconds);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const onTimeEndRef = useRef(onTimeEnd);
-  const prevInitialTimeRef = useRef(initialTimeSeconds);
-  const prevIsRunningRef = useRef(isRunning);
-  const timeEndedRef = useRef(initialTimeSeconds <= 0);
+  const prevInitialTimeSecods = useRef(initialTimeSeconds);
 
+  // Update time left when initial time changes
   useEffect(() => {
-    onTimeEndRef.current = onTimeEnd;
-  }, [onTimeEnd]);
-
-  useEffect(() => {
-    if (initialTimeSeconds !== prevInitialTimeRef.current) {
+    if (initialTimeSeconds !== prevInitialTimeSecods.current) {
       setTimeLeftSeconds(initialTimeSeconds);
-      prevInitialTimeRef.current = initialTimeSeconds;
-      timeEndedRef.current = initialTimeSeconds <= 0;
+      prevInitialTimeSecods.current = initialTimeSeconds;
     }
   }, [initialTimeSeconds]);
 
@@ -31,50 +24,46 @@ const useTimer = (
 
   const startTimer = useCallback(() => {
     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+      clearTimer();
     }
-    timeEndedRef.current = false;
     intervalRef.current = setInterval(intervalCallback, 1000);
   }, [intervalCallback]);
 
-  useEffect(() => {
-    if (timeLeftSeconds <= 0) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-
-      if (!timeEndedRef.current) {
-        onTimeEndRef.current();
-        timeEndedRef.current = true;
-      }
-
-      if (restart && prevIsRunningRef.current) {
-        setTimeLeftSeconds(initialTimeSeconds);
-      }
+  const clearTimer = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
-  }, [timeLeftSeconds, restart, initialTimeSeconds, onTimeEndRef]);
+  }, []);
 
+  // Handle time end
   useEffect(() => {
-    if (isRunning && timeLeftSeconds > 0) {
-      if (!prevIsRunningRef.current || !intervalRef.current) {
+    if (timeLeftSeconds <= 0 && initialTimeSeconds > 0) {
+      if (intervalRef.current) {
+        onTimeEnd();
+        clearTimer();
+      }
+
+      if (restart) {
+        setTimeLeftSeconds(initialTimeSeconds);
         startTimer();
       }
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
     }
-    prevIsRunningRef.current = isRunning;
+  }, [timeLeftSeconds, restart, initialTimeSeconds, onTimeEnd]);
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
+  // Start or stop timer based on isRunning prop
+  useEffect(() => {
+    if (isRunning && timeLeftSeconds > 0 && !intervalRef.current) {
+      startTimer();
+    } else if (!isRunning && intervalRef.current) {
+      clearTimer();
+    }
   }, [isRunning, startTimer, timeLeftSeconds]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => clearTimer();
+  }, []);
 
   return { time: timeLeftSeconds };
 };

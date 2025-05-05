@@ -60,7 +60,7 @@ describe('useTimer Hook', () => {
     });
     expect(onTimeEndMock).not.toHaveBeenCalled();
     expect(result.current.time).toBe(1);
-
+    console.log('result.current.time', result.current.time);
     act(() => {
       advanceSeconds(1);
     });
@@ -74,6 +74,21 @@ describe('useTimer Hook', () => {
     renderHook(() =>
       useTimer(initialTime, onTimeEndMock, true, false)
     );
+    act(() => {
+       advanceSeconds(1);
+    });
+    expect(onTimeEndMock).not.toHaveBeenCalled();
+  });
+
+  it('should not call onTimeEnd when starting timer', () => {
+    const initialTime = 0;
+    const onTimeEndMock = jest.fn();
+    const { rerender } = renderHook(
+      (props: { initial: number }) => useTimer(props.initial, onTimeEndMock, true, false),
+      { initialProps: { initial: initialTime } }
+  );
+    const updatedTime = 10;
+    rerender({ initial: updatedTime });
     act(() => {
        advanceSeconds(1);
     });
