@@ -6,6 +6,7 @@ import tsParser from "@typescript-eslint/parser";
 import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
 import nextPlugin from "@next/eslint-plugin-next"; // Correct import for Next.js plugin rules if needed directly
+import jestPlugin from "eslint-plugin-jest";
 
 
 export default [
@@ -114,5 +115,24 @@ export default [
         // "no-undef": "error" // Turn off no-undef here, rely on globals.node
         "no-undef": "off" 
       }
+  },
+
+  // Jest test file configurations
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/tests/**/*.ts", "**/tests/**/*.tsx", "**/__mocks__/**"],
+    plugins: {
+      jest: jestPlugin
+    },
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+    rules: {
+       ...jestPlugin.configs.recommended.rules, // Apply Jest recommended rules
+      // Allow describe, it, etc.
+      "@typescript-eslint/no-explicit-any": "off", // Often needed in tests
+      "@typescript-eslint/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description", "ts-ignore": true, "ts-nocheck": true, "ts-check": false }] // Adjust ts-comment rule for tests
+    },
   },
 ]; 
