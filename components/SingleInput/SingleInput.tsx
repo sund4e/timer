@@ -53,7 +53,7 @@ const SingleInput = ({
   }, [input.current]);
 
   const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setTimeout(() => {
+    setTimeout(() => { //Fixes mobile
         if(input.current) input.current.setSelectionRange(0, 0);
     });
 
