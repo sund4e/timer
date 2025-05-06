@@ -1,4 +1,4 @@
-import Document, { DocumentContext } from 'next/document';
+import Document, { DocumentContext, Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
 export default class MyDocument extends Document {
@@ -26,5 +26,27 @@ export default class MyDocument extends Document {
     } finally {
       sheet.seal();
     }
+  }
+
+  render() {
+    const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+
+    return (
+      <Html lang="en">
+        <Head>          
+          {umamiWebsiteId && (
+            <script
+              defer
+              src="https://cloud.umami.is/script.js"
+              data-website-id={umamiWebsiteId}
+            />
+          )}
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
   }
 }
