@@ -95,8 +95,7 @@ const TimerApp = memo(
         <SideMenu>
           <Header>Aika Timer</Header>
           <Text>
-            {"\"Aika\" is Finnish and means time. It's also a simple, yet beautiful"}
-            {" online timer with alerts and ability to set recurring reminders."}
+            {"Aika means \"time\" in Finnish and is a minimal timer with alerts and repeat reminders."}
           </Text>
           <SubHeader>Settings</SubHeader>
           <Toggle isOn={playSound} setIsOn={handleSoundToggle}>
