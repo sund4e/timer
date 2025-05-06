@@ -41,28 +41,47 @@ export type Props = {
 
 const TimerApp = memo(
   ({ initialTime = 0, isActive = true, setTitleTime }: Props) => {
+
+    const userAgent = typeof window !== 'undefined' ? navigator.userAgent : '';
+    const isLikelyMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent);
+
     const [notify, setNotify] = useState<(() => void) | null>(null);
     const [restart, setRestart] = useState(true);
-    const [playSound, setPlaySound] = useState(true);
+    const [playSound, setPlaySound] = useState(!isLikelyMobile);
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
     useEffect(() => {
-      //preload the audio after render
       const audio = new Audio('/bell.wav');
+      audio.load();
       audio.addEventListener('canplaythrough', () => {
         setAudio(audio);
       });
     }, []);
 
-    function onTimeEnd() {
-      if (playSound && audio) {
+    function playAudio() {
+      if (audio) {
         audio.currentTime = 0;
-        audio.play();
+        audio.play().catch(err => console.error("Play failed:", err));
+      } else {
+        console.log('Audio not ready to play.');
+      }
+    }
+
+    function onTimeEnd() {
+      if (playSound) {
+        playAudio();
       }
       if (notify) {
         notify();
       }
     }
+
+    const handleSoundToggle = (newValue: boolean) => {
+      setPlaySound(newValue);
+      if (newValue && isLikelyMobile && audio) {
+        playAudio();
+      }
+    };
 
     return (
       <Wrapper>
@@ -80,7 +99,7 @@ const TimerApp = memo(
             {" online timer with alerts and ability to set recurring reminders."}
           </Text>
           <SubHeader>Settings</SubHeader>
-          <Toggle isOn={playSound} setIsOn={setPlaySound}>
+          <Toggle isOn={playSound} setIsOn={handleSoundToggle}>
             Sound
           </Toggle>
           <NotificationToggle setNotify={(notify) => setNotify(() => notify)}>
