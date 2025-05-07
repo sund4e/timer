@@ -12,14 +12,15 @@ export type Theme = {
     small: number;
   };
   transition: number;
+  radius: number;
 };
 export const theme: Theme = {
   colors: {
     dark: '#141414',
     primary: '#182033',
     highlight: '#494F69',
-    accent: '#975E6E',
-    light: '#E8E8E8',
+    accent: '#98473E',
+    light:  '#C9C5CB'
   },
   fontSizes: {
     big: 10,
@@ -27,4 +28,5 @@ export const theme: Theme = {
     small: 0.75,
   },
   transition: 0.4,
+  radius: 0.5,
 };
