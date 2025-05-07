@@ -1,13 +1,14 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export type ButtonProps = {
   onClick?: () => void;
   children: React.ReactNode;
   className?: string;
   disabled?: boolean;
+  isHidden?: boolean;
 };
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{ $isHidden?: boolean }>`
   background-color: transparent;
   color: ${({ theme }) => theme.colors.dark};
   border: 1px solid transparent;
@@ -16,6 +17,10 @@ const StyledButton = styled.button`
   font-weight: 100;
   border-radius: ${({ theme }) => theme.radius}rem;
   cursor: pointer;
+
+  opacity: ${({ $isHidden }) => ($isHidden ? 0 : 1)};
+  pointer-events: ${({ $isHidden }) => ($isHidden ? 'none' : 'auto')};
+
   transition: ${({ theme }) => theme.transition}s ease;
 
   &:hover:not(:disabled) {
@@ -23,8 +28,8 @@ const StyledButton = styled.button`
   }
 
   &:active:not(:disabled) {
-    color: ${({ theme }) => theme.colors.light};
-    border-color: ${({ theme }) => theme.colors.light};
+    color: ${({ theme }) => theme.colors.highlight};
+    border-color: ${({ theme }) => theme.colors.highlight};
   }
 
   &:disabled {
@@ -33,9 +38,9 @@ const StyledButton = styled.button`
   }
 `;
 
-const Button = ({ onClick, children, className, disabled }: ButtonProps) => {
+const Button = ({ onClick, children, className, disabled, isHidden }: ButtonProps) => {
   return (
-    <StyledButton onClick={onClick} className={className} disabled={disabled}>
+    <StyledButton onClick={onClick} className={className} disabled={disabled} $isHidden={isHidden}>
       {children}
     </StyledButton>
   );
