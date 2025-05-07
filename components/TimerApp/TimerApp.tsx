@@ -5,6 +5,7 @@ import Toggle from '../Toggle';
 import { memo, useState, useEffect } from 'react';
 import SideMenu from '../SideMenu';
 import Tooltip from '../Tooltip';
+import Button from '../Button/Button';
 
 const StyledTimer = styled(Timer)`
   font-size: min(16vw, ${({ theme }) => theme.fontSizes.big}rem);
@@ -92,6 +93,7 @@ const TimerApp = memo(
           initialTime={initialTime}
           setTitleTime={setTitleTime}
         />
+        <Button onClick={() => console.log('Start button clicked')}>Start</Button>
         <SideMenu>
           <Header>Aika Timer</Header>
           <Text>
