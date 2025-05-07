@@ -20,8 +20,8 @@ export type Props = {
   value: number;
   onChange: (seconds: number) => void;
   isFocused: boolean;
-  onFocus: () => void;
-  onBlur: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
   className?: string;
 };
 
@@ -92,9 +92,9 @@ const TimeInput = ({
   useKeyPressCallBack('Enter', () => {
     if (internallyFocused && isValidTime(time)) {
       onChangeTime(getSecondsFromDigits(time));
-      onBlur();
+      onBlur?.();
     } else {
-      onFocus(); 
+      onFocus?.(); 
     }
   });
 
@@ -130,6 +130,7 @@ const TimeInput = ({
          inputRefs[nextIndex]?.current?.focus();
       }, 0);
     } else {
+      inputRefs[index]?.current?.blur();
       onChangeTime(getSecondsFromDigits(newTime));
     }
   }, [time, inputRefs, onChangeTime]);
@@ -137,7 +138,7 @@ const TimeInput = ({
   const handleFocusCapture = useCallback(() => {
     if (!internallyFocused) {
       setInternallyFocused(true);
-      onFocus();
+      onFocus?.();
     }
   }, [internallyFocused, onFocus]);
 
@@ -145,7 +146,7 @@ const TimeInput = ({
     if (wrapperRef.current && !wrapperRef.current.contains(event.relatedTarget as Node)) {
         if (internallyFocused && isValidTime(time)) {
            setInternallyFocused(false);
-           onBlur();
+           onBlur?.();
            onChangeTime(getSecondsFromDigits(time)); 
         }
     }

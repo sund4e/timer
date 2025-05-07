@@ -6,6 +6,7 @@ import { memo, useState, useEffect } from 'react';
 import SideMenu from '../SideMenu';
 import Tooltip from '../Tooltip';
 import Button from '../Button/Button';
+import TimerSet from '../TimerSet/TimerSet';
 
 const StyledTimer = styled(Timer)`
   font-size: min(16vw, ${({ theme }) => theme.fontSizes.big}rem);
@@ -86,14 +87,12 @@ const TimerApp = memo(
 
     return (
       <Wrapper>
-        <StyledTimer
-          restart={restart}
-          onTimeEnd={onTimeEnd}
-          isActive={isActive}
+        <TimerSet
           initialTime={initialTime}
+          isActive={isActive}
           setTitleTime={setTitleTime}
+          onTimeEnd={onTimeEnd}
         />
-        <Button onClick={() => console.log('Start button clicked')}>Start</Button>
         <SideMenu>
           <Header>Aika Timer</Header>
           <Text>

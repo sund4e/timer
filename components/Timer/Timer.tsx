@@ -4,84 +4,47 @@ import { useEffect, useRef, useState } from 'react';
 
 export type Props = {
   onTimeEnd: () => void;
-  isActive: boolean;
+  isRunning: boolean;
   initialTime: number;
-  initialFocus?: boolean;
   restart: boolean;
   className?: string;
   setTitleTime: (seconds: number) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+  isFocused: boolean;
 };
-
-
 
 const Timer = ({
   onTimeEnd,
-  isActive,
+  isRunning,
   initialTime,
   restart,
-  initialFocus,
   className,
   setTitleTime,
+  onFocus,
+  onBlur,
+  isFocused,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
-  const [isFocused, setIsFocused] = useState(!!initialFocus);
-  const [timerIsRunning, setTimerIsRunning] = useState(false);
-  const timerIsRunningRef = useRef(timerIsRunning);
-
-  useEffect(() => {
-    timerIsRunningRef.current = timerIsRunning;
-  }, [timerIsRunning]);
-
-  // Ensure timer does not start running if focused when chaninging window
-  useEffect(() => {
-    const handleBlur = () => {
-      if(!timerIsRunningRef.current) {
-        setTimerIsRunning(false);
-      }
-    };
-    window.addEventListener('blur', handleBlur);
-
-    return () => {
-      window.removeEventListener('blur', handleBlur);
-    };
-  }, []);
-
-  useEffect(() => {
-    if(!isFocused && isActive) {
-      setTimerIsRunning(true);
-    } else {
-      setTimerIsRunning(false);
-    }
-  }, [isFocused, isActive]);
-
   const { time } = useTimer(
     startTime,
     hanldeEnd,
-    timerIsRunning,
+    isRunning,
     restart
   );
 
   useEffect(() => {
-    if (isActive) {
+    if (isRunning) {
       setTitleTime(time);
     }
-  }, [time, isActive]);
+  }, [time, isRunning]);
 
   function hanldeEnd() {
     onTimeEnd();
   }
 
-  const onFocus = () => {
-    setIsFocused(true);
-  };
-
-  const onBlur = () => {
-    setIsFocused(false);
-  };
-
   const onChange = (seconds: number) => {
     setStartTime(seconds);
-    setIsFocused(false);
   };
 
   return (
