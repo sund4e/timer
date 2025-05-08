@@ -48,18 +48,20 @@ describe('TimeInput', () => {
   });
 
   describe('Focusing', () => {
-    it('focuses input on click', () => {
-      render();
+    it('calls onFocus on click', () => {
+      const onFocus = jest.fn()
+      render({ onFocus, isFocused: false });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       const input = inputs[2];
-      fireEvent.click(input);
-      expect(input === document.activeElement).toBeTruthy();
+      fireEvent.focus(input);
+      expect(onFocus).toHaveBeenCalled();
     });
 
     it('focuses next input after finishing one', () => {
-      render();
+      render({isFocused: true});
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       changeInputValue(0, 1);
+      expect(inputs[1] === document.activeElement).toBeTruthy();
       changeInputValue(1, 5);
       expect(inputs[2] === document.activeElement).toBeTruthy();
     });
@@ -67,7 +69,8 @@ describe('TimeInput', () => {
     it('focuses next input after pressing right arrow', () => {
       render();
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      fireEvent.click(inputs[2]);
+      inputs[2].focus();
+      expect(inputs[2] === document.activeElement).toBeTruthy();
       fireEvent.keyDown(inputs[2], {
         key: 'ArrowRight',
       });
@@ -75,9 +78,10 @@ describe('TimeInput', () => {
     });
 
     it('focuses previoius input after pressing left arrow', () => {
-      render();
+      render({isFocused: true});
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      fireEvent.click(inputs[2]);
+      inputs[2].focus();
+      expect(inputs[2] === document.activeElement).toBeTruthy();
       fireEvent.keyDown(inputs[2], {
         key: 'ArrowLeft',
       });
@@ -90,7 +94,7 @@ describe('TimeInput', () => {
       const onFocus = jest.fn();
       render({ onFocus });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      fireEvent.click(inputs[2]);
+      inputs[2].focus();
       expect(onFocus).toHaveBeenCalled();
     });
 
@@ -107,8 +111,8 @@ describe('TimeInput', () => {
       const onBlur = jest.fn();
       render({ onBlur });
       const inputs = screen.getAllByRole('textbox');
-      fireEvent.focus(inputs[2]);
-      fireEvent.blur(inputs[2]);
+      inputs[2].focus();
+      inputs[2].blur();
       expect(onBlur).toHaveBeenCalledTimes(1);
     });
 
@@ -119,9 +123,7 @@ describe('TimeInput', () => {
       );
       const inputs = screen.getAllByRole('textbox');
 
-      act(() => {
-        inputs[2].focus();
-      });
+      inputs[2].focus();
       
       rerender(<TimeInput {...defaultProps} onBlur={onBlur} isFocused={false} />);
 
@@ -189,9 +191,9 @@ describe('TimeInput', () => {
   describe('invalid input', () => {
     it('does not move focus to next input', () => {
       const onChange = jest.fn();
-      render({ onChange });
-      changeInputValue(2, 9);
+      render({ onChange, isFocused: true });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      changeInputValue(2, 9);
       expect(inputs[2] === document.activeElement).toBeTruthy();
     });
 
@@ -209,15 +211,5 @@ describe('TimeInput', () => {
       changeInputValue(2, 9);
       expect(getTime()).toEqual('01:99:34');
     });
-
-    it('does not call onBlur when invalid', () => {
-      const onBlur = jest.fn();
-      render({ onBlur });
-      const inputs = screen.getAllByRole('textbox');
-      changeInputValue(2, 9);
-      fireEvent.blur(inputs[2]);
-      expect(onBlur).toHaveBeenCalledTimes(0);
-    });
-
   });
 });

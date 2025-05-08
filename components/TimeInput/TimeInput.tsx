@@ -54,7 +54,6 @@ const TimeInput = ({
   isFocused
 }: Props) => {
   const [time, setTime] = useState(getDigits(value));
-  const [internallyFocused, setInternallyFocused] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef0 = useRef<HTMLInputElement>(null);
   const inputRef1 = useRef<HTMLInputElement>(null);
@@ -68,35 +67,33 @@ const TimeInput = ({
     setTime(getDigits(value));
   }, [value]);
 
-  useEffect(() => {  
-    if (isFocused) {
-       if (!internallyFocused && !(wrapperRef.current?.contains(document.activeElement))) {
-        inputRefs[2]?.current?.focus(); 
-       }
-    } else {
-      if (internallyFocused && wrapperRef.current?.contains(document.activeElement)) {
-         if (document.activeElement instanceof HTMLElement) {
-           document.activeElement.blur();
-         }
+  const onChangeTime = useCallback((time: number[]) => {
+    if (isValidTime(time)) {
+      const seconds = getSecondsFromDigits(time);
+      if (seconds !== value) {
+        onChange(seconds);
       }
-    }
-    setInternallyFocused(isFocused); 
-  }, [isFocused, internallyFocused, inputRefs]);
-
-  const onChangeTime = useCallback((seconds: number) => {
-    if (seconds !== value) {
-      onChange(seconds);
     }
   }, [onChange, time]);
 
   useKeyPressCallBack('Enter', () => {
-    if (internallyFocused && isValidTime(time)) {
-      onChangeTime(getSecondsFromDigits(time));
+    if (isValidTime(time) && isFocused) {
+      onChangeTime(time);
       onBlur?.();
     } else {
       onFocus?.(); 
     }
   });
+
+  useEffect(() => {
+    const currentIndex = findFocusedIndex();
+    if (isFocused && currentIndex === -1) {
+      inputRefs[0]?.current?.focus();
+      onFocus?.();
+    } else {
+      onBlur?.();
+    }
+  }, [isFocused]);
 
   const findFocusedIndex = useCallback(() => {
     return inputRefs.findIndex(ref => ref.current === document.activeElement);
@@ -121,36 +118,33 @@ const TimeInput = ({
   const handleTimeChange = useCallback((index: number) => (newValue: number) => {
     const newTime = time.map((digit, i) => i === index ? newValue : digit);
     setTime(newTime);
+    console.log('newTime', newTime, isValidTime(newTime));
     if (!isValidTime(newTime)) {
       return;
     }
     const nextIndex = index + 1;
     if (inputRefs[nextIndex]) {
-      setTimeout(() => {
-         inputRefs[nextIndex]?.current?.focus();
-      }, 0);
+      inputRefs[nextIndex]?.current?.focus();
+      // setTimeout(() => {
+      //     console.log('focusingnext ', nextIndex);
+      //     inputRefs[nextIndex]?.current?.focus();
+      // }, 0);
     } else {
       inputRefs[index]?.current?.blur();
-      onChangeTime(getSecondsFromDigits(newTime));
+      onChangeTime(newTime);
     }
   }, [time, inputRefs, onChangeTime]);
 
   const handleFocusCapture = useCallback(() => {
-    if (!internallyFocused) {
-      setInternallyFocused(true);
-      onFocus?.();
-    }
-  }, [internallyFocused, onFocus]);
+    onFocus?.();
+  }, [onFocus]);
 
   const handleBlurCapture = useCallback((event: FocusEvent<HTMLDivElement>) => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.relatedTarget as Node)) {
-        if (internallyFocused && isValidTime(time)) {
-           setInternallyFocused(false);
-           onBlur?.();
-           onChangeTime(getSecondsFromDigits(time)); 
-        }
+      onBlur?.();
+      onChangeTime(time); 
     }
-  }, [internallyFocused, onBlur, time]);
+  }, [onBlur, time]);
 
   return (
     <Wrapper 
