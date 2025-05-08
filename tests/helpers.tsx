@@ -12,7 +12,8 @@ export const getTime = (): string | null => {
 export const changeInputValue = (inputInxed: number, value: number) => {
   const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
   const input = inputs[inputInxed];
-  fireEvent.focus(input);
+  input.focus();
+  // fireEvent.focus(input);
   fireEvent.change(input, { target: { value } });
 };
 
@@ -33,4 +34,8 @@ export const simulateWindowFocus = () => {
   act(() => {
     window.dispatchEvent(new window.FocusEvent('focus'));
   });
+};
+
+export const getStartButton = () => {
+  return screen.getByTestId('start-button');
 };
