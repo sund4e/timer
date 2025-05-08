@@ -44,7 +44,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const [timers, setTimers] = useState<TimerConfig[]>([{id: Date.now().toString(), initialTime: initialTime}]);
   const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
   const [isSequenceRunning, setIsSequenceRunning] = useState(isActive);
-  const [focusIndex, setFocusIndex] = useState<number | null>(0);
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
 
   const addTimer = () => {
     const newTimer: TimerConfig = {
