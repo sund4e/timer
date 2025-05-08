@@ -43,7 +43,7 @@ export type Props = {
 const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeEnd }: Props) => {
   const [timers, setTimers] = useState<TimerConfig[]>([{id: Date.now().toString(), initialTime: initialTime}]);
   const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
-  const [isSequenceRunning, setIsSequenceRunning] = useState(false);
+  const [isSequenceRunning, setIsSequenceRunning] = useState(isActive);
   const [focusIndex, setFocusIndex] = useState<number | null>(0);
 
   const addTimer = () => {
@@ -95,7 +95,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
         ))}
       </TimersList>
       <Controls>
-        <Button onClick={onStart} isHidden={isSequenceRunning}>
+        <Button onClick={onStart} isHidden={isSequenceRunning} data-testid="start-button">
           Start
         </Button>
       </Controls>

@@ -1,7 +1,7 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
-import { getTime } from '../../tests/helpers';
+import { getStartButton, getTime } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
 import { setupAudioMock, restoreAudioMock, getMockAudioInstance } from '../../tests/audioMock';
@@ -41,7 +41,7 @@ describe('timerApp', () => {
     jest.useRealTimers();
   });
 
-  it('does runs timer if active', () => {
+  it('does run timer if active', () => {
     render({ isActive: true });
     expect(getTime()).toEqual('00:20:00');
     advanceSeconds(1);
@@ -55,7 +55,37 @@ describe('timerApp', () => {
     expect(getTime()).toEqual('00:20:00');
   });
 
-  it('clicking outside of timer starts the timer', () => {
+  it('starts timer after clicking start button', () => {
+    render({ isActive: false });
+    expect(getTime()).toEqual('00:20:00');
+    const startButton = screen.getByText('Start');
+    fireEvent.click(startButton);
+    advanceSeconds(1);
+    expect(getTime()).toEqual('00:19:59');
+  });
+
+  it('shows start button only when timer is not running', () => {
+    render({ isActive: true });
+    expect(getTime()).toEqual('00:20:00');
+    screen.debug();
+    const startButton = getStartButton();
+    expect(window.getComputedStyle(startButton).opacity).toBe('0');
+    advanceSeconds(1);
+    expect(getTime()).toEqual('00:19:59');
+
+    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    fireEvent.focus(inputs[2]);
+    expect(window.getComputedStyle(startButton).opacity).toBe('1');
+    advanceSeconds(1);
+    expect(getTime()).toEqual('00:19:59');
+
+    fireEvent.click(startButton);
+    expect(window.getComputedStyle(startButton).opacity).toBe('0');
+    advanceSeconds(1);
+    expect(getTime()).toEqual('00:19:58');
+  });
+
+  it('clicking outside of timer does not start the timer', () => {
     render();
     expect(getTime()).toEqual('00:20:00');
     advanceSeconds(1);
@@ -68,7 +98,7 @@ describe('timerApp', () => {
 
     fireEvent.blur(inputs[2]);
     advanceSeconds(1);
-    expect(getTime()).toEqual('00:19:58');
+    expect(getTime()).toEqual('00:19:59');
   });
 
   it('calls setTitleTime with time', () => {
