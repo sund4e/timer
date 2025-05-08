@@ -39,3 +39,10 @@ export const simulateWindowFocus = () => {
 export const getStartButton = () => {
   return screen.getByTestId('start-button');
 };
+
+export const getToggle = (text: string) => {
+  const soundLabel = screen.getByText(text);
+  const toggleInput = soundLabel.parentElement?.querySelector('input[type="checkbox"], input[role="switch"]') || screen.getByRole('switch', { name: /sound/i });
+  if (!toggleInput) throw new Error(`Could not find ${text} toggle input`);
+  return toggleInput as HTMLInputElement;
+}

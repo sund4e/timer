@@ -3,8 +3,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 const useTimer = (
   initialTimeSeconds: number,
   onTimeEnd: () => void,
-  isRunning: boolean,
-  restart: boolean
 ) => {
   const [timeLeftSeconds, setTimeLeftSeconds] = useState(initialTimeSeconds);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -44,28 +42,16 @@ const useTimer = (
         clearTimer();
       }
 
-      if (restart) {
-        setTimeLeftSeconds(initialTimeSeconds);
-        startTimer();
-      }
+      setTimeLeftSeconds(initialTimeSeconds);
     }
-  }, [timeLeftSeconds, restart, initialTimeSeconds, onTimeEnd]);
-
-  // Start or stop timer based on isRunning prop
-  useEffect(() => {
-    if (isRunning && timeLeftSeconds > 0 && !intervalRef.current) {
-      startTimer();
-    } else if (!isRunning && intervalRef.current) {
-      clearTimer();
-    }
-  }, [isRunning, startTimer, timeLeftSeconds]);
+  }, [timeLeftSeconds, initialTimeSeconds, onTimeEnd]);
 
   // Cleanup timer on unmount
   useEffect(() => {
     return () => clearTimer();
   }, []);
 
-  return { time: timeLeftSeconds };
+  return { time: timeLeftSeconds, startTimer, stopTimer: clearTimer };
 };
 
 export default useTimer;

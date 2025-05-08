@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import styled from 'styled-components';
 import Timer from '../Timer';
 import Button from '../Button/Button'; // Assuming Button component path
@@ -38,9 +38,10 @@ export type Props = {
   isActive: boolean;
   setTitleTime: (seconds: number) => void;
   onTimeEnd: () => void;
+  restart: boolean;
 };
 
-const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeEnd }: Props) => {
+const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeEnd, restart = false }: Props) => {
   const [timers, setTimers] = useState<TimerConfig[]>([{id: Date.now().toString(), initialTime: initialTime}]);
   const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
   const [isSequenceRunning, setIsSequenceRunning] = useState(isActive);
@@ -57,6 +58,17 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const removeTimer = (id: string) => {
     setTimers(prevTimers => prevTimers.filter(timer => timer.id !== id));
   };
+
+  useEffect(() => {
+    if (currentTimerIndex === timers.length - 1 &&
+      !isSequenceRunning &&
+      restart &&
+      focusIndex === null &&
+      isActive
+    ) {
+      setIsSequenceRunning(true);
+    }
+  }, [isSequenceRunning, restart, focusIndex, currentTimerIndex, isActive]);
 
   const onFocus = (index: number) => () => {
     setCurrentTimerIndex(index);
@@ -85,8 +97,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
           <StyledTimer
             key={timerConfig.id}
             initialTime={timerConfig.initialTime}
-            isRunning={currentTimerIndex === index && isSequenceRunning}
-            restart={false} // TODO: Move restart to TimerSet
+            isRunning={currentTimerIndex === index && isSequenceRunning}// TODO: Move restart to TimerSet
             onTimeEnd={onTimerEnd}
             setTitleTime={setTitleTime}
             onFocus={onFocus(index)}

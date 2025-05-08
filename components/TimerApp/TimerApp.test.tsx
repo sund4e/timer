@@ -1,7 +1,7 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
-import { getStartButton, getTime } from '../../tests/helpers';
+import { getStartButton, getTime, getToggle } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
 import { setupAudioMock, restoreAudioMock, getMockAudioInstance } from '../../tests/audioMock';
@@ -112,6 +112,41 @@ describe('timerApp', () => {
   // Test that enter does not open side menu
   // Test that enter selects timeinput
 
+  describe('restart', () => {
+    const getRestartToggle = () => {
+      return getToggle('Restart timer when done');
+    }
+
+    it('true runs timer again after finishing', () => {
+      const initialTime = 10;
+      render({ initialTime });
+      fireEvent.click(getRestartToggle());
+      expect(getRestartToggle().checked).toBe(true);
+
+      expect(getTime()).toEqual('00:00:10');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+      advanceSeconds(initialTime);
+      expect(getTime()).toEqual('00:00:10');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+    });
+
+    it('false stops timer after finishing', () => {
+      const initialTime = 10;
+      render({ initialTime });
+      expect(getRestartToggle().checked).toBe(false);
+
+      expect(getTime()).toEqual('00:00:10');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+      advanceSeconds(initialTime);
+      expect(getTime()).toEqual('00:00:10');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:10');
+    });
+  });
+
   describe('sound functionality', () => {
     beforeEach(() => {
       setupAudioMock();
@@ -128,10 +163,7 @@ describe('timerApp', () => {
 
     // Helper to get the Sound Toggle input element
     const getSoundToggle = () => {
-      const soundLabel = screen.getByText('Sound');
-      const toggleInput = soundLabel.parentElement?.querySelector('input[type="checkbox"], input[role="switch"]') || screen.getByRole('switch', { name: /sound/i });
-      if (!toggleInput) throw new Error("Could not find Sound toggle input");
-      return toggleInput as HTMLInputElement;
+      return getToggle('Sound');
     }
 
     describe('on desktop', () => {

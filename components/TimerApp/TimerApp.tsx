@@ -48,7 +48,7 @@ const TimerApp = memo(
     const isLikelyMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent);
 
     const [notify, setNotify] = useState<(() => void) | null>(null);
-    const [restart, setRestart] = useState(true);
+    const [restart, setRestart] = useState(false);
     const [playSound, setPlaySound] = useState(!isLikelyMobile);
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
@@ -92,6 +92,7 @@ const TimerApp = memo(
           isActive={isActive}
           setTitleTime={setTitleTime}
           onTimeEnd={onTimeEnd}
+          restart={restart}
         />
         <SideMenu>
           <Header>Aika Timer</Header>

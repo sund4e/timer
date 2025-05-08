@@ -86,33 +86,11 @@ describe('Timer', () => {
     });
   });
 
-  describe('restart', () => {
-    it('true runs timer again after finishing', () => {
-      const initialTime = 10;
-      render({ initialTime, isRunning: true, restart: true });
-      expect(getTime()).toEqual('00:00:10');
-
-      act(() => {
-        advanceSeconds(initialTime);
-      });
-      expect(getTime()).toEqual('00:00:10');
-    });
-
-    it('false stops timer after finishing', () => {
-      const initialTime = 10;
-      render({ initialTime, isRunning: true, restart: false });
-      expect(getTime()).toEqual('00:00:10');
-      advanceSeconds(initialTime);
-      expect(getTime()).toEqual('00:00:00');
-    });
-  });
-
   describe('Enter', () => {
     it('starts timer', () => {
       const initialTime = 10;
       render({
         initialTime,
-        restart: false,
       });
       enter();
       expect(getTime()).toEqual('00:00:10');
@@ -136,7 +114,7 @@ describe('Timer', () => {
 
     it('keeps the original restart value if no change in the value', () => {
       const initialTime = 10;
-      render({ initialTime, restart: true });
+      render({ initialTime });
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
@@ -162,14 +140,6 @@ describe('Timer', () => {
       advanceSeconds(1);
 
       expect(getTime()).toEqual('00:00:20');
-    });
-
-    it('starts timer if edited number was the last', () => {
-      const initialTime = 0;
-      render({ initialTime });
-      changeInputValue(5, 2);
-      advanceSeconds(1);
-      expect(getTime()).toEqual('00:00:01');
     });
 
     it('changes time to new one', () => {
