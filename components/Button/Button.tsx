@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import React from 'react';
 
 export type ButtonProps = {
   onClick?: () => void;
@@ -6,7 +7,7 @@ export type ButtonProps = {
   className?: string;
   disabled?: boolean;
   isHidden?: boolean;
-};
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'>;
 
 const StyledButton = styled.button<{ $isHidden?: boolean }>`
   background-color: transparent;
@@ -38,9 +39,9 @@ const StyledButton = styled.button<{ $isHidden?: boolean }>`
   }
 `;
 
-const Button = ({ onClick, children, className, disabled, isHidden }: ButtonProps) => {
+const Button = ({ children, isHidden, ...rest }: ButtonProps) => {
   return (
-    <StyledButton onClick={onClick} className={className} disabled={disabled} $isHidden={isHidden}>
+    <StyledButton $isHidden={isHidden} {...rest}>
       {children}
     </StyledButton>
   );
