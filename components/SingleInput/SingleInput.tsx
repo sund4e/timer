@@ -53,10 +53,6 @@ const SingleInput = ({
   }, [input.current]);
 
   const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setTimeout(() => { //Fixes mobile
-        if(input.current) input.current.setSelectionRange(0, 0);
-    });
-
     const number = parseInt(event.target.value[0]);
     onChange(isNaN(number) ? "!" as unknown as number : number);
     if (isNaN(number) || maxValue && number > maxValue) {

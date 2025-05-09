@@ -62,10 +62,17 @@ const TimeInput = ({
   const inputRef4 = useRef<HTMLInputElement>(null);
   const inputRef5 = useRef<HTMLInputElement>(null);
   const inputRefs = [inputRef0, inputRef1, inputRef2, inputRef3, inputRef4, inputRef5];
+  const [nextInputToFocus, setNextInputToFocus] = useState(0);
 
   useEffect(() => {
     setTime(getDigits(value));
   }, [value]);
+
+  useEffect(() => {
+    if (nextInputToFocus) {
+      inputRefs[nextInputToFocus]?.current?.focus();
+    }
+  }, [nextInputToFocus]);
 
   const onChangeTime = useCallback((time: number[]) => {
     if (isValidTime(time)) {
@@ -123,11 +130,7 @@ const TimeInput = ({
     }
     const nextIndex = index + 1;
     if (inputRefs[nextIndex]) {
-      inputRefs[nextIndex]?.current?.focus();
-      // setTimeout(() => {
-      //     console.log('focusingnext ', nextIndex);
-      //     inputRefs[nextIndex]?.current?.focus();
-      // }, 0);
+      setNextInputToFocus(nextIndex);
     } else {
       inputRefs[index]?.current?.blur();
       onChangeTime(newTime);
