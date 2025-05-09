@@ -76,22 +76,22 @@ const TimeInput = ({
     }
   }, [onChange, time]);
 
-  useKeyPressCallBack('Enter', () => {
-    if (isValidTime(time) && isFocused) {
-      onChangeTime(time);
+  const onEnter = useCallback(() => {
+    if (isFocused) {
       onBlur?.();
     } else {
       onFocus?.(); 
     }
-  });
+  }, [onChangeTime, onBlur, onFocus, time, isFocused]);
+
+  useKeyPressCallBack(wrapperRef.current, 'Enter', onEnter);
 
   useEffect(() => {
     const currentIndex = findFocusedIndex();
     if (isFocused && currentIndex === -1) {
       inputRefs[0]?.current?.focus();
-      onFocus?.();
-    } else {
-      onBlur?.();
+    } else if (!isFocused && currentIndex > -1) {
+      inputRefs[currentIndex]?.current?.blur();
     }
   }, [isFocused]);
 
@@ -99,7 +99,7 @@ const TimeInput = ({
     return inputRefs.findIndex(ref => ref.current === document.activeElement);
   }, [inputRefs]);
 
-  useKeyPressCallBack('ArrowRight', () => {
+  useKeyPressCallBack(wrapperRef.current, 'ArrowRight', () => {
     const currentIndex = findFocusedIndex();
     const nextIndex = currentIndex + 1;
     if (currentIndex !== -1 && nextIndex < inputRefs.length) {
@@ -107,7 +107,7 @@ const TimeInput = ({
     }
   });
 
-  useKeyPressCallBack('ArrowLeft', () => {
+  useKeyPressCallBack(wrapperRef.current, 'ArrowLeft', () => {
     const currentIndex = findFocusedIndex();
     const prevIndex = currentIndex - 1;
     if (currentIndex !== -1 && prevIndex >= 0) {
@@ -118,7 +118,6 @@ const TimeInput = ({
   const handleTimeChange = useCallback((index: number) => (newValue: number) => {
     const newTime = time.map((digit, i) => i === index ? newValue : digit);
     setTime(newTime);
-    console.log('newTime', newTime, isValidTime(newTime));
     if (!isValidTime(newTime)) {
       return;
     }

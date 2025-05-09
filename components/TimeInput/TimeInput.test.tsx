@@ -98,11 +98,15 @@ describe('TimeInput', () => {
       expect(onFocus).toHaveBeenCalled();
     });
 
-    it('is called when unfocused and enter is hit', () => {
+    it('is called when isFocused prop becomes true while input is unfocused', () => {
       const onFocus = jest.fn();
-      render({ onFocus, isFocused: false });
-      enter();
-      expect(onFocus).toHaveBeenCalled();
+      const { rerender } = renderElement(
+        <TimeInput {...defaultProps} onFocus={onFocus} isFocused={false} />
+      );
+      expect(onFocus).toHaveBeenCalledTimes(0);  
+
+      rerender(<TimeInput {...defaultProps} onFocus={onFocus} isFocused={true} />);
+      expect(onFocus).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -132,9 +136,10 @@ describe('TimeInput', () => {
 
     it('is called when Enter is pressed while an input is focused', () => {
       const onBlur = jest.fn();
-      render({ ...defaultProps, onBlur, isFocused: true }); 
-      enter();
-      expect(onBlur).toHaveBeenCalled(); 
+      render({ ...defaultProps, onBlur, isFocused: true });
+      const focusedInput = document.activeElement as HTMLElement;
+      enter(focusedInput);
+      expect(onBlur).toHaveBeenCalledTimes(1); 
     });
 
     it('is NOT called when focus moves between internal inputs', () => {
@@ -168,23 +173,20 @@ describe('TimeInput', () => {
       expect(onChange).toHaveBeenCalledWith(6575);
     });
 
-    it('is called correctly on enter', () => {
+    it('is called correctly when isFocused prop becomes false', () => {
       const onChange = jest.fn();
-      render({ onChange, isFocused: true });
-      expect(getTime()).toEqual('01:49:34');
-      changeInputValue(4, 5);
-      enter();
+      const { rerender } = render({onChange, isFocused: true});
+      changeInputValue(2, 5);
+      rerender(<TimeInput {...defaultProps} isFocused={false} onChange={onChange} />);
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange).toHaveBeenCalledWith(getSecondsFromDigits([0, 1, 4, 9, 5, 4]));
+      expect(onChange).toHaveBeenCalledWith(7174);
     });
 
-    it('is not called when Enter is pressed if input was not changed', () => {
+    it('is not called when isFocused prop becomes false if input was not changed', () => {
       const onChange = jest.fn();
-      render({ ...defaultProps, onChange, isFocused: true });
-      expect(getTime()).toEqual('01:49:34');
-      changeInputValue(4, 9); 
-      enter();
-      expect(onChange).not.toHaveBeenCalledTimes(1);
+      const { rerender } = render({onChange, isFocused: true});
+      rerender(<TimeInput {...defaultProps} isFocused={false} onChange={onChange} />);
+      expect(onChange).not.toHaveBeenCalled();
     });
   });
 

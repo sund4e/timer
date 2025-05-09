@@ -17,8 +17,8 @@ export const changeInputValue = (inputInxed: number, value: number) => {
   fireEvent.change(input, { target: { value } });
 };
 
-export const enter = () => {
-  fireEvent.keyDown(document, {
+export const enter = (element?: HTMLElement) => {
+  fireEvent.keyDown(element || document, {
     key: 'Enter',
     charCode: 13,
   });

@@ -1,20 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-const useKeyPressCallBack = (key: string, callback: () => void) => {
-  const pressHandler = (e: KeyboardEvent) => {
-    if (key === e.key) {
-      e.preventDefault();
-      callback();
-    }
-  };
+const useKeyPressCallBack = (element: HTMLElement | null, key: string, callback: () => void) => {
+  const callbackRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    window.addEventListener('keydown', pressHandler);
+    callbackRef.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    const pressHandler = (e: KeyboardEvent | Event) => {
+      if (key === (e as KeyboardEvent).key) {
+        e.preventDefault();
+        callbackRef.current();
+      }
+    };
+    (element || window).addEventListener('keydown', pressHandler);
     // Remove event listeners on cleanup
     return () => {
-      window.removeEventListener('keydown', pressHandler);
+      (element || window).removeEventListener('keydown', pressHandler);
     };
-  });
+  }, [element, key]);
 };
 
 export default useKeyPressCallBack;
