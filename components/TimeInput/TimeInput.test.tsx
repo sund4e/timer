@@ -137,7 +137,6 @@ describe('TimeInput', () => {
     it('is called when Enter is pressed while an input is focused', () => {
       const onBlur = jest.fn();
       render({ ...defaultProps, onBlur, isFocused: true });
-      const focusedInput = document.activeElement as HTMLElement;
       enter();
       expect(onBlur).toHaveBeenCalledTimes(1); 
     });

@@ -1,6 +1,6 @@
 import TimeInput from '../TimeInput';
 import useTimer from '../../hooks/useTimer';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export type Props = {
   onTimeEnd: () => void;

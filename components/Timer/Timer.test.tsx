@@ -1,9 +1,8 @@
-import { fireEvent, screen, act } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import Timer, { Props } from './Timer';
 import { changeInputValue, enter, getTime } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
-import { simulateWindowBlur, simulateWindowFocus } from '../../tests/helpers';
 
 describe('Timer', () => {
   const render = (override?: Partial<Props>) => {

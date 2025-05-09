@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect, useRef, useCallback } from 'react';
+import { useState, memo, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import Timer from '../Timer';
 import Button from '../Button/Button'; // Assuming Button component path
@@ -47,6 +47,8 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
   const [isSequenceRunning, setIsSequenceRunning] = useState(isActive);
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
+  
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const addTimer = () => {
     const newTimer: TimerConfig = {
       id: Date.now().toString(),
@@ -55,6 +57,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
     setTimers(prevTimers => [...prevTimers, newTimer]);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const removeTimer = (id: string) => {
     setTimers(prevTimers => prevTimers.filter(timer => timer.id !== id));
   };
@@ -125,5 +128,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
     </TimerSetWrapper>
   );
 });
+
+TimerSet.displayName = 'TimerSet';
 
 export default TimerSet; 
