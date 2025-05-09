@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Container from '../components/Container';
 import TimerApp from '../components/TimerApp';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getHms } from '../components/TimeInput';
 
 const twoDigitNumber = (number: number) => {
@@ -17,6 +17,11 @@ const toTimeString = (seconds: number) => {
 
 const Home = () => {
   const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: toTimeString(time), artist: 'Aika Timer' });
+  }, [time]);
+
   return (
     <div>
       <Head>
