@@ -152,13 +152,13 @@ describe('Timer', () => {
 
     it('starts timer with new time', () => {
       const initialTime = 10;
-      render({ initialTime, isFocused: true });
+      const { rerender } = render({ initialTime, isFocused: true });
       enter();
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
       changeInputValue(4, 2);
       expect(getTime()).toEqual('00:00:29');
-      enter();
+      rerender({ isFocused: false });
       expect(getTime()).toEqual('00:00:29');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:28');

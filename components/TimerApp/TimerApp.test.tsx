@@ -133,7 +133,7 @@ describe('timerApp', () => {
       });
       expect(document.activeElement).toBe(inputs[0]);
 
-      enter(inputs[0]);
+      enter();
       expect(document.activeElement).toBe(document.body);
     });
 
