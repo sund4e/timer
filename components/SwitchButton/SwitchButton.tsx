@@ -27,15 +27,15 @@ const StyledButton = styled.button<{
     position: relative;
     transform-origin: 1px;
 
-    :first-child {
+    &:first-child {
       transform: ${({ $isOpen }) => ($isOpen ? 'rotate(45deg)' : 'rotate(0)')};
     }
 
-    :nth-child(2) {
+    &:nth-child(2) {
       opacity: ${({ $isOpen }) => ($isOpen ? '0' : '1')};
     }
 
-    :nth-child(3) {
+    &:nth-child(3) {
       transform: ${({ $isOpen }: { $isOpen: boolean }) =>
         $isOpen ? 'rotate(-45deg)' : 'rotate(0)'};
     }
