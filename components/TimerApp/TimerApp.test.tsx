@@ -1,7 +1,7 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
-import { enter, getStartButton, getTime, getToggle } from '../../tests/helpers';
+import { changeInputValue, enter, getStartButton, getTime, getToggle } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
 import { setupAudioMock, restoreAudioMock, getMockAudioInstance } from '../../tests/audioMock';
@@ -24,7 +24,7 @@ const setDeviceUserAgent = (isMobile: boolean) => {
 
 const render = (override?: Partial<Props>) => {
   const props = {
-    initialTime: 20 * 60,
+    initialTime: 0,
     isActive: true,
     setTitleTime: () => {},
     ...override,
@@ -49,21 +49,21 @@ describe('timerApp', () => {
   });
 
   it('does run timer if active', () => {
-    render({ isActive: true });
+    render({ isActive: true, initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
   });
 
   it('does not run timer if not active', () => {
-    render({ isActive: false });
+    render({ isActive: false, initialTime: 20 * 60  });
     expect(getTime()).toEqual('00:20:00');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:20:00');
   });
 
   it('starts timer after clicking start button', () => {
-    render({ isActive: false });
+    render({ isActive: false, initialTime: 20 * 60  });
     expect(getTime()).toEqual('00:20:00');
     const startButton = screen.getByText('Start');
     fireEvent.click(startButton);
@@ -72,7 +72,7 @@ describe('timerApp', () => {
   });
 
   it('shows start button only when timer is not running', () => {
-    render({ isActive: true });
+    render({ isActive: true, initialTime: 20 * 60  });
     expect(getTime()).toEqual('00:20:00');
     const startButton = getStartButton();
     expect(window.getComputedStyle(startButton).opacity).toBe('0');
@@ -92,7 +92,7 @@ describe('timerApp', () => {
   });
 
   it('clicking outside of timer does not start the timer', () => {
-    render();
+    render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
@@ -159,6 +159,29 @@ describe('timerApp', () => {
       enter();
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
+    });
+  });
+
+  describe('changing time', () => {
+    it('starts time from new time after pressing start button', () => {
+      render();
+      expect(getTime()).toEqual('00:00:00');
+      changeInputValue(4, 5);
+      expect(getTime()).toEqual('00:00:50');
+      const startButton = getStartButton();
+      fireEvent.click(startButton);
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:49');
+    });
+    
+    it('starts time from new time after pressing enter', () => {
+      render();
+      expect(getTime()).toEqual('00:00:00');
+      changeInputValue(4, 5);
+      expect(getTime()).toEqual('00:00:50');
+      enter();
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:49');
     });
   });
 

@@ -8,13 +8,22 @@ const useTimer = (
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const prevInitialTimeSecods = useRef(initialTimeSeconds);
 
-  // Update time left when initial time changes
   useEffect(() => {
+    // inital time changed, we should reset timer without calling onTimeEnd
     if (initialTimeSeconds !== prevInitialTimeSecods.current) {
       setTimeLeftSeconds(initialTimeSeconds);
       prevInitialTimeSecods.current = initialTimeSeconds;
+    } else {
+      if (timeLeftSeconds <= 0 && initialTimeSeconds > 0) {
+        if (intervalRef.current) {
+          onTimeEnd();
+          clearTimer();
+        }
+  
+        setTimeLeftSeconds(initialTimeSeconds);
+      }
     }
-  }, [initialTimeSeconds]);
+  }, [initialTimeSeconds, timeLeftSeconds, onTimeEnd]);
 
   const intervalCallback = useCallback(() => {
     setTimeLeftSeconds((prevTime) => Math.max(0, prevTime - 1));
@@ -33,18 +42,6 @@ const useTimer = (
       intervalRef.current = null;
     }
   }, []);
-
-  // Handle time end
-  useEffect(() => {
-    if (timeLeftSeconds <= 0 && initialTimeSeconds > 0) {
-      if (intervalRef.current) {
-        onTimeEnd();
-        clearTimer();
-      }
-
-      setTimeLeftSeconds(initialTimeSeconds);
-    }
-  }, [timeLeftSeconds, initialTimeSeconds, onTimeEnd]);
 
   // Cleanup timer on unmount
   useEffect(() => {
