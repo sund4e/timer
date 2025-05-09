@@ -1,7 +1,8 @@
-import React, { useState, memo, useEffect } from 'react';
+import React, { useState, memo, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import Timer from '../Timer';
 import Button from '../Button/Button'; // Assuming Button component path
+import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 
 type TimerConfig = {
   id: string;
@@ -46,7 +47,6 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
   const [isSequenceRunning, setIsSequenceRunning] = useState(isActive);
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
-
   const addTimer = () => {
     const newTimer: TimerConfig = {
       id: Date.now().toString(),
@@ -84,6 +84,18 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
       setCurrentTimerIndex(Math.min(currentTimerIndex + 1));
     }
   };
+
+  const onEnter = useCallback(() => {
+    if (focusIndex !== null) {
+      setFocusIndex(null);
+      setIsSequenceRunning(true);
+    } else {
+      setFocusIndex(currentTimerIndex);
+      setIsSequenceRunning(false);
+    }
+  }, [focusIndex, currentTimerIndex, setFocusIndex, setIsSequenceRunning]);
+
+  useKeyPressCallBack(null, 'Enter', onEnter);
 
   const onStart = () => {
     setIsSequenceRunning(true);

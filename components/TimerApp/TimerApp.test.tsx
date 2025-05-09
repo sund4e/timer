@@ -1,7 +1,7 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
-import { getStartButton, getTime, getToggle } from '../../tests/helpers';
+import { enter, getStartButton, getTime, getToggle } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
 import { setupAudioMock, restoreAudioMock, getMockAudioInstance } from '../../tests/audioMock';
@@ -34,11 +34,18 @@ const render = (override?: Partial<Props>) => {
 
 describe('timerApp', () => {
   beforeEach(() => {
+    setupAudioMock();
     mockTime();
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    restoreAudioMock();
+    Object.defineProperty(window.navigator, 'userAgent', {
+        value: originalUserAgent,
+        writable: true,
+        configurable: true
+    });
   });
 
   it('does run timer if active', () => {
@@ -67,7 +74,6 @@ describe('timerApp', () => {
   it('shows start button only when timer is not running', () => {
     render({ isActive: true });
     expect(getTime()).toEqual('00:20:00');
-    screen.debug();
     const startButton = getStartButton();
     expect(window.getComputedStyle(startButton).opacity).toBe('0');
     advanceSeconds(1);
@@ -109,8 +115,52 @@ describe('timerApp', () => {
     advanceSeconds(1);
     expect(setTitleTime).toHaveBeenCalledWith(initialTime - 1);
   });
-  // Test that enter does not open side menu
-  // Test that enter selects timeinput
+
+  describe('enter', () => {
+    it('focuses time input if not focused', () => {
+      render();
+      expect(document.activeElement).toBe(document.body);
+      enter();
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      expect(document.activeElement).toBe(inputs[0]);
+    });
+
+    it('unfocuses time input if focused', () => {
+      render();
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      act(() => {
+        inputs[0].focus();
+      });
+      expect(document.activeElement).toBe(inputs[0]);
+
+      enter(inputs[0]);
+      expect(document.activeElement).toBe(document.body);
+    });
+
+    it('stops timer if running', () => {
+      render({ initialTime: 10 });
+      expect(getTime()).toEqual('00:00:10');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+
+      enter();
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+    });
+
+    it('starts timer if not running', () => {
+      render({ initialTime: 10});
+      expect(getTime()).toEqual('00:00:10');
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      fireEvent.focus(inputs[2]);
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:10');
+
+      enter();
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+    });
+  });
 
   describe('restart', () => {
     const getRestartToggle = () => {
@@ -148,19 +198,6 @@ describe('timerApp', () => {
   });
 
   describe('sound functionality', () => {
-    beforeEach(() => {
-      setupAudioMock();
-    });
-
-    afterEach(() => {
-      restoreAudioMock();
-      Object.defineProperty(window.navigator, 'userAgent', {
-          value: originalUserAgent,
-          writable: true,
-          configurable: true
-      });
-    });
-
     // Helper to get the Sound Toggle input element
     const getSoundToggle = () => {
       return getToggle('Sound');
