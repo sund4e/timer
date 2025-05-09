@@ -37,14 +37,17 @@ export type Props = {
 
 const TimerApp = memo(
   ({ initialTime = 0, isActive = true, setTitleTime }: Props) => {
-
-    const userAgent = typeof window !== 'undefined' ? navigator.userAgent : '';
-    const isLikelyMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent);
-
     const [notify, setNotify] = useState<(() => void) | null>(null);
     const [restart, setRestart] = useState(false);
-    const [playSound, setPlaySound] = useState(!isLikelyMobile);
+    const [playSound, setPlaySound] = useState(true);
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+    const [isLikelyMobile, setIsLikelyMobile] = useState(false);
+
+    useEffect(() => {
+      const userAgent = navigator.userAgent;
+      const isLikelyMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent);
+      setIsLikelyMobile(isLikelyMobile);
+    }, []);
 
     useEffect(() => {
       const audio = new Audio('/bell.wav');
@@ -53,6 +56,12 @@ const TimerApp = memo(
         setAudio(audio);
       });
     }, []);
+
+    useEffect(() => {
+      if (isLikelyMobile) {
+        setPlaySound(false);
+      }
+    }, [isLikelyMobile]);
 
     function playAudio() {
       if (audio) {
