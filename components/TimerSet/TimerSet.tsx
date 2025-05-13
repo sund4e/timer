@@ -3,14 +3,18 @@ import styled from 'styled-components';
 import Timer from '../Timer';
 import Button from '../Button/Button'; // Assuming Button component path
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
+import { theme } from '../../styles/theme';
 
 type TimerConfig = {
   id: string;
   initialTime: number; // in seconds
 };
 
-const StyledTimer = styled(Timer)`
-  font-size: min(16vw, ${({ theme }) => theme.fontSizes.big}rem);
+const StyledTimer = styled(Timer)<{
+  $highlight: boolean;
+}>`
+  font-size: ${({ $highlight, theme }) => $highlight ? `min(16vw, ${theme.fontSizes.big}rem)` : `min(8vw, ${theme.fontSizes.medium}rem)`};
+  transition: ${({ theme }) => theme.transition}s ease;
 `;
 
 const TimerSetWrapper = styled.div`
@@ -45,21 +49,25 @@ export type Props = {
 const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeEnd, restart = false }: Props) => {
   const [timers, setTimers] = useState<TimerConfig[]>([{id: Date.now().toString(), initialTime: initialTime}]);
   const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
-  const [isSequenceRunning, setIsSequenceRunning] = useState(isActive);
-  const [focusIndex, setFocusIndex] = useState<number | null>(null);
+  const [isSequenceRunning, setIsSequenceRunning] = useState(false);
+  const [focusIndex, setFocusIndex] = useState<number | null>(initialTime > 0 ? 0 : null);
   
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const addTimer = () => {
     const newTimer: TimerConfig = {
       id: Date.now().toString(),
       initialTime: initialTime,
     };
-    setTimers(prevTimers => [...prevTimers, newTimer]);
+    setTimers(prevTimers => {
+      const newTimers = [...prevTimers];
+      newTimers.splice(currentTimerIndex +1, 0, newTimer);
+      setCurrentTimerIndex(currentTimerIndex + 1);
+      return newTimers;
+    });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const removeTimer = (id: string) => {
-    setTimers(prevTimers => prevTimers.filter(timer => timer.id !== id));
+  const removeTimer = () => {
+    setCurrentTimerIndex(Math.max(currentTimerIndex - 1, 0));
+    setTimers(prevTimers => prevTimers.filter((timer, index) => index !== currentTimerIndex));
   };
 
   useEffect(() => {
@@ -91,18 +99,21 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const onEnter = useCallback(() => {
     if (focusIndex !== null) {
       setFocusIndex(null);
-      setIsSequenceRunning(true);
+      if(currentTimerIndex === timers.length - 1) {
+        setIsSequenceRunning(true);
+      }
     } else {
       setFocusIndex(currentTimerIndex);
       setIsSequenceRunning(false);
     }
-  }, [focusIndex, currentTimerIndex, setFocusIndex, setIsSequenceRunning]);
+  }, [focusIndex, currentTimerIndex, setFocusIndex, setIsSequenceRunning, timers]);
 
   useKeyPressCallBack(null, 'Enter', onEnter);
 
   const onStart = () => {
     setIsSequenceRunning(true);
     setFocusIndex(null);
+    setCurrentTimerIndex(0);
   };
 
   return (
@@ -117,10 +128,17 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
             setTitleTime={setTitleTime}
             onFocus={onFocus(index)}
             isFocused={focusIndex === index}
+            $highlight={currentTimerIndex === index}
           />
         ))}
       </TimersList>
       <Controls>
+        <Button onClick={addTimer} isHidden={isSequenceRunning} data-testid="add-button">
+          Add
+        </Button>
+        <Button onClick={removeTimer} isHidden={isSequenceRunning} data-testid="remove-button">
+          Remove
+        </Button>
         <Button onClick={onStart} isHidden={isSequenceRunning} data-testid="start-button">
           Start
         </Button>

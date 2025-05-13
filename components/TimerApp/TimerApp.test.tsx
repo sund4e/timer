@@ -1,7 +1,7 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
-import { changeInputValue, enter, getStartButton, getTime, getToggle } from '../../tests/helpers';
+import { changeInputValue, enter, getAddButton, getStartButton, getTime, getToggle } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
 import { setupAudioMock, restoreAudioMock, getMockAudioInstance } from '../../tests/audioMock';
@@ -49,21 +49,22 @@ describe('timerApp', () => {
   });
 
   it('does run timer if active', () => {
-    render({ isActive: true, initialTime: 20 * 60 });
+    render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
+    enter();
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
   });
 
   it('does not run timer if not active', () => {
-    render({ isActive: false, initialTime: 20 * 60  });
+    render({ initialTime: 20 * 60  });
     expect(getTime()).toEqual('00:20:00');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:20:00');
   });
 
   it('starts timer after clicking start button', () => {
-    render({ isActive: false, initialTime: 20 * 60  });
+    render({ initialTime: 20 * 60  });
     expect(getTime()).toEqual('00:20:00');
     const startButton = screen.getByText('Start');
     fireEvent.click(startButton);
@@ -72,8 +73,9 @@ describe('timerApp', () => {
   });
 
   it('shows start button only when timer is not running', () => {
-    render({ isActive: true, initialTime: 20 * 60  });
+    render({ initialTime: 20 * 60  });
     expect(getTime()).toEqual('00:20:00');
+    enter();
     const startButton = getStartButton();
     expect(window.getComputedStyle(startButton).opacity).toBe('0');
     advanceSeconds(1);
@@ -94,6 +96,7 @@ describe('timerApp', () => {
   it('clicking outside of timer does not start the timer', () => {
     render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
+    enter();
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
 
@@ -110,10 +113,25 @@ describe('timerApp', () => {
   it('calls setTitleTime with time', () => {
     const setTitleTime = jest.fn();
     const initialTime = 10;
-    render({ isActive: true, setTitleTime, initialTime });
+    render({ setTitleTime, initialTime });
+    enter();
     expect(setTitleTime).toHaveBeenCalledWith(initialTime);
     advanceSeconds(1);
     expect(setTitleTime).toHaveBeenCalledWith(initialTime - 1);
+  });
+
+  describe('initial render', () => {
+    it('does not focus time input if initial time is 0', () => {
+      render();
+      expect(document.activeElement).toBe(document.body);
+    });
+
+    it('shows buttons if initial time is 0', () => {
+      render();
+      expect(screen.getByTestId('start-button')).toBeTruthy();
+      expect(screen.getByTestId('add-button')).toBeTruthy();
+      expect(screen.getByTestId('remove-button')).toBeTruthy();
+    });
   });
 
   describe('enter', () => {
@@ -140,6 +158,7 @@ describe('timerApp', () => {
     it('stops timer if running', () => {
       render({ initialTime: 10 });
       expect(getTime()).toEqual('00:00:10');
+      enter();
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
 
@@ -196,6 +215,7 @@ describe('timerApp', () => {
       fireEvent.click(getRestartToggle());
       expect(getRestartToggle().checked).toBe(true);
 
+      enter();
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
@@ -210,6 +230,7 @@ describe('timerApp', () => {
       render({ initialTime });
       expect(getRestartToggle().checked).toBe(false);
 
+      enter();
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
@@ -240,7 +261,7 @@ describe('timerApp', () => {
         const initialTime = 3;
         render({ initialTime });
         expect(getSoundToggle().checked).toBe(true);
-        
+        enter();
         advanceSeconds(initialTime);
         
         expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
@@ -304,11 +325,19 @@ describe('timerApp', () => {
           expect(getSoundToggle().checked).toBe(true);
 
           getMockAudioInstance().play.mockClear();
-
+          enter();
           advanceSeconds(initialTime);
 
           expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
        });
+    });
+  });
+
+  describe('multiple timers', () => {
+    it('add button adds a timer', () => {
+      render();
+      fireEvent.click(getAddButton());
+      expect(getTime()).toEqual('00:00:10');
     });
   });
 });
