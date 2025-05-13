@@ -11,24 +11,30 @@ type TimerConfig = {
   enterAnimation?: boolean;
 };
 
-const StyledTimer = styled(Timer)`
-  font-size: ${({ theme }) => `min(8vw, ${theme.fontSizes.medium}rem)`};
+const StyledTimer = styled(Timer)<{$position: number}>`
+  position: absolute;
+  font-size: ${({ theme }) => theme.fontSizes.medium}rem;
   transition:
-    opacity ${({ theme }) => theme.transition * 2}s ease-out,
-    font-size ${({ theme }) => theme.transition}s ease-out;
+    opacity ${({ theme }) => theme.transition}s ease-out,
+    scale ${({ theme }) => theme.transition}s ease-out,
+    transform ${({ theme }) => theme.transition}s ease-out;
   opacity: 1;
   &.active {
-    font-size: ${({ theme }) => `min(16vw, ${theme.fontSizes.big}rem)`};
+    transform: scale(2);
   }
   &.enter-animation {
     opacity: 0;
   }
+  ${({ $position }) => $position && `transform: translateY(${$position * 6}vh);`}
+  opacity: ${({ $position }) => Math.abs($position) > 4 ? 0 : 1};
 `;
 
 const TimerSetWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
   gap: 20px; /* Space between timers and controls */
   padding: 20px;
 `;
@@ -37,6 +43,8 @@ const TimersList = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 50vh;
   gap: 15px; /* Space between individual timers */
 `;
 
@@ -161,6 +169,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
               currentTimerIndex === index ? 'active' : '',
               timerConfig.enterAnimation ? 'enter-animation' : ''
             ].filter(Boolean).join(' ')}
+            $position={index - currentTimerIndex}
           />
         ))}
       </TimersList>
