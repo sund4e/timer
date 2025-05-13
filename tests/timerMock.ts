@@ -12,9 +12,11 @@ class MockTimer {
   advanceSecods(seconds: number) {
     this.time = this.time + seconds * 1000;
     Date.now = jest.fn(() => this.time);
-    act(() => {
-      jest.advanceTimersByTime(seconds * 1000);
-    });
+    for (let i = 0; i < seconds; i++) {
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+    }
   }
 }
 

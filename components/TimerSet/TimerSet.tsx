@@ -91,9 +91,13 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const onTimerEnd = () => {
     onTimeEnd();
     if (currentTimerIndex === timers.length - 1) {
-      setIsSequenceRunning(false);
+      if (restart && timers.length > 1) {
+        setCurrentTimerIndex(0);
+      } else {
+        setIsSequenceRunning(false);
+      }
     } else {
-      setCurrentTimerIndex(Math.min(currentTimerIndex + 1));
+      setCurrentTimerIndex(Math.min(currentTimerIndex + 1, timers.length - 1));
     }
   };
 

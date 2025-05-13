@@ -78,3 +78,19 @@ export const getToggle = (text: string) => {
   if (!toggleInput) throw new Error(`Could not find ${text} toggle input`);
   return toggleInput as HTMLInputElement;
 }
+
+export const getActiveTimer = () => {
+  const timers = getTimers();
+  const activeTimer = timers.find(timer => timer.classList.contains('active'));
+  if (!activeTimer) throw new Error('No active timer found');
+  return activeTimer;
+}
+
+export const focusTimer = (index: number) => {
+  const timers = getTimers();
+  const timer = timers[index];
+  if (!timer) throw new Error('No timer found');
+  act(() => {
+    timer.focus();
+  });
+}

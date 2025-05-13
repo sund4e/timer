@@ -1,7 +1,7 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
-import { changeInputValue, enter, getAddButton, getStartButton, getTime, getTimes, getToggle, start } from '../../tests/helpers';
+import { changeInputValue, enter, focusTimer, getAddButton, getRemoveButton, getStartButton, getTime, getTimes, getToggle, start } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
 import { setupAudioMock, restoreAudioMock, getMockAudioInstance } from '../../tests/audioMock';
@@ -219,10 +219,12 @@ describe('timerApp', () => {
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
+      expect(getMockAudioInstance().play).toHaveBeenCalledTimes(0);
       advanceSeconds(initialTime);
-      expect(getTime()).toEqual('00:00:10');
-      advanceSeconds(1);
+      expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
       expect(getTime()).toEqual('00:00:09');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:08');
     });
 
     it('false stops timer after finishing', () => {
@@ -334,11 +336,105 @@ describe('timerApp', () => {
   });
 
   describe('multiple timers', () => {
-    it('add button adds a timer', () => {
-      render();
-      expect(getTimes()).toEqual(['00:00:00']);
-      fireEvent.click(getAddButton());
-      expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
+    describe('add button', () => {
+      it('adds a timer', () => {
+        render();
+        expect(getTimes()).toEqual(['00:00:00']);
+        fireEvent.click(getAddButton());
+        expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
+      });
+
+      it('adds a timer after focused timer', () => {
+        render();
+        changeInputValue(4, 1);
+        expect(getTimes()).toEqual(['00:00:10']);
+        fireEvent.click(getAddButton());
+        changeInputValue(10, 2);
+        expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
+        focusTimer(0);
+        fireEvent.click(getAddButton());
+        expect(getTimes()).toEqual(['00:00:10', '00:00:00', '00:00:20']);
+      });
     });
+
+    describe('remove button', () => {
+      it('removes a timer', () => {
+        render();
+        fireEvent.click(getAddButton());
+        expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
+        fireEvent.click(getRemoveButton());
+        expect(getTimes()).toEqual(['00:00:00']);
+      });
+
+      it('removes focused timer', () => {
+        render();
+        fireEvent.click(getAddButton());
+        changeInputValue(4, 1);
+        changeInputValue(10, 2);
+        expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
+        focusTimer(0);
+        fireEvent.click(getRemoveButton());
+        expect(getTimes()).toEqual(['00:00:20']);
+      });
+    });
+  });
+
+  it('runs timers in sequence', () => {
+    render();
+    fireEvent.click(getAddButton());
+    fireEvent.click(getAddButton());
+    changeInputValue(4, 1);
+    changeInputValue(10, 1);
+    changeInputValue(16, 1);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(0);
+
+    start();
+    advanceSeconds(1);
+    expect(getTimes()).toEqual(['00:00:09', '00:00:10', '00:00:10']);
+    advanceSeconds(9);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
+
+    advanceSeconds(1);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:09', '00:00:10']);
+    advanceSeconds(9);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(2);
+
+    advanceSeconds(1);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:09']);
+    advanceSeconds(9);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(3);
+
+    advanceSeconds(9);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(3);
+  });
+
+  it('restarts sequence', () => {
+    render();
+    fireEvent.click(getToggle('Restart timer when done'));
+    fireEvent.click(getAddButton());
+    fireEvent.click(getAddButton());
+    changeInputValue(4, 1);
+    changeInputValue(10, 1);
+    changeInputValue(16, 1);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(0);
+    start();
+
+    advanceSeconds(11);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:09', '00:00:10']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
+
+    advanceSeconds(10);
+    expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:09']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(2);
+
+    advanceSeconds(10);
+    expect(getTimes()).toEqual(['00:00:09', '00:00:10', '00:00:10']);
+    expect(getMockAudioInstance().play).toHaveBeenCalledTimes(3);
   });
 });
