@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Timer from '../Timer';
 import Button from '../Button/Button'; // Assuming Button component path
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
-import { theme } from '../../styles/theme';
+import { v4 as uuid } from 'uuid';
 
 type TimerConfig = {
   id: string;
@@ -55,7 +55,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   
   const addTimer = () => {
     const newTimer: TimerConfig = {
-      id: Date.now().toString(),
+      id: uuid(),
       initialTime: initialTime,
     };
     setTimers(prevTimers => {
