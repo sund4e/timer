@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import TimeInput, { Props, getSecondsFromDigits } from './TimeInput';
-import { changeInputValue, enter, getTime } from '../../tests/helpers';
+import { changeInputValue, enter, getTimes } from '../../tests/helpers';
 import { act } from 'react';
 
 jest.useFakeTimers();
@@ -27,6 +27,8 @@ describe('getSecondsFromDigits', () => {
     expect(getSecondsFromDigits([0, 1, 4, 9, 3, 4])).toEqual(6574);
   });
 });
+
+const getTime = () => getTimes()[0]; // Assume only one timer
 
 describe('TimeInput', () => {
   afterEach(() => {

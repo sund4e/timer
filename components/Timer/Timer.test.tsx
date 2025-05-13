@@ -1,8 +1,10 @@
 import { screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import Timer, { Props } from './Timer';
-import { changeInputValue, enter, getTime } from '../../tests/helpers';
+import { changeInputValue, enter, getTimes } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
+
+const getTime = () => getTimes()[0]; // Assume only one timer
 
 describe('Timer', () => {
   const render = (override?: Partial<Props>) => {

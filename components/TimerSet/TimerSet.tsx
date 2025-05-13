@@ -10,11 +10,12 @@ type TimerConfig = {
   initialTime: number; // in seconds
 };
 
-const StyledTimer = styled(Timer)<{
-  $highlight: boolean;
-}>`
-  font-size: ${({ $highlight, theme }) => $highlight ? `min(16vw, ${theme.fontSizes.big}rem)` : `min(8vw, ${theme.fontSizes.medium}rem)`};
+const StyledTimer = styled(Timer)`
+  font-size: ${({ theme }) => `min(8vw, ${theme.fontSizes.medium}rem)`};
   transition: ${({ theme }) => theme.transition}s ease;
+  &.active {
+    font-size: ${({ theme }) => `min(16vw, ${theme.fontSizes.big}rem)`};
+  }
 `;
 
 const TimerSetWrapper = styled.div`
@@ -50,7 +51,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const [timers, setTimers] = useState<TimerConfig[]>([{id: Date.now().toString(), initialTime: initialTime}]);
   const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
   const [isSequenceRunning, setIsSequenceRunning] = useState(false);
-  const [focusIndex, setFocusIndex] = useState<number | null>(initialTime > 0 ? 0 : null);
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
   
   const addTimer = () => {
     const newTimer: TimerConfig = {
@@ -128,7 +129,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
             setTitleTime={setTitleTime}
             onFocus={onFocus(index)}
             isFocused={focusIndex === index}
-            $highlight={currentTimerIndex === index}
+            className={currentTimerIndex === index ? 'active' : undefined}
           />
         ))}
       </TimersList>

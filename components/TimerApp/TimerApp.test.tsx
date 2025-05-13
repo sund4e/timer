@@ -1,7 +1,7 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
-import { changeInputValue, enter, getAddButton, getStartButton, getTime, getToggle } from '../../tests/helpers';
+import { changeInputValue, enter, getAddButton, getStartButton, getTime, getTimes, getToggle, start } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
 import { setupAudioMock, restoreAudioMock, getMockAudioInstance } from '../../tests/audioMock';
@@ -48,15 +48,15 @@ describe('timerApp', () => {
     });
   });
 
-  it('does run timer if active', () => {
+  it('runs timer after start', () => {
     render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
-    enter();
+    start();
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
   });
 
-  it('does not run timer if not active', () => {
+  it('does not run timer if not started', () => {
     render({ initialTime: 20 * 60  });
     expect(getTime()).toEqual('00:20:00');
     advanceSeconds(1);
@@ -72,10 +72,10 @@ describe('timerApp', () => {
     expect(getTime()).toEqual('00:19:59');
   });
 
-  it('shows start button only when timer is not running', () => {
+  it('hides start button when timer is running', () => {
     render({ initialTime: 20 * 60  });
     expect(getTime()).toEqual('00:20:00');
-    enter();
+    start();
     const startButton = getStartButton();
     expect(window.getComputedStyle(startButton).opacity).toBe('0');
     advanceSeconds(1);
@@ -96,7 +96,7 @@ describe('timerApp', () => {
   it('clicking outside of timer does not start the timer', () => {
     render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
-    enter();
+    start();
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
 
@@ -114,7 +114,7 @@ describe('timerApp', () => {
     const setTitleTime = jest.fn();
     const initialTime = 10;
     render({ setTitleTime, initialTime });
-    enter();
+    start();
     expect(setTitleTime).toHaveBeenCalledWith(initialTime);
     advanceSeconds(1);
     expect(setTitleTime).toHaveBeenCalledWith(initialTime - 1);
@@ -158,7 +158,7 @@ describe('timerApp', () => {
     it('stops timer if running', () => {
       render({ initialTime: 10 });
       expect(getTime()).toEqual('00:00:10');
-      enter();
+      start();
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
 
@@ -215,7 +215,7 @@ describe('timerApp', () => {
       fireEvent.click(getRestartToggle());
       expect(getRestartToggle().checked).toBe(true);
 
-      enter();
+      start();
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
@@ -230,7 +230,7 @@ describe('timerApp', () => {
       render({ initialTime });
       expect(getRestartToggle().checked).toBe(false);
 
-      enter();
+      start();
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
@@ -261,7 +261,7 @@ describe('timerApp', () => {
         const initialTime = 3;
         render({ initialTime });
         expect(getSoundToggle().checked).toBe(true);
-        enter();
+        start();
         advanceSeconds(initialTime);
         
         expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
@@ -325,7 +325,7 @@ describe('timerApp', () => {
           expect(getSoundToggle().checked).toBe(true);
 
           getMockAudioInstance().play.mockClear();
-          enter();
+          start();
           advanceSeconds(initialTime);
 
           expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
@@ -336,8 +336,9 @@ describe('timerApp', () => {
   describe('multiple timers', () => {
     it('add button adds a timer', () => {
       render();
+      expect(getTimes()).toEqual(['00:00:00']);
       fireEvent.click(getAddButton());
-      expect(getTime()).toEqual('00:00:10');
+      expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
     });
   });
 });

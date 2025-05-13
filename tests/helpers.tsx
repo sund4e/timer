@@ -1,12 +1,29 @@
-import { screen, fireEvent, act } from '@testing-library/react';
+import { screen, fireEvent, act, within } from '@testing-library/react';
+
+const formatTime = (numbers: string[]): string => {
+  return `${numbers.slice(0, 2).join('')}:${numbers.slice(2, 4).join('')}:${numbers.slice(4, 6).join('')}`;
+};
+
+const getTimerTime = (timer: HTMLElement) => {
+  const { getAllByRole } = within(timer);
+  const numbers = getAllByRole('textbox').map((input) => (input as HTMLInputElement).value);
+  return formatTime(numbers);
+}
+
+const getTimers = () => {
+  return screen.getAllByTestId('time');
+}
 
 export const getTime = (): string | null => {
-  const numbers = screen
-    .getAllByRole('textbox')
-    .map((input) => (input as HTMLInputElement).value);
-  return `${numbers.slice(0, 2).join('')}:${numbers
-    .slice(2, 4)
-    .join('')}:${numbers.slice(4, 6).join('')}`;
+  const timers = getTimers();
+  const activeTimer = timers.find(timer => timer.classList.contains('active'));
+  if (!activeTimer) return null;
+  return getTimerTime(activeTimer);
+};
+
+export const getTimes = (): string[] => {
+  const timers = getTimers();  
+  return timers.map(timer => getTimerTime(timer));
 };
 
 export const changeInputValue = (inputInxed: number, value: number) => {
@@ -40,6 +57,20 @@ export const simulateWindowFocus = () => {
 export const getStartButton = () => {
   return screen.getByTestId('start-button');
 };
+
+export const getAddButton = () => {
+  return screen.getByTestId('add-button');
+};
+
+export const getRemoveButton = () => {
+  return screen.getByTestId('remove-button');
+};
+
+export const start = () => {
+  act(() => {
+    getStartButton().click();
+  });
+}
 
 export const getToggle = (text: string) => {
   const soundLabel = screen.getByText(text);
