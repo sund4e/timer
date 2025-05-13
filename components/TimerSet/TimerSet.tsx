@@ -99,7 +99,6 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
         newTimers.splice(currentTimerIndex, 1, newTimer);
         return newTimers;
       });
-      console.log('remove enter animation');
     }
   }, [timers, currentTimerIndex]);
 
