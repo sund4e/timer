@@ -8,13 +8,20 @@ import { v4 as uuid } from 'uuid';
 type TimerConfig = {
   id: string;
   initialTime: number; // in seconds
+  enterAnimation?: boolean;
 };
 
 const StyledTimer = styled(Timer)`
   font-size: ${({ theme }) => `min(8vw, ${theme.fontSizes.medium}rem)`};
-  transition: ${({ theme }) => theme.transition}s ease;
+  transition:
+    opacity ${({ theme }) => theme.transition * 2}s ease-out,
+    font-size ${({ theme }) => theme.transition}s ease-out;
+  opacity: 1;
   &.active {
     font-size: ${({ theme }) => `min(16vw, ${theme.fontSizes.big}rem)`};
+  }
+  &.enter-animation {
+    opacity: 0;
   }
 `;
 
@@ -57,6 +64,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
     const newTimer: TimerConfig = {
       id: uuid(),
       initialTime: initialTime,
+      enterAnimation: true,
     };
     setTimers(prevTimers => {
       const newTimers = [...prevTimers];
@@ -67,9 +75,25 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   };
 
   const removeTimer = () => {
+    if (timers.length === 1) {
+      return;
+    }
     setCurrentTimerIndex(Math.max(currentTimerIndex - 1, 0));
     setTimers(prevTimers => prevTimers.filter((timer, index) => index !== currentTimerIndex));
   };
+
+  useEffect(() => {
+    const currentTimer = timers[currentTimerIndex]
+    if (currentTimer.enterAnimation) {
+      const newTimer = {...currentTimer, enterAnimation: false}
+      setTimers(prevTimers => {
+        const newTimers = [...prevTimers];
+        newTimers.splice(currentTimerIndex, 1, newTimer);
+        return newTimers;
+      });
+      console.log('remove enter animation');
+    }
+  }, [timers, currentTimerIndex]);
 
   useEffect(() => {
     if (currentTimerIndex === timers.length - 1 &&
@@ -133,7 +157,10 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
             setTitleTime={setTitleTime}
             onFocus={onFocus(index)}
             isFocused={focusIndex === index}
-            className={currentTimerIndex === index ? 'active' : undefined}
+            className={[
+              currentTimerIndex === index ? 'active' : '',
+              timerConfig.enterAnimation ? 'enter-animation' : ''
+            ].filter(Boolean).join(' ')}
           />
         ))}
       </TimersList>
@@ -141,7 +168,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
         <Button onClick={addTimer} isHidden={isSequenceRunning} data-testid="add-button">
           Add
         </Button>
-        <Button onClick={removeTimer} isHidden={isSequenceRunning} data-testid="remove-button">
+        <Button onClick={removeTimer} isHidden={isSequenceRunning || timers.length === 1} data-testid="remove-button">
           Remove
         </Button>
         <Button onClick={onStart} isHidden={isSequenceRunning} data-testid="start-button">
