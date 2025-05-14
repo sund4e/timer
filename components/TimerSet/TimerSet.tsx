@@ -38,6 +38,7 @@ const TimerSetWrapper = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
+  width: 100%;
   gap: 20px; /* Space between timers and controls */
   padding: 20px;
 `;
@@ -150,7 +151,29 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
     }
   }, [focusIndex, currentTimerIndex, setFocusIndex, setIsSequenceRunning, timers]);
 
+  const moveUp = useCallback(() =>{
+    if (currentTimerIndex > 0) {
+      const newIndex = currentTimerIndex - 1;
+      setCurrentTimerIndex(newIndex);
+      if (focusIndex === currentTimerIndex) {
+        setFocusIndex(newIndex);
+      }
+    }
+  }, [currentTimerIndex, setCurrentTimerIndex, focusIndex]);
+
+  const moveDown = useCallback(() =>{
+    if (currentTimerIndex < timers.length - 1) {
+      const newIndex = currentTimerIndex + 1;
+      setCurrentTimerIndex(newIndex);
+      if (focusIndex === currentTimerIndex) {
+        setFocusIndex(newIndex);
+      }
+    }
+  }, [currentTimerIndex, setCurrentTimerIndex]);
+
   useKeyPressCallBack(null, 'Enter', onEnter);
+  useKeyPressCallBack(null, 'ArrowUp', moveUp);
+  useKeyPressCallBack(null, 'ArrowDown', moveDown);
 
   const onStart = () => {
     setIsSequenceRunning(true);
