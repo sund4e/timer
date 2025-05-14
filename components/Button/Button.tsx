@@ -33,14 +33,18 @@ const StyledButton = styled.button<{ $isHidden?: boolean }>`
   }
 
   &:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
   }
 `;
 
 const Button = ({ children, isHidden, ...rest }: ButtonProps) => {
   return (
-    <StyledButton $isHidden={isHidden} {...rest}>
+    <StyledButton 
+      $isHidden={isHidden} 
+      tabIndex={isHidden ? -1 : undefined}  // Hide button from tab navigation
+      disabled={isHidden || rest.disabled} 
+      {...rest}
+    >
       {children}
     </StyledButton>
   );
