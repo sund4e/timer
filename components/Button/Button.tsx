@@ -15,7 +15,6 @@ const StyledButton = styled.button<{ $isHidden?: boolean }>`
   border: 1px solid transparent;
   padding: 10px 20px;
   font-size: ${({ theme }) => theme.fontSizes.medium * 0.8}rem;
-  font-weight: 100;
   border-radius: ${({ theme }) => theme.radius}rem;
   cursor: pointer;
 
