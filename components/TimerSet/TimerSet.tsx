@@ -28,7 +28,7 @@ const StyledTimer = styled(Timer)<{$position: number}>`
   &.enter-animation {
     opacity: 0;
   }
-  ${({ $position }) => { console.log($position); return $position && `transform: translateY(${$position * (fontSize + margin)}vh);`}}
+  ${({ $position }) => $position && `transform: translateY(${$position * (fontSize + margin)}vh);`}
   opacity: ${({ $position }) => Math.abs($position) > 4 ? 0 : 1};
 `;
 
@@ -47,9 +47,11 @@ const TimersList = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
   flex-grow: 1;
   gap: 15px; /* Space between individual timers */
+  position: relative; /* Ensure absolute children are contained */
+  overflow: hidden; /* Prevent children from overflowing this container */
+  width: 100%; /* Take full available width */
 `;
 
 const Controls = styled.div`
