@@ -11,7 +11,7 @@ export type ButtonProps = {
 
 const StyledButton = styled.button<{ $isHidden?: boolean }>`
   background-color: transparent;
-  color: ${({ theme }) => theme.colors.dark};
+  color: ${({ theme }) => theme.colors.light};
   border: 1px solid transparent;
   padding: 10px 20px;
   font-size: ${({ theme }) => theme.fontSizes.medium * 0.8}rem;
@@ -25,7 +25,7 @@ const StyledButton = styled.button<{ $isHidden?: boolean }>`
   transition: ${({ theme }) => theme.transition}s ease;
 
   &:hover:not(:disabled) {
-    border: 1px solid ${({ theme }) => theme.colors.dark};
+    border: 1px solid ${({ theme }) => theme.colors.light};
   }
 
   &:active:not(:disabled) {

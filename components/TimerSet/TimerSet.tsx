@@ -11,9 +11,12 @@ type TimerConfig = {
   enterAnimation?: boolean;
 };
 
+const fontSize = 5 //vh
+const margin = 3 //vh
+
 const StyledTimer = styled(Timer)<{$position: number}>`
   position: absolute;
-  font-size: ${({ theme }) => theme.fontSizes.medium}rem;
+  font-size: ${fontSize}vh;
   transition:
     opacity ${({ theme }) => theme.transition}s ease-out,
     scale ${({ theme }) => theme.transition}s ease-out,
@@ -25,7 +28,7 @@ const StyledTimer = styled(Timer)<{$position: number}>`
   &.enter-animation {
     opacity: 0;
   }
-  ${({ $position }) => $position && `transform: translateY(${$position * 6}vh);`}
+  ${({ $position }) => { console.log($position); return $position && `transform: translateY(${$position * (fontSize + margin)}vh);`}}
   opacity: ${({ $position }) => Math.abs($position) > 4 ? 0 : 1};
 `;
 
@@ -44,13 +47,14 @@ const TimersList = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 50vh;
+  overflow: hidden;
+  flex-grow: 1;
   gap: 15px; /* Space between individual timers */
 `;
 
 const Controls = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px; /* Space between control buttons */
 `;
 
@@ -87,7 +91,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
       return;
     }
     setCurrentTimerIndex(Math.max(currentTimerIndex - 1, 0));
-    setTimers(prevTimers => prevTimers.filter((timer, index) => index !== currentTimerIndex));
+    setTimers(prevTimers => prevTimers.filter((_, index) => index !== currentTimerIndex));
   };
 
   useEffect(() => {
