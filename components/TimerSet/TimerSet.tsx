@@ -74,6 +74,7 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
   const [isSequenceRunning, setIsSequenceRunning] = useState(false);
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
+  const [restartSequence, setRestartSequence] = useState(false);
   
   const addTimer = () => {
     const newTimer: TimerConfig = {
@@ -98,6 +99,14 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   };
 
   useEffect(() => {
+    if (restartSequence) {
+      setCurrentTimerIndex(0);
+      setIsSequenceRunning(true);
+      setRestartSequence(false);
+    }
+  }, [restartSequence, restart]);
+
+  useEffect(() => {
     const currentTimer = timers[currentTimerIndex]
     if (currentTimer.enterAnimation) {
       const newTimer = {...currentTimer, enterAnimation: false}
@@ -109,17 +118,6 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
     }
   }, [timers, currentTimerIndex]);
 
-  useEffect(() => {
-    if (currentTimerIndex === timers.length - 1 &&
-      !isSequenceRunning &&
-      restart &&
-      focusIndex === null &&
-      isActive
-    ) {
-      setIsSequenceRunning(true);
-    }
-  }, [isSequenceRunning, restart, focusIndex, currentTimerIndex, isActive]);
-
   const onFocus = (index: number) => () => {
     setCurrentTimerIndex(index);
     setFocusIndex(index);
@@ -129,11 +127,10 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   const onTimerEnd = () => {
     onTimeEnd();
     if (currentTimerIndex === timers.length - 1) {
-      if (restart && timers.length > 1) {
-        setCurrentTimerIndex(0);
-      } else {
-        setIsSequenceRunning(false);
+      if (restart) {
+        setRestartSequence(true);
       }
+      setIsSequenceRunning(false);
     } else {
       setCurrentTimerIndex(Math.min(currentTimerIndex + 1, timers.length - 1));
     }
