@@ -13,6 +13,7 @@ type TimerConfig = {
 
 const fontSize = 5; //vh
 const margin = 3; //vh
+const visibleTimers = 4;
 
 const StyledTimer = styled(Timer)<{ $position: number }>`
   position: absolute;
@@ -30,7 +31,7 @@ const StyledTimer = styled(Timer)<{ $position: number }>`
   }
   ${({ $position }) =>
     $position && `transform: translateY(${$position * (fontSize + margin)}vh);`}
-  opacity: ${({ $position }) => (Math.abs($position) > 4 ? 0 : 1)};
+  opacity: ${({ $position }) => (Math.abs($position) >= visibleTimers ? 0 : 1)};
 `;
 
 const TimerSetWrapper = styled.div`
@@ -56,10 +57,26 @@ const TimersList = styled.div`
   width: 100%; /* Take full available width */
 `;
 
-const Controls = styled.div`
+const Row = styled.div`
   display: flex;
   flex-direction: row;
+  width: 100%;
+  justify-content: center;
   gap: 10px; /* Space between control buttons */
+`;
+
+const TimerSetControls = styled.div<{
+  $timersLength: number;
+  $currentTimerIndex: number;
+}>`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  transition: transform ${({ theme }) => theme.transition}s ease-out;
+  ${({ $timersLength, $currentTimerIndex }) =>
+    `transform: translateY(${Math.min(visibleTimers, $timersLength - $currentTimerIndex) * (fontSize + margin) + 1}vh);`}
+  gap: 10px;
 `;
 
 export type Props = {
@@ -228,22 +245,23 @@ const TimerSet = memo(
               $position={index - currentTimerIndex}
             />
           ))}
+          {!isSequenceRunning && focusIndex !== null && (
+            <TimerSetControls
+              $timersLength={timers.length}
+              $currentTimerIndex={currentTimerIndex}
+            >
+              <Button onClick={addTimer} data-testid="add-button">
+                Add
+              </Button>
+              {timers.length > 1 && (
+                <Button onClick={removeTimer} data-testid="remove-button">
+                  Remove
+                </Button>
+              )}
+            </TimerSetControls>
+          )}
         </TimersList>
-        <Controls>
-          <Button
-            onClick={addTimer}
-            isHidden={isSequenceRunning}
-            data-testid="add-button"
-          >
-            Add
-          </Button>
-          <Button
-            onClick={removeTimer}
-            isHidden={isSequenceRunning || timers.length === 1}
-            data-testid="remove-button"
-          >
-            Remove
-          </Button>
+        <Row>
           <Button
             onClick={onStart}
             isHidden={isSequenceRunning}
@@ -251,7 +269,7 @@ const TimerSet = memo(
           >
             Start
           </Button>
-        </Controls>
+        </Row>
       </TimerSetWrapper>
     );
   }
