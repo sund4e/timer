@@ -262,13 +262,31 @@ const TimerSet = memo(
           )}
         </TimersList>
         <Row>
-          <Button
-            onClick={onStart}
-            isHidden={isSequenceRunning}
-            data-testid="start-button"
-          >
-            Start
-          </Button>
+            <Hidable isHidden={isSequenceRunning}>
+              <Button
+                onClick={startSequence}
+                data-testid="start-button"
+                ref={startButtonRef}
+              >
+                {'Start'}
+              </Button>
+            </Hidable>
+            <Hidable isHidden={isSequenceRunning}>
+              <Button
+                onClick={startSequence}
+                data-testid="start-button"
+                ref={startButtonRef}
+              >
+                {'Restart'}
+              </Button>
+              <Button
+                onClick={runSequence}
+                data-testid="start-button"
+                ref={startButtonRef}
+              >
+                Resume
+              </Button>
+            </Hidable>
         </Row>
       </TimerSetWrapper>
     );
