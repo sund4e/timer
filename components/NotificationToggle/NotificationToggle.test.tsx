@@ -20,8 +20,9 @@ describe('NotificationToggle', () => {
   const render = (override?: Partial<Props>) => {
     const defaultProps: Props = {
       setNotify,
-      children: (isDenied: boolean) => 
-        <div data-testid="child-content">{`Denied: ${isDenied}`}</div>,
+      children: (isDenied: boolean) => (
+        <div data-testid="child-content">{`Denied: ${isDenied}`}</div>
+      ),
       ...override,
     };
     return renderElement(<NotificationToggle {...defaultProps} />);

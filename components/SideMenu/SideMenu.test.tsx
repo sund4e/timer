@@ -1,4 +1,4 @@
-import { screen} from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { render as renderElement } from '../../tests/render';
 import SideMenu, { Props } from './SideMenu';
 

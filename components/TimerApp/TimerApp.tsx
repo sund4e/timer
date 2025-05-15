@@ -66,7 +66,7 @@ const TimerApp = memo(
     function playAudio() {
       if (audio) {
         audio.currentTime = 0;
-        audio.play().catch(err => console.error("Play failed:", err));
+        audio.play().catch((err) => console.error('Play failed:', err));
       } else {
         console.log('Audio not ready to play.');
       }
@@ -100,7 +100,9 @@ const TimerApp = memo(
         <SideMenu>
           <Header>Aika Timer</Header>
           <Text>
-            {"Aika means \"time\" in Finnish and is a minimal timer with alerts and repeat reminders."}
+            {
+              'Aika means "time" in Finnish and is a minimal timer with alerts and repeat reminders.'
+            }
           </Text>
           <SubHeader>Settings</SubHeader>
           <Toggle isOn={playSound} setIsOn={handleSoundToggle}>
@@ -112,8 +114,10 @@ const TimerApp = memo(
                 Notifications{' '}
                 {isDenied && (
                   <Tooltip>
-                    {"Can't enable notifications since they are disabled in the"}
-                    {" browser settings"}
+                    {
+                      "Can't enable notifications since they are disabled in the"
+                    }
+                    {' browser settings'}
                   </Tooltip>
                 )}
               </>

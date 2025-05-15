@@ -1,10 +1,25 @@
 import TimerApp from './TimerApp';
 import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
-import { changeInputValue, enter, focusTimer, getAddButton, getRemoveButton, getStartButton, getTime, getTimes, getToggle, start } from '../../tests/helpers';
+import {
+  changeInputValue,
+  enter,
+  focusTimer,
+  getAddButton,
+  getRemoveButton,
+  getStartButton,
+  getTime,
+  getTimes,
+  getToggle,
+  start,
+} from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
-import { setupAudioMock, restoreAudioMock, getMockAudioInstance } from '../../tests/audioMock';
+import {
+  setupAudioMock,
+  restoreAudioMock,
+  getMockAudioInstance,
+} from '../../tests/audioMock';
 
 // --- Mocks ---
 
@@ -42,9 +57,9 @@ describe('timerApp', () => {
     jest.useRealTimers();
     restoreAudioMock();
     Object.defineProperty(window.navigator, 'userAgent', {
-        value: originalUserAgent,
-        writable: true,
-        configurable: true
+      value: originalUserAgent,
+      writable: true,
+      configurable: true,
     });
   });
 
@@ -57,14 +72,14 @@ describe('timerApp', () => {
   });
 
   it('does not run timer if not started', () => {
-    render({ initialTime: 20 * 60  });
+    render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:20:00');
   });
 
   it('starts timer after clicking start button', () => {
-    render({ initialTime: 20 * 60  });
+    render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
     const startButton = screen.getByText('Start');
     fireEvent.click(startButton);
@@ -73,7 +88,7 @@ describe('timerApp', () => {
   });
 
   it('hides start button when timer is running', () => {
-    render({ initialTime: 20 * 60  });
+    render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
     start();
     const startButton = getStartButton();
@@ -168,7 +183,7 @@ describe('timerApp', () => {
     });
 
     it('starts timer if not running', () => {
-      render({ initialTime: 10});
+      render({ initialTime: 10 });
       expect(getTime()).toEqual('00:00:10');
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       fireEvent.focus(inputs[2]);
@@ -192,7 +207,7 @@ describe('timerApp', () => {
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:49');
     });
-    
+
     it('starts time from new time after pressing enter', () => {
       render();
       expect(getTime()).toEqual('00:00:00');
@@ -207,7 +222,7 @@ describe('timerApp', () => {
   describe('restart', () => {
     const getRestartToggle = () => {
       return getToggle('Restart timer when done');
-    }
+    };
 
     it('true runs timer again after finishing', () => {
       const initialTime = 10;
@@ -247,7 +262,7 @@ describe('timerApp', () => {
     // Helper to get the Sound Toggle input element
     const getSoundToggle = () => {
       return getToggle('Sound');
-    }
+    };
 
     describe('on desktop', () => {
       beforeEach(() => {
@@ -265,7 +280,7 @@ describe('timerApp', () => {
         expect(getSoundToggle().checked).toBe(true);
         start();
         advanceSeconds(initialTime);
-        
+
         expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
       });
 
@@ -296,13 +311,13 @@ describe('timerApp', () => {
       });
 
       test('should not play sound when timer ends if toggle is off', () => {
-         const initialTime = 3;
-         render({ initialTime });
-         expect(getSoundToggle().checked).toBe(false);
+        const initialTime = 3;
+        render({ initialTime });
+        expect(getSoundToggle().checked).toBe(false);
 
-         advanceSeconds(initialTime);
+        advanceSeconds(initialTime);
 
-         expect(getMockAudioInstance().play).not.toHaveBeenCalled();
+        expect(getMockAudioInstance().play).not.toHaveBeenCalled();
       });
 
       test('should attempt to play sound immediately when toggle is turned on', () => {
@@ -317,21 +332,21 @@ describe('timerApp', () => {
         expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
       });
 
-       test('should play sound when timer ends after toggle has been turned on', () => {
-          const initialTime = 3;
-          render({ initialTime });
+      test('should play sound when timer ends after toggle has been turned on', () => {
+        const initialTime = 3;
+        render({ initialTime });
 
-         act(() => {
-           fireEvent.click(getSoundToggle());
-         });
-          expect(getSoundToggle().checked).toBe(true);
+        act(() => {
+          fireEvent.click(getSoundToggle());
+        });
+        expect(getSoundToggle().checked).toBe(true);
 
-          getMockAudioInstance().play.mockClear();
-          start();
-          advanceSeconds(initialTime);
+        getMockAudioInstance().play.mockClear();
+        start();
+        advanceSeconds(initialTime);
 
-          expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
-       });
+        expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
+      });
     });
   });
 

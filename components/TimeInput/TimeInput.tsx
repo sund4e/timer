@@ -27,7 +27,14 @@ export type Props = {
 
 const getDigits = (seconds: number) => {
   const hms = getHms(seconds);
-  return [Math.floor(hms.hours / 10), hms.hours % 10, Math.floor(hms.minutes / 10), hms.minutes % 10, Math.floor(hms.seconds / 10), hms.seconds % 10];
+  return [
+    Math.floor(hms.hours / 10),
+    hms.hours % 10,
+    Math.floor(hms.minutes / 10),
+    hms.minutes % 10,
+    Math.floor(hms.seconds / 10),
+    hms.seconds % 10,
+  ];
 };
 
 export const getSecondsFromDigits = (digits: number[]) => {
@@ -40,8 +47,8 @@ export const getSecondsFromDigits = (digits: number[]) => {
 
 const maxValues = [9, 9, 5, 9, 5, 9];
 const isValidTime = (time: number[]) => {
-  return time.every((digit, index) => 
-    !isNaN(digit) && digit >= 0 && digit <= maxValues[index]
+  return time.every(
+    (digit, index) => !isNaN(digit) && digit >= 0 && digit <= maxValues[index]
   );
 };
 
@@ -51,7 +58,7 @@ const TimeInput = ({
   className,
   onFocus,
   onBlur,
-  isFocused
+  isFocused,
 }: Props) => {
   const [time, setTime] = useState(getDigits(value));
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -61,7 +68,14 @@ const TimeInput = ({
   const inputRef3 = useRef<HTMLInputElement>(null);
   const inputRef4 = useRef<HTMLInputElement>(null);
   const inputRef5 = useRef<HTMLInputElement>(null);
-  const inputRefs = [inputRef0, inputRef1, inputRef2, inputRef3, inputRef4, inputRef5];
+  const inputRefs = [
+    inputRef0,
+    inputRef1,
+    inputRef2,
+    inputRef3,
+    inputRef4,
+    inputRef5,
+  ];
   const [nextInputToFocus, setNextInputToFocus] = useState(0);
 
   useEffect(() => {
@@ -74,20 +88,23 @@ const TimeInput = ({
     }
   }, [nextInputToFocus]);
 
-  const onChangeTime = useCallback((time: number[]) => {
-    if (isValidTime(time)) {
-      const seconds = getSecondsFromDigits(time);
-      if (seconds !== value) {
-        onChange(seconds);
+  const onChangeTime = useCallback(
+    (time: number[]) => {
+      if (isValidTime(time)) {
+        const seconds = getSecondsFromDigits(time);
+        if (seconds !== value) {
+          onChange(seconds);
+        }
       }
-    }
-  }, [onChange, time]);
+    },
+    [onChange, time]
+  );
 
   const onEnter = useCallback(() => {
     if (isFocused) {
       onBlur?.();
     } else {
-      onFocus?.(); 
+      onFocus?.();
     }
   }, [onChangeTime, onBlur, onFocus, time, isFocused]);
 
@@ -103,7 +120,7 @@ const TimeInput = ({
   }, [isFocused]);
 
   const findFocusedIndex = useCallback(() => {
-    return inputRefs.findIndex(ref => ref.current === document.activeElement);
+    return inputRefs.findIndex((ref) => ref.current === document.activeElement);
   }, [inputRefs]);
 
   useKeyPressCallBack(wrapperRef.current, 'ArrowRight', () => {
@@ -122,38 +139,47 @@ const TimeInput = ({
     }
   });
 
-  const handleTimeChange = useCallback((index: number) => (newValue: number) => {
-    const newTime = time.map((digit, i) => i === index ? newValue : digit);
-    setTime(newTime);
-    if (!isValidTime(newTime)) {
-      return;
-    }
-    const nextIndex = index + 1;
-    if (inputRefs[nextIndex]) {
-      setNextInputToFocus(nextIndex);
-    } else {
-      inputRefs[index]?.current?.blur();
-      onChangeTime(newTime);
-    }
-  }, [time, inputRefs, onChangeTime]);
+  const handleTimeChange = useCallback(
+    (index: number) => (newValue: number) => {
+      const newTime = time.map((digit, i) => (i === index ? newValue : digit));
+      setTime(newTime);
+      if (!isValidTime(newTime)) {
+        return;
+      }
+      const nextIndex = index + 1;
+      if (inputRefs[nextIndex]) {
+        setNextInputToFocus(nextIndex);
+      } else {
+        inputRefs[index]?.current?.blur();
+        onChangeTime(newTime);
+      }
+    },
+    [time, inputRefs, onChangeTime]
+  );
 
   const handleFocusCapture = useCallback(() => {
     onFocus?.();
   }, [onFocus]);
 
-  const handleBlurCapture = useCallback((event: FocusEvent<HTMLDivElement>) => {
-    if (wrapperRef.current && !wrapperRef.current.contains(event.relatedTarget as Node)) {
-      onBlur?.();
-      onChangeTime(time); 
-    }
-  }, [onBlur, time]);
+  const handleBlurCapture = useCallback(
+    (event: FocusEvent<HTMLDivElement>) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.relatedTarget as Node)
+      ) {
+        onBlur?.();
+        onChangeTime(time);
+      }
+    },
+    [onBlur, time]
+  );
 
   return (
-    <Wrapper 
+    <Wrapper
       ref={wrapperRef}
-      $isFocused={isFocused} 
-      data-testid="time" 
-      className={className} 
+      $isFocused={isFocused}
+      data-testid="time"
+      className={className}
       onFocusCapture={handleFocusCapture}
       onBlurCapture={handleBlurCapture}
       tabIndex={-1}
@@ -163,7 +189,7 @@ const TimeInput = ({
           <SingleInput
             ref={inputRefs[index]}
             maxValue={maxValues[index]}
-            onChange={handleTimeChange(index)} 
+            onChange={handleTimeChange(index)}
             value={digit}
           />
           {(index === 1 || index === 3) && <span>:</span>}

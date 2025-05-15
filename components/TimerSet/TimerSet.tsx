@@ -11,10 +11,10 @@ type TimerConfig = {
   enterAnimation?: boolean;
 };
 
-const fontSize = 5 //vh
-const margin = 3 //vh
+const fontSize = 5; //vh
+const margin = 3; //vh
 
-const StyledTimer = styled(Timer)<{$position: number}>`
+const StyledTimer = styled(Timer)<{ $position: number }>`
   position: absolute;
   font-size: ${fontSize}vh;
   transition:
@@ -28,8 +28,9 @@ const StyledTimer = styled(Timer)<{$position: number}>`
   &.enter-animation {
     opacity: 0;
   }
-  ${({ $position }) => $position && `transform: translateY(${$position * (fontSize + margin)}vh);`}
-  opacity: ${({ $position }) => Math.abs($position) > 4 ? 0 : 1};
+  ${({ $position }) =>
+    $position && `transform: translateY(${$position * (fontSize + margin)}vh);`}
+  opacity: ${({ $position }) => (Math.abs($position) > 4 ? 0 : 1)};
 `;
 
 const TimerSetWrapper = styled.div`
@@ -69,159 +70,193 @@ export type Props = {
   restart: boolean;
 };
 
-const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeEnd, restart = false }: Props) => {
-  const [timers, setTimers] = useState<TimerConfig[]>([{id: Date.now().toString(), initialTime: initialTime}]);
-  const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
-  const [isSequenceRunning, setIsSequenceRunning] = useState(false);
-  const [focusIndex, setFocusIndex] = useState<number | null>(null);
-  const [restartSequence, setRestartSequence] = useState(false);
-  
-  const addTimer = () => {
-    const newTimer: TimerConfig = {
-      id: uuid(),
-      initialTime: initialTime,
-      enterAnimation: true,
-    };
-    setTimers(prevTimers => {
-      const newTimers = [...prevTimers];
-      newTimers.splice(currentTimerIndex +1, 0, newTimer);
-      setCurrentTimerIndex(currentTimerIndex + 1);
-      return newTimers;
-    });
-  };
+const TimerSet = memo(
+  ({
+    initialTime = 0,
+    isActive = true,
+    setTitleTime,
+    onTimeEnd,
+    restart = false,
+  }: Props) => {
+    const [timers, setTimers] = useState<TimerConfig[]>([
+      { id: Date.now().toString(), initialTime: initialTime },
+    ]);
+    const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
+    const [isSequenceRunning, setIsSequenceRunning] = useState(false);
+    const [focusIndex, setFocusIndex] = useState<number | null>(null);
+    const [restartSequence, setRestartSequence] = useState(false);
 
-  const removeTimer = () => {
-    if (timers.length === 1) {
-      return;
-    }
-    setCurrentTimerIndex(Math.max(currentTimerIndex - 1, 0));
-    setTimers(prevTimers => prevTimers.filter((_, index) => index !== currentTimerIndex));
-  };
-
-  useEffect(() => {
-    if (restartSequence) {
-      setCurrentTimerIndex(0);
-      setIsSequenceRunning(true);
-      setRestartSequence(false);
-    }
-  }, [restartSequence, restart]);
-
-  useEffect(() => {
-    const currentTimer = timers[currentTimerIndex]
-    if (currentTimer.enterAnimation) {
-      const newTimer = {...currentTimer, enterAnimation: false}
-      setTimers(prevTimers => {
+    const addTimer = () => {
+      const newTimer: TimerConfig = {
+        id: uuid(),
+        initialTime: initialTime,
+        enterAnimation: true,
+      };
+      setTimers((prevTimers) => {
         const newTimers = [...prevTimers];
-        newTimers.splice(currentTimerIndex, 1, newTimer);
+        newTimers.splice(currentTimerIndex + 1, 0, newTimer);
+        setCurrentTimerIndex(currentTimerIndex + 1);
         return newTimers;
       });
-    }
-  }, [timers, currentTimerIndex]);
+    };
 
-  const onFocus = (index: number) => () => {
-    setCurrentTimerIndex(index);
-    setFocusIndex(index);
-    setIsSequenceRunning(false);
-  };
-
-  const onTimerEnd = () => {
-    onTimeEnd();
-    if (currentTimerIndex === timers.length - 1) {
-      if (restart) {
-        setRestartSequence(true);
+    const removeTimer = () => {
+      if (timers.length === 1) {
+        return;
       }
-      setIsSequenceRunning(false);
-    } else {
-      setCurrentTimerIndex(Math.min(currentTimerIndex + 1, timers.length - 1));
-    }
-  };
+      setCurrentTimerIndex(Math.max(currentTimerIndex - 1, 0));
+      setTimers((prevTimers) =>
+        prevTimers.filter((_, index) => index !== currentTimerIndex)
+      );
+    };
 
-  const onEnter = useCallback(() => {
-    const activeElement = document.activeElement as HTMLElement | null;
-
-    if (activeElement?.tagName === 'BUTTON') {
-      // default event is prevented, we need to simulate click
-      activeElement.click();
-      activeElement.blur();
-      return;
-    }
-
-    if (focusIndex !== null) {
-      setFocusIndex(null);
-      if(currentTimerIndex === timers.length - 1) {
+    useEffect(() => {
+      if (restartSequence) {
+        setCurrentTimerIndex(0);
         setIsSequenceRunning(true);
+        setRestartSequence(false);
       }
-    } else {
-      setFocusIndex(currentTimerIndex);
+    }, [restartSequence, restart]);
+
+    useEffect(() => {
+      const currentTimer = timers[currentTimerIndex];
+      if (currentTimer.enterAnimation) {
+        const newTimer = { ...currentTimer, enterAnimation: false };
+        setTimers((prevTimers) => {
+          const newTimers = [...prevTimers];
+          newTimers.splice(currentTimerIndex, 1, newTimer);
+          return newTimers;
+        });
+      }
+    }, [timers, currentTimerIndex]);
+
+    const onFocus = (index: number) => () => {
+      setCurrentTimerIndex(index);
+      setFocusIndex(index);
       setIsSequenceRunning(false);
-    }
-  }, [focusIndex, currentTimerIndex, setFocusIndex, setIsSequenceRunning, timers]);
+    };
 
-  const moveUp = useCallback(() =>{
-    if (currentTimerIndex > 0) {
-      const newIndex = currentTimerIndex - 1;
-      setCurrentTimerIndex(newIndex);
-      if (focusIndex === currentTimerIndex) {
-        setFocusIndex(newIndex);
+    const onTimerEnd = () => {
+      onTimeEnd();
+      if (currentTimerIndex === timers.length - 1) {
+        if (restart) {
+          setRestartSequence(true);
+        }
+        setIsSequenceRunning(false);
+      } else {
+        setCurrentTimerIndex(
+          Math.min(currentTimerIndex + 1, timers.length - 1)
+        );
       }
-    }
-  }, [currentTimerIndex, setCurrentTimerIndex, focusIndex]);
+    };
 
-  const moveDown = useCallback(() =>{
-    if (currentTimerIndex < timers.length - 1) {
-      const newIndex = currentTimerIndex + 1;
-      setCurrentTimerIndex(newIndex);
-      if (focusIndex === currentTimerIndex) {
-        setFocusIndex(newIndex);
+    const onEnter = useCallback(() => {
+      const activeElement = document.activeElement as HTMLElement | null;
+
+      if (activeElement?.tagName === 'BUTTON') {
+        // default event is prevented, we need to simulate click
+        activeElement.click();
+        activeElement.blur();
+        return;
       }
-    }
-  }, [currentTimerIndex, setCurrentTimerIndex]);
 
-  useKeyPressCallBack(null, 'Enter', onEnter);
-  useKeyPressCallBack(null, 'ArrowUp', moveUp);
-  useKeyPressCallBack(null, 'ArrowDown', moveDown);
+      if (focusIndex !== null) {
+        setFocusIndex(null);
+        if (currentTimerIndex === timers.length - 1) {
+          setIsSequenceRunning(true);
+        }
+      } else {
+        setFocusIndex(currentTimerIndex);
+        setIsSequenceRunning(false);
+      }
+    }, [
+      focusIndex,
+      currentTimerIndex,
+      setFocusIndex,
+      setIsSequenceRunning,
+      timers,
+    ]);
 
-  const onStart = () => {
-    setIsSequenceRunning(true);
-    setFocusIndex(null);
-    setCurrentTimerIndex(0);
-  };
+    const moveUp = useCallback(() => {
+      if (currentTimerIndex > 0) {
+        const newIndex = currentTimerIndex - 1;
+        setCurrentTimerIndex(newIndex);
+        if (focusIndex === currentTimerIndex) {
+          setFocusIndex(newIndex);
+        }
+      }
+    }, [currentTimerIndex, setCurrentTimerIndex, focusIndex]);
 
-  return (
-    <TimerSetWrapper>
-      <TimersList>
-        {timers.map((timerConfig, index) => (
-          <StyledTimer
-            key={timerConfig.id}
-            initialTime={timerConfig.initialTime}
-            isRunning={currentTimerIndex === index && isSequenceRunning}// TODO: Move restart to TimerSet
-            onTimeEnd={onTimerEnd}
-            setTitleTime={setTitleTime}
-            onFocus={onFocus(index)}
-            isFocused={focusIndex === index}
-            className={[
-              currentTimerIndex === index ? 'active' : '',
-              timerConfig.enterAnimation ? 'enter-animation' : ''
-            ].filter(Boolean).join(' ')}
-            $position={index - currentTimerIndex}
-          />
-        ))}
-      </TimersList>
-      <Controls>
-        <Button onClick={addTimer} isHidden={isSequenceRunning} data-testid="add-button">
-          Add
-        </Button>
-        <Button onClick={removeTimer} isHidden={isSequenceRunning || timers.length === 1} data-testid="remove-button">
-          Remove
-        </Button>
-        <Button onClick={onStart} isHidden={isSequenceRunning} data-testid="start-button">
-          Start
-        </Button>
-      </Controls>
-    </TimerSetWrapper>
-  );
-});
+    const moveDown = useCallback(() => {
+      if (currentTimerIndex < timers.length - 1) {
+        const newIndex = currentTimerIndex + 1;
+        setCurrentTimerIndex(newIndex);
+        if (focusIndex === currentTimerIndex) {
+          setFocusIndex(newIndex);
+        }
+      }
+    }, [currentTimerIndex, setCurrentTimerIndex]);
+
+    useKeyPressCallBack(null, 'Enter', onEnter);
+    useKeyPressCallBack(null, 'ArrowUp', moveUp);
+    useKeyPressCallBack(null, 'ArrowDown', moveDown);
+
+    const onStart = () => {
+      setIsSequenceRunning(true);
+      setFocusIndex(null);
+      setCurrentTimerIndex(0);
+    };
+
+    return (
+      <TimerSetWrapper>
+        <TimersList>
+          {timers.map((timerConfig, index) => (
+            <StyledTimer
+              key={timerConfig.id}
+              initialTime={timerConfig.initialTime}
+              isRunning={currentTimerIndex === index && isSequenceRunning} // TODO: Move restart to TimerSet
+              onTimeEnd={onTimerEnd}
+              setTitleTime={setTitleTime}
+              onFocus={onFocus(index)}
+              isFocused={focusIndex === index}
+              className={[
+                currentTimerIndex === index ? 'active' : '',
+                timerConfig.enterAnimation ? 'enter-animation' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              $position={index - currentTimerIndex}
+            />
+          ))}
+        </TimersList>
+        <Controls>
+          <Button
+            onClick={addTimer}
+            isHidden={isSequenceRunning}
+            data-testid="add-button"
+          >
+            Add
+          </Button>
+          <Button
+            onClick={removeTimer}
+            isHidden={isSequenceRunning || timers.length === 1}
+            data-testid="remove-button"
+          >
+            Remove
+          </Button>
+          <Button
+            onClick={onStart}
+            isHidden={isSequenceRunning}
+            data-testid="start-button"
+          >
+            Start
+          </Button>
+        </Controls>
+      </TimerSetWrapper>
+    );
+  }
+);
 
 TimerSet.displayName = 'TimerSet';
 
-export default TimerSet; 
+export default TimerSet;

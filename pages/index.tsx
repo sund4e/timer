@@ -19,7 +19,10 @@ const Home = () => {
   const [time, setTime] = useState(0);
 
   useEffect(() => {
-    navigator.mediaSession.metadata = new MediaMetadata({ title: toTimeString(time), artist: 'Aika Timer' });
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: toTimeString(time),
+      artist: 'Aika Timer',
+    });
   }, [time]);
 
   return (

@@ -20,7 +20,7 @@ export const theme: Theme = {
     primary: '#182033',
     highlight: '#494F69',
     accent: '#98473E',
-    light:  '#C9C5CB'
+    light: '#C9C5CB',
   },
   fontSizes: {
     big: 10,

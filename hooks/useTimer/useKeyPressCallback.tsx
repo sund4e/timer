@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react';
 
-const useKeyPressCallBack = (element: HTMLElement | null, key: string, callback: () => void) => {
+const useKeyPressCallBack = (
+  element: HTMLElement | null,
+  key: string,
+  callback: () => void
+) => {
   const callbackRef = useRef<() => void>(() => {});
 
   useEffect(() => {

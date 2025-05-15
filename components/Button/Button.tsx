@@ -39,10 +39,10 @@ const StyledButton = styled.button<{ $isHidden?: boolean }>`
 
 const Button = ({ children, isHidden, ...rest }: ButtonProps) => {
   return (
-    <StyledButton 
-      $isHidden={isHidden} 
-      tabIndex={isHidden ? -1 : undefined}  // Hide button from tab navigation
-      disabled={isHidden || rest.disabled} 
+    <StyledButton
+      $isHidden={isHidden}
+      tabIndex={isHidden ? -1 : undefined} // Hide button from tab navigation
+      disabled={isHidden || rest.disabled}
       {...rest}
     >
       {children}
@@ -50,4 +50,4 @@ const Button = ({ children, isHidden, ...rest }: ButtonProps) => {
   );
 };
 
-export default Button; 
+export default Button;

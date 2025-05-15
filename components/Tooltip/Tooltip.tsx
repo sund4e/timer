@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import QuestionIcon from '../../icons/question';
 
-const TooltipText = styled.div<{$parentPosition: DOMRect}>`
+const TooltipText = styled.div<{ $parentPosition: DOMRect }>`
   background-color: ${({ theme }) => theme.colors.highlight};
   color: ${({ theme }) => theme.colors.light};
   position: absolute;
@@ -58,7 +58,9 @@ const Tooltip = ({ children }: Props) => {
       {show &&
         parentPosition &&
         ReactDOM.createPortal(
-          <TooltipText $parentPosition={parentPosition}>{children}</TooltipText>,
+          <TooltipText $parentPosition={parentPosition}>
+            {children}
+          </TooltipText>,
           portalRoot.current
         )}
     </>

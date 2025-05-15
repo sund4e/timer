@@ -1,7 +1,7 @@
 Simple online timer, check out [aika.app](https://aika.app/)
 
-
 TODO:
+
 - CI/CD: run tests, ts compile and lint, deploy only after that
 - Revisit eslint.config.js hacks
 - Fix editor config to show lint and ts errors
@@ -19,8 +19,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-*   [Node.js](https://nodejs.org/) (Version 18 or later recommended)
-*   [Yarn](https://yarnpkg.com/) (Version 1.x)
+- [Node.js](https://nodejs.org/) (Version 18 or later recommended)
+- [Yarn](https://yarnpkg.com/) (Version 1.x)
 
 ### Installation
 
@@ -66,9 +66,9 @@ This project is deployed using [Vercel](https://vercel.com/). Pushes to the `mai
 
 ## Built With
 
-*   [React](https://reactjs.org/) - JavaScript library for building user interfaces.
-*   [Next.js](https://nextjs.org/) - React framework for production.
-*   [TypeScript](https://www.typescriptlang.org/) - Typed superset of JavaScript.
-*   [Styled Components](https://styled-components.com/) - For component-level styling.
-*   [ESLint](https://eslint.org/) - For code linting.
-*   [Jest](https://jestjs.io/) & [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) - For testing.
+- [React](https://reactjs.org/) - JavaScript library for building user interfaces.
+- [Next.js](https://nextjs.org/) - React framework for production.
+- [TypeScript](https://www.typescriptlang.org/) - Typed superset of JavaScript.
+- [Styled Components](https://styled-components.com/) - For component-level styling.
+- [ESLint](https://eslint.org/) - For code linting.
+- [Jest](https://jestjs.io/) & [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) - For testing.

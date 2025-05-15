@@ -1,10 +1,5 @@
 import styled from 'styled-components';
-import {
-  useRef,
-  ChangeEvent,
-  useCallback,
-  useState
-} from 'react';
+import { useRef, ChangeEvent, useCallback, useState } from 'react';
 
 const StyledInput = styled.input<{
   $isInvalid: boolean;
@@ -35,13 +30,7 @@ export type Props = {
   ref?: React.RefObject<HTMLInputElement | null>;
 };
 
-const SingleInput = ({
-  value,
-  onChange,
-  className,
-  maxValue,
-  ref
-}: Props) => {
+const SingleInput = ({ value, onChange, className, maxValue, ref }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const input = ref || inputRef;
   const [isValid, setIsValid] = useState(true);
@@ -52,16 +41,18 @@ const SingleInput = ({
     }
   }, [input.current]);
 
-  const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const number = parseInt(event.target.value[0]);
-    onChange(isNaN(number) ? "!" as unknown as number : number);
-    if (isNaN(number) || maxValue && number > maxValue) {
-      setIsValid(false);
-    } else {
-      setIsValid(true);
-    }
-
-  }, [onChange]);
+  const onChangeInput = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const number = parseInt(event.target.value[0]);
+      onChange(isNaN(number) ? ('!' as unknown as number) : number);
+      if (isNaN(number) || (maxValue && number > maxValue)) {
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+      }
+    },
+    [onChange]
+  );
 
   return (
     <StyledInput

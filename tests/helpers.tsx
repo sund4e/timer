@@ -6,24 +6,28 @@ const formatTime = (numbers: string[]): string => {
 
 const getTimerTime = (timer: HTMLElement) => {
   const { getAllByRole } = within(timer);
-  const numbers = getAllByRole('textbox').map((input) => (input as HTMLInputElement).value);
+  const numbers = getAllByRole('textbox').map(
+    (input) => (input as HTMLInputElement).value
+  );
   return formatTime(numbers);
-}
+};
 
 const getTimers = () => {
   return screen.getAllByTestId('time');
-}
+};
 
 export const getTime = (): string | null => {
   const timers = getTimers();
-  const activeTimer = timers.find(timer => timer.classList.contains('active'));
+  const activeTimer = timers.find((timer) =>
+    timer.classList.contains('active')
+  );
   if (!activeTimer) return null;
   return getTimerTime(activeTimer);
 };
 
 export const getTimes = (): string[] => {
-  const timers = getTimers();  
-  return timers.map(timer => getTimerTime(timer));
+  const timers = getTimers();
+  return timers.map((timer) => getTimerTime(timer));
 };
 
 export const changeInputValue = (inputInxed: number, value: number) => {
@@ -70,21 +74,26 @@ export const start = () => {
   act(() => {
     getStartButton().click();
   });
-}
+};
 
 export const getToggle = (text: string) => {
   const soundLabel = screen.getByText(text);
-  const toggleInput = soundLabel.parentElement?.querySelector('input[type="checkbox"], input[role="switch"]') || screen.getByRole('switch', { name: /sound/i });
+  const toggleInput =
+    soundLabel.parentElement?.querySelector(
+      'input[type="checkbox"], input[role="switch"]'
+    ) || screen.getByRole('switch', { name: /sound/i });
   if (!toggleInput) throw new Error(`Could not find ${text} toggle input`);
   return toggleInput as HTMLInputElement;
-}
+};
 
 export const getActiveTimer = () => {
   const timers = getTimers();
-  const activeTimer = timers.find(timer => timer.classList.contains('active'));
+  const activeTimer = timers.find((timer) =>
+    timer.classList.contains('active')
+  );
   if (!activeTimer) throw new Error('No active timer found');
   return activeTimer;
-}
+};
 
 export const focusTimer = (index: number) => {
   const timers = getTimers();
@@ -93,4 +102,4 @@ export const focusTimer = (index: number) => {
   act(() => {
     timer.focus();
   });
-}
+};

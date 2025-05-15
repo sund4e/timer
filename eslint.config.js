@@ -1,20 +1,19 @@
 // eslint.config.js
-import globals from "globals";
-import js from "@eslint/js";
-import tseslint from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
-import reactPlugin from "eslint-plugin-react";
-import hooksPlugin from "eslint-plugin-react-hooks";
-import jestPlugin from "eslint-plugin-jest";
-
+import globals from 'globals';
+import js from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import reactPlugin from 'eslint-plugin-react';
+import hooksPlugin from 'eslint-plugin-react-hooks';
+import jestPlugin from 'eslint-plugin-jest';
 
 export default [
   // Global ignores
   {
     ignores: [
-      "node_modules/",
-      ".next/",
-      "out/",
+      'node_modules/',
+      '.next/',
+      'out/',
       // Add other directories or files to ignore here
       // "*.js" // Keep this if you truly want to ignore ALL .js files, otherwise remove
     ],
@@ -25,24 +24,24 @@ export default [
 
   // TypeScript configurations
   {
-    files: ["**/*.ts", "**/*.tsx"], // Apply only to TS/TSX files
+    files: ['**/*.ts', '**/*.tsx'], // Apply only to TS/TSX files
     plugins: {
-      "@typescript-eslint": tseslint,
+      '@typescript-eslint': tseslint,
     },
     languageOptions: {
       parser: tsParser,
       parserOptions: {
         ecmaFeatures: { jsx: true },
-        project: "./tsconfig.json", // Link to your tsconfig for type-aware rules
+        project: './tsconfig.json', // Link to your tsconfig for type-aware rules
       },
       globals: {
         ...globals.browser,
         ...globals.node,
-        NodeJS: "readonly"
+        NodeJS: 'readonly',
       },
     },
     rules: {
-      ...tseslint.configs["eslint-recommended"].rules, // Override JS recommended rules with TS equivalents
+      ...tseslint.configs['eslint-recommended'].rules, // Override JS recommended rules with TS equivalents
       ...tseslint.configs.recommended.rules, // Apply TS recommended rules
       // Add any specific TS rule overrides here
       // Example: "@typescript-eslint/no-unused-vars": "warn",
@@ -51,10 +50,10 @@ export default [
 
   // React configurations
   {
-    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"], // Apply to all relevant files
+    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'], // Apply to all relevant files
     plugins: {
       react: reactPlugin,
-      "react-hooks": hooksPlugin,
+      'react-hooks': hooksPlugin,
     },
     languageOptions: {
       parserOptions: {
@@ -62,20 +61,20 @@ export default [
       },
       globals: {
         ...globals.browser,
-        React: "readonly"
+        React: 'readonly',
       },
     },
     settings: {
       react: {
-        version: "detect", // Detect React version automatically
+        version: 'detect', // Detect React version automatically
       },
     },
     rules: {
       ...reactPlugin.configs.recommended.rules, // Apply React recommended rules
       ...hooksPlugin.configs.recommended.rules, // Apply React Hooks recommended rules
       // Add any specific React rule overrides here
-      "react/react-in-jsx-scope": "off", // Keep your override for Next.js
-      "react/prop-types": "off", // Often not needed with TypeScript
+      'react/react-in-jsx-scope': 'off', // Keep your override for Next.js
+      'react/prop-types': 'off', // Often not needed with TypeScript
     },
   },
 
@@ -104,24 +103,37 @@ export default [
   // Config files override (ensure they are treated as CommonJS if needed, although type:module might handle this)
   // This might not be strictly necessary with type:module, but for clarity:
   {
-      files: ["*.config.js", "*.config.cjs", "jest.setup.js", "setupTests.js", "jest.setup.cjs", "setupTests.cjs"], // Target .js and potential .cjs versions
-      languageOptions: {
-        // sourceType: "commonjs", // This might not be needed if globals are set
-        globals: {
-            ...globals.node
-        }
+    files: [
+      '*.config.js',
+      '*.config.cjs',
+      'jest.setup.js',
+      'setupTests.js',
+      'jest.setup.cjs',
+      'setupTests.cjs',
+    ], // Target .js and potential .cjs versions
+    languageOptions: {
+      // sourceType: "commonjs", // This might not be needed if globals are set
+      globals: {
+        ...globals.node,
       },
-      rules: {
-        // "no-undef": "error" // Turn off no-undef here, rely on globals.node
-        "no-undef": "off" 
-      }
+    },
+    rules: {
+      // "no-undef": "error" // Turn off no-undef here, rely on globals.node
+      'no-undef': 'off',
+    },
   },
 
   // Jest test file configurations
   {
-    files: ["**/*.test.ts", "**/*.test.tsx", "**/tests/**/*.ts", "**/tests/**/*.tsx", "**/__mocks__/**"],
+    files: [
+      '**/*.test.ts',
+      '**/*.test.tsx',
+      '**/tests/**/*.ts',
+      '**/tests/**/*.tsx',
+      '**/__mocks__/**',
+    ],
     plugins: {
-      jest: jestPlugin
+      jest: jestPlugin,
     },
     languageOptions: {
       globals: {
@@ -129,19 +141,27 @@ export default [
       },
     },
     rules: {
-       ...jestPlugin.configs.recommended.rules, // Apply Jest recommended rules
+      ...jestPlugin.configs.recommended.rules, // Apply Jest recommended rules
       // Allow describe, it, etc.
-      "@typescript-eslint/no-explicit-any": "off", // Often needed in tests
-      "@typescript-eslint/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description", "ts-ignore": true, "ts-nocheck": true, "ts-check": false }] // Adjust ts-comment rule for tests
+      '@typescript-eslint/no-explicit-any': 'off', // Often needed in tests
+      '@typescript-eslint/ban-ts-comment': [
+        'error',
+        {
+          'ts-expect-error': 'allow-with-description',
+          'ts-ignore': true,
+          'ts-nocheck': true,
+          'ts-check': false,
+        },
+      ], // Adjust ts-comment rule for tests
     },
   },
 
   // Specific file rule overrides
   {
-      files: ["styled.d.ts"],
-      rules: {
-          // Target the rule reported in the error message
-          "@typescript-eslint/no-empty-object-type": "off" 
-      }
-  }
-]; 
+    files: ['styled.d.ts'],
+    rules: {
+      // Target the rule reported in the error message
+      '@typescript-eslint/no-empty-object-type': 'off',
+    },
+  },
+];

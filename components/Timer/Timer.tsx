@@ -24,18 +24,15 @@ const Timer = ({
   isFocused,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
-  const { time, startTimer, stopTimer } = useTimer(
-    startTime,
-    hanldeEnd,
-  );
-  
+  const { time, startTimer, stopTimer } = useTimer(startTime, hanldeEnd);
+
   useEffect(() => {
     if (isRunning) {
       startTimer();
     } else {
       stopTimer();
     }
-  }, [isRunning])
+  }, [isRunning]);
 
   useEffect(() => {
     if (isRunning) {

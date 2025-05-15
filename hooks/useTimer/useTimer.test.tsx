@@ -3,12 +3,10 @@ import { mockTime, advanceSeconds } from '../../tests/timerMock';
 import useTimer from './useTimer';
 
 const renderUseTimer = (
-  initialTime: number, 
+  initialTime: number,
   onTimeEnd: () => void = jest.fn()
 ) => {
-  const renderResult = renderHook(
-    () => useTimer(initialTime, onTimeEnd)
-  );
+  const renderResult = renderHook(() => useTimer(initialTime, onTimeEnd));
   return renderResult;
 };
 
@@ -63,9 +61,7 @@ describe('useTimer Hook', () => {
   it('should call onTimeEnd when timer reaches zero', () => {
     const initialTime = 2;
     const onTimeEndMock = jest.fn();
-    const { result } = renderHook(() =>
-      useTimer(initialTime, onTimeEndMock)
-    );
+    const { result } = renderHook(() => useTimer(initialTime, onTimeEndMock));
 
     result.current.startTimer();
 
@@ -85,12 +81,10 @@ describe('useTimer Hook', () => {
   it('should not call onTimeEnd if initialTimeSeconds is 0', () => {
     const initialTime = 0;
     const onTimeEndMock = jest.fn();
-    const { result } = renderHook(() =>
-      useTimer(initialTime, onTimeEndMock)
-    );
+    const { result } = renderHook(() => useTimer(initialTime, onTimeEndMock));
     result.current.startTimer();
     act(() => {
-       advanceSeconds(1);
+      advanceSeconds(1);
     });
     expect(onTimeEndMock).not.toHaveBeenCalled();
   });
@@ -101,11 +95,11 @@ describe('useTimer Hook', () => {
     const { rerender } = renderHook(
       (props: { initial: number }) => useTimer(props.initial, onTimeEndMock),
       { initialProps: { initial: initialTime } }
-  );
+    );
     const updatedTime = 10;
     rerender({ initial: updatedTime });
     act(() => {
-       advanceSeconds(1);
+      advanceSeconds(1);
     });
     expect(onTimeEndMock).not.toHaveBeenCalled();
   });
@@ -114,9 +108,7 @@ describe('useTimer Hook', () => {
     it('should start timer when startTimer is called', () => {
       const initialTime = 5;
       const onTimeEndMock = jest.fn();
-      const { result } = renderHook(() =>
-        useTimer(initialTime, onTimeEndMock)
-      );
+      const { result } = renderHook(() => useTimer(initialTime, onTimeEndMock));
 
       expect(result.current.time).toBe(initialTime);
 
@@ -128,7 +120,7 @@ describe('useTimer Hook', () => {
       result.current.startTimer();
 
       act(() => {
-         advanceSeconds(1);
+        advanceSeconds(1);
       });
       expect(result.current.time).toBe(initialTime - 1);
 
@@ -146,67 +138,63 @@ describe('useTimer Hook', () => {
     });
 
     it('should restart timer from initialTimeSeconds when startTimer is called after timer reaches 0', () => {
-        const initialTime = 5;
-        const onTimeEndMock = jest.fn();
-        const { result } = renderHook(() =>
-          useTimer(initialTime, onTimeEndMock)
-        );
-        result.current.startTimer();
-        advanceSeconds(initialTime);
-        expect(onTimeEndMock).toHaveBeenCalledTimes(1);
-  
-        advanceSeconds(1);
-        expect(result.current.time).toBe(initialTime);
-        expect(onTimeEndMock).toHaveBeenCalledTimes(1);
-  
-        result.current.startTimer();
-        advanceSeconds(1);
-        expect(result.current.time).toBe(initialTime - 1);
-        expect(onTimeEndMock).toHaveBeenCalledTimes(1);
+      const initialTime = 5;
+      const onTimeEndMock = jest.fn();
+      const { result } = renderHook(() => useTimer(initialTime, onTimeEndMock));
+      result.current.startTimer();
+      advanceSeconds(initialTime);
+      expect(onTimeEndMock).toHaveBeenCalledTimes(1);
 
-        advanceSeconds(initialTime - 1);
-        expect(result.current.time).toBe(initialTime);
-        expect(onTimeEndMock).toHaveBeenCalledTimes(2);
+      advanceSeconds(1);
+      expect(result.current.time).toBe(initialTime);
+      expect(onTimeEndMock).toHaveBeenCalledTimes(1);
+
+      result.current.startTimer();
+      advanceSeconds(1);
+      expect(result.current.time).toBe(initialTime - 1);
+      expect(onTimeEndMock).toHaveBeenCalledTimes(1);
+
+      advanceSeconds(initialTime - 1);
+      expect(result.current.time).toBe(initialTime);
+      expect(onTimeEndMock).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('stopTimer', () => {
     it('should pause timer when stopTimer is called', () => {
-        const initialTime = 10;
-        const { result } = renderHook(() =>
-          useTimer(initialTime, jest.fn())
-        );
-        result.current.startTimer();
-        advanceSeconds(1)
-        expect(result.current.time).toBe(initialTime - 1);
+      const initialTime = 10;
+      const { result } = renderHook(() => useTimer(initialTime, jest.fn()));
+      result.current.startTimer();
+      advanceSeconds(1);
+      expect(result.current.time).toBe(initialTime - 1);
 
-        result.current.stopTimer();
-        advanceSeconds(1);
-        expect(result.current.time).toBe(initialTime - 1);
+      result.current.stopTimer();
+      advanceSeconds(1);
+      expect(result.current.time).toBe(initialTime - 1);
 
-        result.current.startTimer();
-        advanceSeconds(1);
-        expect(result.current.time).toBe(initialTime - 2);
+      result.current.startTimer();
+      advanceSeconds(1);
+      expect(result.current.time).toBe(initialTime - 2);
     });
   });
 
   it('should reset timer to new initialTimeSeconds when prop changes', () => {
-      const initialTime1 = 10;
-      const initialTime2 = 30;
-      const { result, rerender } = renderHook(
-          (props: { initial: number }) => useTimer(props.initial, jest.fn()),
-          { initialProps: { initial: initialTime1 } }
-      );
-      result.current.startTimer();
-      advanceSeconds(3);
-      expect(result.current.time).toBe(initialTime1 - 3);
+    const initialTime1 = 10;
+    const initialTime2 = 30;
+    const { result, rerender } = renderHook(
+      (props: { initial: number }) => useTimer(props.initial, jest.fn()),
+      { initialProps: { initial: initialTime1 } }
+    );
+    result.current.startTimer();
+    advanceSeconds(3);
+    expect(result.current.time).toBe(initialTime1 - 3);
 
-      rerender({ initial: initialTime2 });
-      advanceSeconds(0);
+    rerender({ initial: initialTime2 });
+    advanceSeconds(0);
 
-      expect(result.current.time).toBe(initialTime2);
-      
-      advanceSeconds(5);
-      expect(result.current.time).toBe(initialTime2 - 5);
+    expect(result.current.time).toBe(initialTime2);
+
+    advanceSeconds(5);
+    expect(result.current.time).toBe(initialTime2 - 5);
   });
-}); 
+});

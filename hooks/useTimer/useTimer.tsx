@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const useTimer = (
-  initialTimeSeconds: number,
-  onTimeEnd: () => void,
-) => {
+const useTimer = (initialTimeSeconds: number, onTimeEnd: () => void) => {
   const [timeLeftSeconds, setTimeLeftSeconds] = useState(initialTimeSeconds);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const prevInitialTimeSecods = useRef(initialTimeSeconds);
@@ -19,7 +16,7 @@ const useTimer = (
           onTimeEnd();
           clearTimer();
         }
-  
+
         setTimeLeftSeconds(initialTimeSeconds);
       }
     }
