@@ -4,6 +4,7 @@ import React from 'react';
 export type ButtonProps = {
   onClick?: () => void;
   children: React.ReactNode;
+  ref?: React.RefObject<HTMLButtonElement | null>;
   className?: string;
   disabled?: boolean;
   isHidden?: boolean;
@@ -30,6 +31,11 @@ const StyledButton = styled.button<{ $isHidden?: boolean }>`
   &:active:not(:disabled) {
     color: ${({ theme }) => theme.colors.highlight};
     border-color: ${({ theme }) => theme.colors.highlight};
+  }
+
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.light};
   }
 
   &:disabled {
