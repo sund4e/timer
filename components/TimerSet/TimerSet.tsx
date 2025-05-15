@@ -4,6 +4,7 @@ import Timer from '../Timer';
 import Button from '../Button/Button'; // Assuming Button component path
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import { v4 as uuid } from 'uuid';
+import Hidable from '../Hidable/Hidable';
 
 type TimerConfig = {
   id: string;
