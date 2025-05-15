@@ -137,6 +137,15 @@ const TimerSet = memo(({ initialTime = 0, isActive = true, setTitleTime, onTimeE
   };
 
   const onEnter = useCallback(() => {
+    const activeElement = document.activeElement as HTMLElement | null;
+
+    if (activeElement?.tagName === 'BUTTON') {
+      // default event is prevented, we need to simulate click
+      activeElement.click();
+      activeElement.blur();
+      return;
+    }
+
     if (focusIndex !== null) {
       setFocusIndex(null);
       if(currentTimerIndex === timers.length - 1) {
