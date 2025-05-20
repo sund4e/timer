@@ -11,6 +11,7 @@ export type Props = {
   onFocus?: () => void;
   onBlur?: () => void;
   isFocused: boolean;
+  onDirty: (seconds: number) => void;
 };
 
 const Timer = ({
@@ -22,6 +23,7 @@ const Timer = ({
   onFocus,
   onBlur,
   isFocused,
+  onDirty,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
   const { time, startTimer, stopTimer } = useTimer(startTime, hanldeEnd);
@@ -46,6 +48,7 @@ const Timer = ({
 
   const onChange = (seconds: number) => {
     setStartTime(seconds);
+    onDirty(seconds);
   };
 
   return (

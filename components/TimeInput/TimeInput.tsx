@@ -100,16 +100,6 @@ const TimeInput = ({
     [onChange, time]
   );
 
-  const onEnter = useCallback(() => {
-    if (isFocused) {
-      onBlur?.();
-    } else {
-      onFocus?.();
-    }
-  }, [onChangeTime, onBlur, onFocus, time, isFocused]);
-
-  useKeyPressCallBack(wrapperRef.current, 'Enter', onEnter);
-
   useEffect(() => {
     const currentIndex = findFocusedIndex();
     if (isFocused && currentIndex === -1) {

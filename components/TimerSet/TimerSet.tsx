@@ -1,16 +1,11 @@
-import { useState, memo, useEffect, useCallback } from 'react';
+import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import Timer from '../Timer';
 import Button from '../Button/Button'; // Assuming Button component path
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import { v4 as uuid } from 'uuid';
 import Hidable from '../Hidable/Hidable';
-
-type TimerConfig = {
-  id: string;
-  initialTime: number; // in seconds
-  enterAnimation?: boolean;
-};
+import useTimers from '../../hooks/useTimers/useTimers';
 
 const fontSize = 5; //vh
 const margin = 3; //vh
@@ -89,43 +84,35 @@ export type Props = {
 };
 
 const TimerSet = memo(
-  ({
-    initialTime = 0,
-    isActive = true,
-    setTitleTime,
-    onTimeEnd,
-    restart = false,
-  }: Props) => {
-    const [timers, setTimers] = useState<TimerConfig[]>([
-      { id: Date.now().toString(), initialTime: initialTime },
-    ]);
+  ({ initialTime = 0, setTitleTime, onTimeEnd, restart = false }: Props) => {
+    const {
+      timers,
+      addTimerAtIndex,
+      removeTimerAtIndex,
+      resetTimers,
+      editTimerAtIndex,
+    } = useTimers([{ id: uuid(), initialTime: initialTime }]);
     const [currentTimerIndex, setCurrentTimerIndex] = useState<number>(0);
     const [isSequenceRunning, setIsSequenceRunning] = useState(false);
     const [focusIndex, setFocusIndex] = useState<number | null>(null);
     const [restartSequence, setRestartSequence] = useState(false);
+    const startButtonRef = useRef<HTMLButtonElement>(null);
+    const resumeButtonRef = useRef<HTMLButtonElement>(null);
+    const [isNewTimerSet, setIsNewTimerSet] = useState(true);
 
     const addTimer = () => {
-      const newTimer: TimerConfig = {
+      const newTimerIndex = currentTimerIndex + 1;
+      addTimerAtIndex(newTimerIndex, {
         id: uuid(),
         initialTime: initialTime,
         enterAnimation: true,
-      };
-      setTimers((prevTimers) => {
-        const newTimers = [...prevTimers];
-        newTimers.splice(currentTimerIndex + 1, 0, newTimer);
-        setCurrentTimerIndex(currentTimerIndex + 1);
-        return newTimers;
       });
+      setFocusIndex(newTimerIndex);
     };
 
     const removeTimer = () => {
-      if (timers.length === 1) {
-        return;
-      }
+      removeTimerAtIndex(currentTimerIndex);
       setCurrentTimerIndex(Math.max(currentTimerIndex - 1, 0));
-      setTimers((prevTimers) =>
-        prevTimers.filter((_, index) => index !== currentTimerIndex)
-      );
     };
 
     useEffect(() => {
@@ -136,17 +123,49 @@ const TimerSet = memo(
       }
     }, [restartSequence, restart]);
 
+    const runSequence = () => {
+      setIsSequenceRunning(true);
+      setFocusIndex(null);
+    };
+
+    const resetSequence = () => {
+      resetTimers();
+      setIsNewTimerSet(true);
+      setCurrentTimerIndex(0);
+    };
+
+    const startSequence = () => {
+      resetSequence();
+      runSequence();
+    };
+
     useEffect(() => {
       const currentTimer = timers[currentTimerIndex];
       if (currentTimer.enterAnimation) {
-        const newTimer = { ...currentTimer, enterAnimation: false };
-        setTimers((prevTimers) => {
-          const newTimers = [...prevTimers];
-          newTimers.splice(currentTimerIndex, 1, newTimer);
-          return newTimers;
-        });
+        editTimerAtIndex(currentTimerIndex, { enterAnimation: false });
       }
     }, [timers, currentTimerIndex]);
+
+    // Focus start button when sequence stopped and no other element is focused
+    useEffect(() => {
+      if (!isSequenceRunning && document.activeElement === document.body) {
+        startButtonRef.current?.focus();
+      }
+    }, [isSequenceRunning]);
+
+    // Set dirty state after sequence first started
+    useEffect(() => {
+      if (isSequenceRunning && isNewTimerSet) {
+        setIsNewTimerSet(false);
+      }
+    }, [isSequenceRunning, isNewTimerSet]);
+
+    // Ensure current timer index always poits to focus index
+    useEffect(() => {
+      if (focusIndex) {
+        setCurrentTimerIndex(focusIndex);
+      }
+    }, [focusIndex]);
 
     const onFocus = (index: number) => () => {
       setCurrentTimerIndex(index);
@@ -180,50 +199,64 @@ const TimerSet = memo(
 
       if (focusIndex !== null) {
         setFocusIndex(null);
-        if (currentTimerIndex === timers.length - 1) {
+        startButtonRef.current?.focus();
+      } else {
+        if (isSequenceRunning) {
+          setIsSequenceRunning(false);
+          startButtonRef.current?.focus() || resumeButtonRef.current?.focus();
+        } else {
+          setFocusIndex(currentTimerIndex);
           setIsSequenceRunning(true);
         }
-      } else {
-        setFocusIndex(currentTimerIndex);
-        setIsSequenceRunning(false);
       }
     }, [
       focusIndex,
       currentTimerIndex,
       setFocusIndex,
       setIsSequenceRunning,
+      isSequenceRunning,
       timers,
     ]);
 
     const moveUp = useCallback(() => {
-      if (currentTimerIndex > 0) {
-        const newIndex = currentTimerIndex - 1;
-        setCurrentTimerIndex(newIndex);
-        if (focusIndex === currentTimerIndex) {
-          setFocusIndex(newIndex);
-        }
+      if (document.activeElement === startButtonRef.current) {
+        setFocusIndex(timers.length - 1);
+      } else if (focusIndex) {
+        const newIndex = Math.max(focusIndex - 1, 0);
+        setFocusIndex(newIndex);
       }
-    }, [currentTimerIndex, setCurrentTimerIndex, focusIndex]);
+    }, [focusIndex, timers]);
 
     const moveDown = useCallback(() => {
-      if (currentTimerIndex < timers.length - 1) {
-        const newIndex = currentTimerIndex + 1;
-        setCurrentTimerIndex(newIndex);
-        if (focusIndex === currentTimerIndex) {
-          setFocusIndex(newIndex);
+      if (focusIndex !== null) {
+        const lastIndex = timers.length - 1;
+        if (focusIndex === lastIndex) {
+          setFocusIndex(null);
+          startButtonRef.current?.focus();
+        } else {
+          setFocusIndex(focusIndex + 1);
         }
       }
-    }, [currentTimerIndex, setCurrentTimerIndex]);
+    }, [timers, focusIndex]);
 
     useKeyPressCallBack(null, 'Enter', onEnter);
     useKeyPressCallBack(null, 'ArrowUp', moveUp);
     useKeyPressCallBack(null, 'ArrowDown', moveDown);
 
-    const onStart = () => {
-      setIsSequenceRunning(true);
-      setFocusIndex(null);
-      setCurrentTimerIndex(0);
-    };
+    const onDirty = useCallback(
+      (index: number) => (seconds: number) => {
+        const nextFocusIndex = index + 1;
+        if (nextFocusIndex < timers.length) {
+          setFocusIndex(nextFocusIndex);
+        } else {
+          startButtonRef.current?.focus();
+        }
+
+        editTimerAtIndex(index, { initialTime: seconds });
+        setIsNewTimerSet(true);
+      },
+      [currentTimerIndex, timers, focusIndex]
+    );
 
     return (
       <TimerSetWrapper>
@@ -244,6 +277,7 @@ const TimerSet = memo(
                 .filter(Boolean)
                 .join(' ')}
               $position={index - currentTimerIndex}
+              onDirty={onDirty(index)}
             />
           ))}
           {!isSequenceRunning && focusIndex !== null && (
@@ -263,6 +297,7 @@ const TimerSet = memo(
           )}
         </TimersList>
         <Row>
+          {isNewTimerSet && (
             <Hidable isHidden={isSequenceRunning}>
               <Button
                 onClick={startSequence}
@@ -272,22 +307,21 @@ const TimerSet = memo(
                 {'Start'}
               </Button>
             </Hidable>
+          )}
+          {!isNewTimerSet && (
             <Hidable isHidden={isSequenceRunning}>
-              <Button
-                onClick={startSequence}
-                data-testid="start-button"
-                ref={startButtonRef}
-              >
-                {'Restart'}
+              <Button onClick={resetSequence} data-testid="reset-button">
+                {'Reset'}
               </Button>
               <Button
                 onClick={runSequence}
-                data-testid="start-button"
-                ref={startButtonRef}
+                data-testid="resume-button"
+                ref={resumeButtonRef}
               >
                 Resume
               </Button>
             </Hidable>
+          )}
         </Row>
       </TimerSetWrapper>
     );
