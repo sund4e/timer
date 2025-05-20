@@ -8,14 +8,16 @@ const getTime = () => getTimes()[0]; // Assume only one timer
 
 describe('Timer', () => {
   const render = (override?: Partial<Props>) => {
-    const defaultProps = {
+    const defaultProps: Props = {
       initialTime: 10,
       onTimeEnd: () => {},
       isRunning: true,
-      restart: false,
       isFocused: false,
       setTitleTime: () => {},
+      onFocus: () => {},
+      onBlur: () => {},
       onDirty: () => {},
+      onChange: () => {},
       ...override,
     };
     const rendered = renderElement(<Timer {...defaultProps} />);
