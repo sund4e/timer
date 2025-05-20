@@ -11,7 +11,8 @@ export type Props = {
   onFocus?: () => void;
   onBlur?: () => void;
   isFocused: boolean;
-  onDirty: (seconds: number) => void;
+  onDirty?: () => void;
+  onChange: (seconds: number) => void;
 };
 
 const Timer = ({
@@ -24,6 +25,7 @@ const Timer = ({
   onBlur,
   isFocused,
   onDirty,
+  onChange,
 }: Props) => {
   const [startTime, setStartTime] = useState(initialTime);
   const { time, startTimer, stopTimer } = useTimer(startTime, hanldeEnd);
@@ -46,16 +48,17 @@ const Timer = ({
     onTimeEnd();
   }
 
-  const onChange = (seconds: number) => {
+  const onChangeTimeInput = (seconds: number) => {
     setStartTime(seconds);
-    onDirty(seconds);
+    onChange(seconds);
   };
 
   return (
     <TimeInput
       className={className}
       value={time}
-      onChange={onChange}
+      onChange={onChangeTimeInput}
+      onDirty={onDirty}
       isFocused={isFocused}
       onFocus={onFocus}
       onBlur={onBlur}

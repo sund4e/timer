@@ -23,6 +23,7 @@ export type Props = {
   onFocus?: () => void;
   onBlur?: () => void;
   className?: string;
+  onDirty?: () => void;
 };
 
 const getDigits = (seconds: number) => {
@@ -59,6 +60,7 @@ const TimeInput = ({
   onFocus,
   onBlur,
   isFocused,
+  onDirty,
 }: Props) => {
   const [time, setTime] = useState(getDigits(value));
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -131,6 +133,7 @@ const TimeInput = ({
 
   const handleTimeChange = useCallback(
     (index: number) => (newValue: number) => {
+      onDirty?.();
       const newTime = time.map((digit, i) => (i === index ? newValue : digit));
       setTime(newTime);
       if (!isValidTime(newTime)) {

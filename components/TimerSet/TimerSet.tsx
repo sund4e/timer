@@ -243,7 +243,7 @@ const TimerSet = memo(
     useKeyPressCallBack(null, 'ArrowUp', moveUp);
     useKeyPressCallBack(null, 'ArrowDown', moveDown);
 
-    const onDirty = useCallback(
+    const onChangeTimer = useCallback(
       (index: number) => (seconds: number) => {
         const nextFocusIndex = index + 1;
         if (nextFocusIndex < timers.length) {
@@ -257,6 +257,10 @@ const TimerSet = memo(
       },
       [currentTimerIndex, timers, focusIndex]
     );
+
+    const onDirty = useCallback(() => {
+      setIsNewTimerSet(true);
+    }, []);
 
     return (
       <TimerSetWrapper>
@@ -277,7 +281,8 @@ const TimerSet = memo(
                 .filter(Boolean)
                 .join(' ')}
               $position={index - currentTimerIndex}
-              onDirty={onDirty(index)}
+              onChange={onChangeTimer(index)}
+              onDirty={onDirty}
             />
           ))}
           {!isSequenceRunning && focusIndex !== null && (

@@ -170,6 +170,16 @@ describe('timerApp', () => {
       expect(getButton('reset')).toBeTruthy();
     });
 
+    it('shows start button again if focused timer edited', () => {
+      render();
+      clickButton('start');
+      focusTimer(0);
+      changeInputValue(1, 1);
+      expect(getButton('start')).toBeTruthy();
+      expect(getButton('resume')).toBeFalsy();
+      expect(getButton('reset')).toBeFalsy();
+    });
+
     it('shows add and remove buttons correctly if timer focused', () => {
       render();
       clickButton('start');
