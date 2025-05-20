@@ -58,21 +58,24 @@ export const simulateWindowFocus = () => {
   });
 };
 
-export const getStartButton = () => {
-  return screen.getByTestId('start-button');
+export const getButton = (buttonId: string) => {
+  const button = screen.queryByTestId(`${buttonId}-button`);
+  // Ensure button is visible
+  if (
+    !button ||
+    window.getComputedStyle(button?.parentElement as Element).opacity === '0'
+  ) {
+    return null;
+  }
+  return button;
 };
 
-export const getAddButton = () => {
-  return screen.getByTestId('add-button');
-};
-
-export const getRemoveButton = () => {
-  return screen.getByTestId('remove-button');
-};
-
-export const start = () => {
+export const clickButton = (buttonId: string) => {
+  const button = getButton(buttonId);
+  if (!button) throw new Error(`Could not find ${buttonId} button`);
   act(() => {
-    getStartButton().click();
+    button.focus();
+    button.click();
   });
 };
 

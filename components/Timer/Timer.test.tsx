@@ -15,6 +15,7 @@ describe('Timer', () => {
       restart: false,
       isFocused: false,
       setTitleTime: () => {},
+      onDirty: () => {},
       ...override,
     };
     const rendered = renderElement(<Timer {...defaultProps} />);

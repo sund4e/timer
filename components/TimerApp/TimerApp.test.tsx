@@ -3,15 +3,13 @@ import { render as renderElement } from '../../tests/render';
 import { fireEvent, screen, act } from '@testing-library/react';
 import {
   changeInputValue,
+  clickButton,
   enter,
   focusTimer,
-  getAddButton,
-  getRemoveButton,
-  getStartButton,
+  getButton,
   getTime,
   getTimes,
   getToggle,
-  start,
 } from '../../tests/helpers';
 import { advanceSeconds, mockTime } from '../../tests/timerMock';
 import { Props } from './TimerApp';
@@ -66,7 +64,7 @@ describe('timerApp', () => {
   it('runs timer after start', () => {
     render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
-    start();
+    clickButton('start');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
   });
@@ -81,8 +79,7 @@ describe('timerApp', () => {
   it('starts timer after clicking start button', () => {
     render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
-    const startButton = screen.getByText('Start');
-    fireEvent.click(startButton);
+    clickButton('start');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
   });
@@ -90,20 +87,23 @@ describe('timerApp', () => {
   it('hides start button when timer is running', () => {
     render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
-    start();
-    const startButton = getStartButton();
-    expect(window.getComputedStyle(startButton).opacity).toBe('0');
+    expect(getButton('start')).toBeTruthy();
+
+    clickButton('start');
+    expect(getButton('start')).toBeNull();
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
 
     const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
     fireEvent.focus(inputs[2]);
-    expect(window.getComputedStyle(startButton).opacity).toBe('1');
+    expect(getButton('start')).toBeNull();
+    expect(getButton('resume')).toBeTruthy();
+
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
 
-    fireEvent.click(startButton);
-    expect(window.getComputedStyle(startButton).opacity).toBe('0');
+    clickButton('resume');
+    expect(getButton('resume')).toBeNull();
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:58');
   });
@@ -111,7 +111,7 @@ describe('timerApp', () => {
   it('clicking outside of timer does not start the timer', () => {
     render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
-    start();
+    clickButton('start');
     advanceSeconds(1);
     expect(getTime()).toEqual('00:19:59');
 
@@ -129,37 +129,108 @@ describe('timerApp', () => {
     const setTitleTime = jest.fn();
     const initialTime = 10;
     render({ setTitleTime, initialTime });
-    start();
+    clickButton('start');
     expect(setTitleTime).toHaveBeenCalledWith(initialTime);
     advanceSeconds(1);
     expect(setTitleTime).toHaveBeenCalledWith(initialTime - 1);
   });
 
-  describe('initial render', () => {
-    it('does not focus time input if initial time is 0', () => {
+  describe('buttons', () => {
+    it('inital render shows and focuses start button', () => {
       render();
-      expect(document.activeElement).toBe(document.body);
+      expect(getButton('start')).toBeTruthy();
+      expect(document.activeElement).toBe(getButton('start'));
     });
 
-    it('shows buttons if initial time is 0', () => {
+    it('inital render shows only start button', () => {
       render();
-      expect(screen.getByTestId('start-button')).toBeTruthy();
-      expect(screen.getByTestId('add-button')).toBeTruthy();
-      expect(screen.getByTestId('remove-button')).toBeTruthy();
+      expect(getButton('start')).toBeTruthy();
+      expect(getButton('add')).toBeFalsy();
+      expect(getButton('remove')).toBeFalsy();
+      expect(getButton('reset')).toBeFalsy();
+      expect(getButton('restart')).toBeFalsy();
+    });
+
+    it('does not show buttons if timer is running', () => {
+      render();
+      clickButton('start');
+      expect(getButton('start')).toBeFalsy();
+      expect(getButton('add')).toBeFalsy();
+      expect(getButton('remove')).toBeFalsy();
+      expect(getButton('reset')).toBeFalsy();
+      expect(getButton('restart')).toBeFalsy();
+    });
+
+    it('shows resume and reset buttons if timer focused after start', () => {
+      render();
+      clickButton('start');
+      focusTimer(0);
+      expect(getButton('start')).toBeFalsy();
+      expect(getButton('resume')).toBeTruthy();
+      expect(getButton('reset')).toBeTruthy();
+    });
+
+    it('shows add and remove buttons correctly if timer focused', () => {
+      render();
+      clickButton('start');
+      focusTimer(0);
+      expect(getButton('add')).toBeTruthy();
+      expect(getButton('remove')).toBeFalsy();
+
+      fireEvent.click(getButton('add') as HTMLButtonElement);
+      expect(getButton('remove')).toBeTruthy();
+    });
+
+    describe('resume button', () => {
+      it('continues timer', () => {
+        render({ initialTime: 20 * 60 });
+        clickButton('start');
+        advanceSeconds(1);
+        expect(getTime()).toEqual('00:19:59');
+
+        focusTimer(0);
+        advanceSeconds(1);
+        expect(getTime()).toEqual('00:19:59');
+
+        clickButton('resume');
+        advanceSeconds(1);
+        expect(getTime()).toEqual('00:19:58');
+      });
+    });
+
+    describe('reset button', () => {
+      it('resets timer', () => {
+        render({ initialTime: 20 * 60 });
+        expect(getTime()).toEqual('00:20:00');
+        clickButton('start');
+        advanceSeconds(1);
+        expect(getTime()).toEqual('00:19:59');
+
+        focusTimer(0);
+        advanceSeconds(1);
+        expect(getTime()).toEqual('00:19:59');
+
+        clickButton('reset');
+        expect(getTime()).toEqual('00:20:00');
+
+        clickButton('start');
+        advanceSeconds(1);
+        expect(getTime()).toEqual('00:19:59');
+      });
     });
   });
 
   describe('enter', () => {
-    it('focuses time input if not focused', () => {
+    it('focuses resume button if focused', () => {
       render();
+      clickButton('start');
       expect(document.activeElement).toBe(document.body);
       enter();
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      expect(document.activeElement).toBe(inputs[0]);
+      expect(document.activeElement).toBe(getButton('resume'));
     });
 
-    it('unfocuses time input if focused', () => {
-      render();
+    it('focuses and triggers start and resume buttons correctly', () => {
+      render({ initialTime: 10 });
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       act(() => {
         inputs[0].focus();
@@ -167,13 +238,28 @@ describe('timerApp', () => {
       expect(document.activeElement).toBe(inputs[0]);
 
       enter();
+      expect(document.activeElement).toBe(getButton('start'));
+
+      enter();
+      expect(getTime()).toEqual('00:00:10');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+
+      enter();
+      expect(document.activeElement).toBe(getButton('resume'));
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+
+      enter();
       expect(document.activeElement).toBe(document.body);
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:08');
     });
 
     it('stops timer if running', () => {
       render({ initialTime: 10 });
       expect(getTime()).toEqual('00:00:10');
-      start();
+      clickButton('start');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
 
@@ -182,7 +268,7 @@ describe('timerApp', () => {
       expect(getTime()).toEqual('00:00:09');
     });
 
-    it('starts timer if not running', () => {
+    it('focuses start button if not running and triggers start', () => {
       render({ initialTime: 10 });
       expect(getTime()).toEqual('00:00:10');
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
@@ -191,6 +277,12 @@ describe('timerApp', () => {
       expect(getTime()).toEqual('00:00:10');
 
       enter();
+      expect(document.activeElement).toBe(getButton('start'));
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:10');
+
+      enter();
+      expect(document.activeElement).toBe(document.body);
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
     });
@@ -202,18 +294,7 @@ describe('timerApp', () => {
       expect(getTime()).toEqual('00:00:00');
       changeInputValue(4, 5);
       expect(getTime()).toEqual('00:00:50');
-      const startButton = getStartButton();
-      fireEvent.click(startButton);
-      advanceSeconds(1);
-      expect(getTime()).toEqual('00:00:49');
-    });
-
-    it('starts time from new time after pressing enter', () => {
-      render();
-      expect(getTime()).toEqual('00:00:00');
-      changeInputValue(4, 5);
-      expect(getTime()).toEqual('00:00:50');
-      enter();
+      clickButton('start');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:49');
     });
@@ -230,7 +311,7 @@ describe('timerApp', () => {
       fireEvent.click(getRestartToggle());
       expect(getRestartToggle().checked).toBe(true);
 
-      start();
+      clickButton('start');
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
@@ -247,7 +328,7 @@ describe('timerApp', () => {
       render({ initialTime });
       expect(getRestartToggle().checked).toBe(false);
 
-      start();
+      clickButton('start');
       expect(getTime()).toEqual('00:00:10');
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:09');
@@ -278,7 +359,7 @@ describe('timerApp', () => {
         const initialTime = 3;
         render({ initialTime });
         expect(getSoundToggle().checked).toBe(true);
-        start();
+        clickButton('start');
         advanceSeconds(initialTime);
 
         expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
@@ -342,7 +423,7 @@ describe('timerApp', () => {
         expect(getSoundToggle().checked).toBe(true);
 
         getMockAudioInstance().play.mockClear();
-        start();
+        clickButton('start');
         advanceSeconds(initialTime);
 
         expect(getMockAudioInstance().play).toHaveBeenCalledTimes(1);
@@ -355,7 +436,8 @@ describe('timerApp', () => {
       it('adds a timer', () => {
         render();
         expect(getTimes()).toEqual(['00:00:00']);
-        fireEvent.click(getAddButton());
+        focusTimer(0);
+        clickButton('add');
         expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
       });
 
@@ -363,11 +445,12 @@ describe('timerApp', () => {
         render();
         changeInputValue(4, 1);
         expect(getTimes()).toEqual(['00:00:10']);
-        fireEvent.click(getAddButton());
+        focusTimer(0);
+        clickButton('add');
         changeInputValue(10, 2);
         expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
         focusTimer(0);
-        fireEvent.click(getAddButton());
+        clickButton('add');
         expect(getTimes()).toEqual(['00:00:10', '00:00:00', '00:00:20']);
       });
     });
@@ -375,20 +458,22 @@ describe('timerApp', () => {
     describe('remove button', () => {
       it('removes a timer', () => {
         render();
-        fireEvent.click(getAddButton());
+        focusTimer(0);
+        clickButton('add');
         expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
-        fireEvent.click(getRemoveButton());
+        clickButton('remove');
         expect(getTimes()).toEqual(['00:00:00']);
       });
 
       it('removes focused timer', () => {
         render();
-        fireEvent.click(getAddButton());
+        focusTimer(0);
+        clickButton('add');
         changeInputValue(4, 1);
         changeInputValue(10, 2);
         expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
         focusTimer(0);
-        fireEvent.click(getRemoveButton());
+        clickButton('remove');
         expect(getTimes()).toEqual(['00:00:20']);
       });
     });
@@ -396,15 +481,16 @@ describe('timerApp', () => {
 
   it('runs timers in sequence', () => {
     render();
-    fireEvent.click(getAddButton());
-    fireEvent.click(getAddButton());
+    focusTimer(0);
+    clickButton('add');
+    clickButton('add');
     changeInputValue(4, 1);
     changeInputValue(10, 1);
     changeInputValue(16, 1);
     expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
     expect(getMockAudioInstance().play).toHaveBeenCalledTimes(0);
 
-    start();
+    clickButton('start');
     advanceSeconds(1);
     expect(getTimes()).toEqual(['00:00:09', '00:00:10', '00:00:10']);
     advanceSeconds(9);
@@ -431,14 +517,15 @@ describe('timerApp', () => {
   it('restarts sequence', () => {
     render();
     fireEvent.click(getToggle('Restart timer when done'));
-    fireEvent.click(getAddButton());
-    fireEvent.click(getAddButton());
+    focusTimer(0);
+    clickButton('add');
+    clickButton('add');
     changeInputValue(4, 1);
     changeInputValue(10, 1);
     changeInputValue(16, 1);
     expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
     expect(getMockAudioInstance().play).toHaveBeenCalledTimes(0);
-    start();
+    clickButton('start');
 
     advanceSeconds(11);
     expect(getTimes()).toEqual(['00:00:10', '00:00:09', '00:00:10']);
