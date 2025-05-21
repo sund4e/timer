@@ -1,11 +1,12 @@
 import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import Timer from '../Timer';
-import Button from '../Button/Button'; // Assuming Button component path
+import Button from '../Button/Button';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import { v4 as uuid } from 'uuid';
 import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
+import { FaPlus, FaPlay, FaTrash } from 'react-icons/fa';
 
 const fontSize = 5; //vh
 const margin = 3; //vh
@@ -73,6 +74,7 @@ const TimerSetControls = styled.div<{
   ${({ $timersLength, $currentTimerIndex }) =>
     `transform: translateY(${Math.min(visibleTimers, $timersLength - $currentTimerIndex) * (fontSize + margin) + 1}vh);`}
   gap: 10px;
+  margin-top: 1vh;
 `;
 
 export type Props = {
@@ -291,11 +293,11 @@ const TimerSet = memo(
               $currentTimerIndex={currentTimerIndex}
             >
               <Button onClick={addTimer} data-testid="add-button">
-                Add
+                <FaPlus fontSize={'70%'} />
               </Button>
               {timers.length > 1 && (
                 <Button onClick={removeTimer} data-testid="remove-button">
-                  Remove
+                  <FaTrash fontSize={'70%'} />
                 </Button>
               )}
             </TimerSetControls>
@@ -309,7 +311,7 @@ const TimerSet = memo(
                 data-testid="start-button"
                 ref={startButtonRef}
               >
-                {'Start'}
+                Start
               </Button>
             </Hidable>
           )}
