@@ -137,7 +137,7 @@ const TimerSet = memo(
     };
 
     const startSequence = () => {
-      resetSequence();
+      setCurrentTimerIndex(0);
       runSequence();
     };
 
