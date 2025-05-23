@@ -131,14 +131,19 @@ const TimerSet = memo(
     };
 
     const resetSequence = () => {
+      setCurrentTimerIndex(0);
       resetTimers();
       setIsNewTimerSet(true);
-      setCurrentTimerIndex(0);
     };
 
     const startSequence = () => {
       resetSequence();
       runSequence();
+    };
+
+    const focusStart = () => {
+      setFocusIndex(null);
+      startButtonRef.current?.focus() || resumeButtonRef.current?.focus();
     };
 
     useEffect(() => {
@@ -151,7 +156,7 @@ const TimerSet = memo(
     // Focus start button when sequence stopped and no other element is focused
     useEffect(() => {
       if (!isSequenceRunning && document.activeElement === document.body) {
-        startButtonRef.current?.focus();
+        focusStart();
       }
     }, [isSequenceRunning]);
 
@@ -200,12 +205,11 @@ const TimerSet = memo(
       }
 
       if (focusIndex !== null) {
-        setFocusIndex(null);
-        startButtonRef.current?.focus();
+        focusStart();
       } else {
         if (isSequenceRunning) {
           setIsSequenceRunning(false);
-          startButtonRef.current?.focus() || resumeButtonRef.current?.focus();
+          focusStart();
         } else {
           setFocusIndex(currentTimerIndex);
           setIsSequenceRunning(true);
@@ -233,8 +237,7 @@ const TimerSet = memo(
       if (focusIndex !== null) {
         const lastIndex = timers.length - 1;
         if (focusIndex === lastIndex) {
-          setFocusIndex(null);
-          startButtonRef.current?.focus();
+          focusStart();
         } else {
           setFocusIndex(focusIndex + 1);
         }
@@ -251,7 +254,7 @@ const TimerSet = memo(
         if (nextFocusIndex < timers.length) {
           setFocusIndex(nextFocusIndex);
         } else {
-          startButtonRef.current?.focus();
+          focusStart();
         }
 
         editTimerAtIndex(index, { initialTime: seconds });
