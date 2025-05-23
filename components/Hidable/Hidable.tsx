@@ -17,6 +17,7 @@ const StyledDiv = styled.div<{ $isHidden?: boolean }>`
   }
 `;
 
+// Component for hiding children wihtout removing them from DOM (preventing layout shift)
 const Hidable = ({ children, isHidden, ...rest }: Props) => {
   return (
     <StyledDiv
