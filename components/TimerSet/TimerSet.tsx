@@ -225,7 +225,10 @@ const TimerSet = memo(
     ]);
 
     const moveUp = useCallback(() => {
-      if (document.activeElement === startButtonRef.current) {
+      if (
+        document.activeElement === startButtonRef.current ||
+        document.activeElement === resumeButtonRef.current
+      ) {
         setFocusIndex(timers.length - 1);
       } else if (focusIndex) {
         const newIndex = Math.max(focusIndex - 1, 0);
