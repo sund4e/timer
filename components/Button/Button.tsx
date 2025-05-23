@@ -1,16 +1,9 @@
 import styled from 'styled-components';
+import { motion, HTMLMotionProps } from 'motion/react';
 import React from 'react';
+import { useTheme } from 'styled-components';
 
-export type ButtonProps = {
-  onClick?: () => void;
-  children: React.ReactNode;
-  ref?: React.RefObject<HTMLButtonElement | null>;
-  className?: string;
-  disabled?: boolean;
-  isHidden?: boolean;
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'>;
-
-const StyledButton = styled.button<{ $isHidden?: boolean }>`
+const StyledButton = styled(motion.button)<{ $isHidden?: boolean }>`
   background-color: transparent;
   color: ${({ theme }) => theme.colors.light};
   border: 1px solid transparent;
@@ -18,11 +11,6 @@ const StyledButton = styled.button<{ $isHidden?: boolean }>`
   font-size: ${({ theme }) => theme.fontSizes.medium * 0.8}rem;
   border-radius: ${({ theme }) => theme.radius}rem;
   cursor: pointer;
-
-  opacity: ${({ $isHidden }) => ($isHidden ? 0 : 1)};
-  pointer-events: ${({ $isHidden }) => ($isHidden ? 'none' : 'auto')};
-
-  transition: ${({ theme }) => theme.transition}s ease;
 
   &:hover:not(:disabled) {
     border: 1px solid ${({ theme }) => theme.colors.light};
@@ -43,17 +31,26 @@ const StyledButton = styled.button<{ $isHidden?: boolean }>`
   }
 `;
 
-const Button = ({ children, isHidden, ...rest }: ButtonProps) => {
+const Button = ({ children, ...rest }: HTMLMotionProps<'button'>) => {
+  const theme = useTheme();
   return (
     <StyledButton
-      $isHidden={isHidden}
-      tabIndex={isHidden ? -1 : undefined} // Hide button from tab navigation
-      disabled={isHidden || rest.disabled}
+      transition={{
+        duration: theme.transition,
+        ease: 'easeOut',
+        bounce: 0,
+      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      layout
       {...rest}
     >
       {children}
     </StyledButton>
   );
 };
+
+Button.displayName = 'Button';
 
 export default Button;
