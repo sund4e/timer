@@ -12,7 +12,7 @@ const getTimerTime = (timer: HTMLElement) => {
   return formatTime(numbers);
 };
 
-const getTimers = () => {
+export const getTimers = () => {
   return screen.getAllByTestId('time');
 };
 

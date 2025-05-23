@@ -6,8 +6,10 @@ import {
   clickButton,
   enter,
   focusTimer,
+  getActiveTimer,
   getButton,
   getTime,
+  getTimers,
   getTimes,
   getToggle,
 } from '../../tests/helpers';
@@ -466,25 +468,54 @@ describe('timerApp', () => {
     });
 
     describe('remove button', () => {
-      it('removes a timer', () => {
+      beforeEach(() => {
         render();
         focusTimer(0);
         clickButton('add');
         expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
+      });
+
+      it('removes a timer', () => {
         clickButton('remove');
         expect(getTimes()).toEqual(['00:00:00']);
       });
 
       it('removes focused timer', () => {
-        render();
-        focusTimer(0);
-        clickButton('add');
         changeInputValue(4, 1);
         changeInputValue(10, 2);
         expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
         focusTimer(0);
         clickButton('remove');
         expect(getTimes()).toEqual(['00:00:20']);
+      });
+    });
+
+    describe('reset button', () => {
+      beforeEach(() => {
+        render();
+        focusTimer(0);
+        clickButton('add');
+        changeInputValue(4, 1);
+        changeInputValue(10, 2);
+        expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
+      });
+
+      it('resets all timers', () => {
+        clickButton('start');
+        advanceSeconds(15);
+        expect(getTimes()).toEqual(['00:00:10', '00:00:15']);
+        focusTimer(0);
+        clickButton('reset');
+        expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
+      });
+
+      it('moves focus to first timer', () => {
+        clickButton('start');
+        advanceSeconds(15);
+        expect(getTimes()).toEqual(['00:00:10', '00:00:15']);
+        focusTimer(0);
+        clickButton('reset');
+        expect(getActiveTimer()).toEqual(getTimers()[0]);
       });
     });
   });

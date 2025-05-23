@@ -131,9 +131,9 @@ const TimerSet = memo(
     };
 
     const resetSequence = () => {
-      setCurrentTimerIndex(0);
       resetTimers();
       setIsNewTimerSet(true);
+      setFocusIndex(0);
     };
 
     const startSequence = () => {
