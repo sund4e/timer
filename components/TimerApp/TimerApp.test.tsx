@@ -193,6 +193,19 @@ describe('timerApp', () => {
       expect(getButton('remove')).toBeTruthy();
     });
 
+    it('shows add button even after editing timer', () => {
+      render();
+      focusTimer(0);
+      expect(getButton('add')).toBeTruthy();
+      changeInputValue(1, 1);
+      act(() => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      });
+      expect(getButton('add')).toBeTruthy();
+    });
+
     describe('resume button', () => {
       it('continues timer', () => {
         render({ initialTime: 20 * 60 });

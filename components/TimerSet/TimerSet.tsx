@@ -256,8 +256,6 @@ const TimerSet = memo(
         const nextFocusIndex = index + 1;
         if (nextFocusIndex < timers.length) {
           setFocusIndex(nextFocusIndex);
-        } else {
-          focusStart();
         }
 
         editTimerAtIndex(index, { initialTime: seconds });
