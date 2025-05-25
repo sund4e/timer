@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Image from 'next/image';
 
-const MainContainer = styled.div`
+const MainContainer = styled.main`
   display: flex;
   justify-content: center;
   flex-direction: column;

@@ -33,7 +33,7 @@ const Home = () => {
   }, [time]);
 
   return (
-    <div>
+    <>
       <Head>
         <title>
           {time > 0 ? `${toTimeString(time)} - ${APP_NAME}` : APP_DEFAULT_TITLE}
@@ -89,7 +89,7 @@ const Home = () => {
       <Container>
         <TimerApp initialTime={0} isActive={true} setTitleTime={setTime} />
       </Container>
-    </div>
+    </>
   );
 };
 
