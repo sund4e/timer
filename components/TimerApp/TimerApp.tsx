@@ -35,6 +35,8 @@ export type Props = {
   setTitleTime: (seconds: number) => void;
 };
 
+const AIKA_INFO_VISIBILITY_THRESHOLD_PX = 480;
+
 const TimerApp = memo(
   ({ initialTime = 0, isActive = true, setTitleTime }: Props) => {
     const [notify, setNotify] = useState<(() => void) | null>(null);
@@ -42,6 +44,7 @@ const TimerApp = memo(
     const [playSound, setPlaySound] = useState(true);
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
     const [isLikelyMobile, setIsLikelyMobile] = useState(false);
+    const [showAikaInfoText, setShowAikaInfoText] = useState(true);
 
     useEffect(() => {
       const userAgent = navigator.userAgent;
@@ -62,6 +65,21 @@ const TimerApp = memo(
         setPlaySound(false);
       }
     }, [isLikelyMobile]);
+
+    useEffect(() => {
+      const checkHeight = () => {
+        if (window.innerHeight < AIKA_INFO_VISIBILITY_THRESHOLD_PX) {
+          setShowAikaInfoText(false);
+        } else {
+          setShowAikaInfoText(true);
+        }
+      };
+
+      window.addEventListener('resize', checkHeight);
+      checkHeight();
+
+      return () => window.removeEventListener('resize', checkHeight);
+    }, []);
 
     function playAudio() {
       if (audio) {
@@ -99,11 +117,16 @@ const TimerApp = memo(
         />
         <SideMenu>
           <Header>Aika Timer</Header>
-          <Text>
-            {
-              'Aika means "time" in Finnish and is a minimal timer with alerts and repeat reminders.'
-            }
-          </Text>
+          {showAikaInfoText && (
+            <>
+              <SubHeader>What is Aika?</SubHeader>
+              <Text>
+                {
+                  'Aika means "time" in Finnish. It\'s a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Perfect for Pomodoro productivity, time-boxed meetings, and the 20-20-20 eye care technique.'
+                }
+              </Text>
+            </>
+          )}
           <SubHeader>Settings</SubHeader>
           <Toggle isOn={playSound} setIsOn={handleSoundToggle}>
             Sound
