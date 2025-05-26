@@ -8,26 +8,34 @@ import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaPlay, FaTrash } from 'react-icons/fa';
 
-const fontSize = 5; //vh
-const margin = 3; //vh
+const fontSize = 15; //vw
+const margin = 5; //vh
 const visibleTimers = 4;
 
-const StyledTimer = styled(Timer)<{ $position: number }>`
+const getTransform = (timersLength: number) => {
+  return 1 - Math.min(timersLength - 1, visibleTimers - 1) * 0.2;
+};
+
+const StyledTimer = styled(Timer)<{
+  $position: number;
+  $active: boolean;
+  $timersLength: number;
+}>`
   position: absolute;
-  font-size: ${fontSize}vh;
+  font-size: ${fontSize}vw;
   transition:
     opacity ${({ theme }) => theme.transition}s ease-out,
     scale ${({ theme }) => theme.transition}s ease-out,
     transform ${({ theme }) => theme.transition}s ease-out;
   opacity: 1;
-  &.active {
-    transform: scale(2);
-  }
   &.enter-animation {
     opacity: 0;
   }
-  ${({ $position }) =>
-    $position && `transform: translateY(${$position * (fontSize + margin)}vh);`}
+  ${({ $position, $active, $timersLength }) => {
+    const factor = getTransform($timersLength);
+    const scale = factor * ($active ? 1 : 0.5);
+    return `transform: translateY(${$position * factor * (fontSize * scale + margin)}vh) scale(${scale});`;
+  }}
   opacity: ${({ $position }) => (Math.abs($position) >= visibleTimers ? 0 : 1)};
 `;
 
@@ -36,8 +44,8 @@ const TimerSetWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  width: 100%;
+  height: 100dvh;
+  width: 100dvw;
   gap: 20px; /* Space between timers and controls */
   padding: 20px;
 `;
@@ -72,7 +80,7 @@ const TimerSetControls = styled.div<{
   justify-content: center;
   transition: transform ${({ theme }) => theme.transition}s ease-out;
   ${({ $timersLength, $currentTimerIndex }) =>
-    `transform: translateY(${Math.min(visibleTimers, $timersLength - $currentTimerIndex) * (fontSize + margin) + 1}vh);`}
+    `transform: translateY(${Math.min(visibleTimers, $timersLength - $currentTimerIndex) * getTransform($timersLength) * (fontSize + margin + 1)}vh);`}
   gap: 10px;
   margin-top: 1vh;
 `;
@@ -280,13 +288,12 @@ const TimerSet = memo(
               setTitleTime={setTitleTime}
               onFocus={onFocus(index)}
               isFocused={focusIndex === index}
-              className={[
-                currentTimerIndex === index ? 'active' : '',
-                timerConfig.enterAnimation ? 'enter-animation' : '',
-              ]
+              className={[timerConfig.enterAnimation ? 'enter-animation' : '']
                 .filter(Boolean)
                 .join(' ')}
               $position={index - currentTimerIndex}
+              $active={currentTimerIndex === index}
+              $timersLength={timers.length}
               onChange={onChangeTimer(index)}
               onDirty={onDirty}
             />
