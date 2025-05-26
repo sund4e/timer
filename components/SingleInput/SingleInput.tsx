@@ -16,6 +16,7 @@ const StyledInput = styled.input<{
   padding: 0;
   font-size: inherit;
   color: inherit;
+  max-width: 1ch;
   transition: ${({ theme }) => theme.transition}s;
   caret-color: transparent;
   ${({ theme, $isInvalid }) =>
