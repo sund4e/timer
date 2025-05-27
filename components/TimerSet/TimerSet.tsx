@@ -76,7 +76,7 @@ const TimerSetControls = styled.div<{
   justify-content: center;
   transition: transform ${({ theme }) => theme.transition}s ease-out;
   ${({ $timersLength, $currentTimerIndex }) =>
-    `transform: translateY(${Math.min(visibleTimers + 1, $timersLength - $currentTimerIndex) * fontSizeInactive + fontSizeActive / 2}vh);`}
+    `transform: translateY(${Math.min(visibleTimers + 1, $timersLength - $currentTimerIndex) * fontSizeInactive + fontSizeActive / 2 + 3}vh);`}
   gap: 10px;
   margin-top: 1vh;
 `;
