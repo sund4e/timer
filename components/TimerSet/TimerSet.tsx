@@ -152,7 +152,7 @@ const TimerSet = memo(
       if (currentTimer.enterAnimation) {
         editTimerAtIndex(currentTimerIndex, { enterAnimation: false });
       }
-    }, [timers, currentTimerIndex]);
+    }, [timers, currentTimerIndex, editTimerAtIndex]);
 
     // Focus start button when sequence stopped and no other element is focused
     useEffect(() => {
@@ -222,7 +222,6 @@ const TimerSet = memo(
       setFocusIndex,
       setIsSequenceRunning,
       isSequenceRunning,
-      timers,
     ]);
 
     const moveUp = useCallback(() => {
@@ -262,7 +261,7 @@ const TimerSet = memo(
         editTimerAtIndex(index, { initialTime: seconds });
         setIsNewTimerSet(true);
       },
-      [currentTimerIndex, timers, focusIndex]
+      [timers, editTimerAtIndex]
     );
 
     const onDirty = useCallback(() => {
