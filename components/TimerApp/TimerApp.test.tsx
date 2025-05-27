@@ -164,7 +164,6 @@ describe('timerApp', () => {
       const savedData = JSON.parse(savedDataString!);
 
       expect(savedData).toHaveLength(2);
-      console.log('savedData', savedData);
       expect(savedData[0].initialTime).toBe(60 * 5);
       expect(savedData[1].initialTime).toBe(60 * 10);
     });
