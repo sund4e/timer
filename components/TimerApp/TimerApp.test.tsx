@@ -485,10 +485,10 @@ describe('timerApp', () => {
         render();
         focusTimer(0);
         clickButton('add');
-        expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
       });
 
       it('removes a timer', () => {
+        expect(getTimes()).toEqual(['00:00:00', '00:00:00']);
         clickButton('remove');
         expect(getTimes()).toEqual(['00:00:00']);
       });
@@ -510,10 +510,10 @@ describe('timerApp', () => {
         clickButton('add');
         changeInputValue(4, 1);
         changeInputValue(10, 2);
-        expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
       });
 
       it('resets all timers', () => {
+        expect(getTimes()).toEqual(['00:00:10', '00:00:20']);
         clickButton('start');
         advanceSeconds(15);
         expect(getTimes()).toEqual(['00:00:10', '00:00:15']);

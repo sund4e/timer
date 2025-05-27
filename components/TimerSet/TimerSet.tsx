@@ -6,7 +6,7 @@ import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import { v4 as uuid } from 'uuid';
 import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
-import { FaPlus, FaPlay, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 const fontSize = 10; //vh
 const visibleTimers = 4;
@@ -140,7 +140,11 @@ const TimerSet = memo(
 
     const focusStart = () => {
       setFocusIndex(null);
-      startButtonRef.current?.focus() || resumeButtonRef.current?.focus();
+      if (startButtonRef.current) {
+        startButtonRef.current.focus();
+      } else {
+        resumeButtonRef.current?.focus();
+      }
     };
 
     useEffect(() => {
