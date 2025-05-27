@@ -12,9 +12,11 @@ const fontSizeActive = 20;
 const fontSizeInactive = 5;
 const visibleTimers = 4;
 
+const fontSize = `min(${fontSizeActive}vw, ${fontSizeActive}vh)`;
+
 const StyledTimer = styled(Timer)<{ $position: number }>`
   position: absolute;
-  font-size: min(${fontSizeActive}vw, ${fontSizeActive}vh);
+  font-size: ${fontSize};
   transition:
     opacity ${({ theme }) => theme.transition}s ease-out,
     scale ${({ theme }) => theme.transition}s ease-out,
@@ -23,15 +25,10 @@ const StyledTimer = styled(Timer)<{ $position: number }>`
   &.enter-animation {
     opacity: 0;
   }
-  ${({ $position }) =>
-    $position &&
-    `transform: translateY(${
-      $position === 0
-        ? 0
-        : $position > 0
-          ? $position * fontSizeInactive + fontSizeActive / 2
-          : $position * fontSizeInactive - fontSizeActive / 2
-    }vh) scale(${$position ? fontSizeInactive / fontSizeActive : 1});`}
+  ${({ $position }) => {
+    const multiplier = $position === 0 ? 0 : $position > 0 ? 1 : -1; // 0 for center, 1 for up, -1 for down
+    return `transform: translateY(calc(${multiplier * Math.abs($position) * fontSizeInactive}vh + ${multiplier} * ${fontSize} / 2)) scale(${$position ? fontSizeInactive / fontSizeActive : 1});`;
+  }}
   opacity: ${({ $position }) => (Math.abs($position) >= visibleTimers ? 0 : 1)};
 `;
 
