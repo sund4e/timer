@@ -8,21 +8,12 @@ import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaPlay, FaTrash } from 'react-icons/fa';
 
-const fontSize = 15; //vw
-const margin = 5; //vh
+const fontSize = 10; //vh
 const visibleTimers = 4;
 
-const getTransform = (timersLength: number) => {
-  return 1 - Math.min(timersLength - 1, visibleTimers - 1) * 0.2;
-};
-
-const StyledTimer = styled(Timer)<{
-  $position: number;
-  $active: boolean;
-  $timersLength: number;
-}>`
+const StyledTimer = styled(Timer)<{ $position: number }>`
   position: absolute;
-  font-size: ${fontSize}vw;
+  font-size: ${fontSize}vh;
   transition:
     opacity ${({ theme }) => theme.transition}s ease-out,
     scale ${({ theme }) => theme.transition}s ease-out,
@@ -31,11 +22,9 @@ const StyledTimer = styled(Timer)<{
   &.enter-animation {
     opacity: 0;
   }
-  ${({ $position, $active, $timersLength }) => {
-    const factor = getTransform($timersLength);
-    const scale = factor * ($active ? 1 : 0.5);
-    return `transform: translateY(${$position * factor * (fontSize * scale + margin)}vh) scale(${scale});`;
-  }}
+  ${({ $position }) =>
+    $position &&
+    `transform: translateY(${$position * fontSize}vh) scale(${$position ? 0.5 : 1});`}
   opacity: ${({ $position }) => (Math.abs($position) >= visibleTimers ? 0 : 1)};
 `;
 
@@ -44,8 +33,8 @@ const TimerSetWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100dvh;
-  width: 100dvw;
+  height: 100vh;
+  width: 100%;
   gap: 20px; /* Space between timers and controls */
   padding: 20px;
 `;
@@ -80,7 +69,7 @@ const TimerSetControls = styled.div<{
   justify-content: center;
   transition: transform ${({ theme }) => theme.transition}s ease-out;
   ${({ $timersLength, $currentTimerIndex }) =>
-    `transform: translateY(${Math.min(visibleTimers, $timersLength - $currentTimerIndex) * getTransform($timersLength) * (fontSize + margin + 1)}vh);`}
+    `transform: translateY(${Math.min(visibleTimers, $timersLength - $currentTimerIndex) * fontSize + 1}vh);`}
   gap: 10px;
   margin-top: 1vh;
 `;
@@ -292,8 +281,6 @@ const TimerSet = memo(
                 .filter(Boolean)
                 .join(' ')}
               $position={index - currentTimerIndex}
-              $active={currentTimerIndex === index}
-              $timersLength={timers.length}
               onChange={onChangeTimer(index)}
               onDirty={onDirty}
             />
