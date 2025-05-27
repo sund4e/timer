@@ -1,10 +1,11 @@
 import styled from 'styled-components';
-import NotificationToggle from '../NotificationToggle';
 import Toggle from '../Toggle';
 import { memo, useState, useEffect } from 'react';
 import SideMenu from '../SideMenu';
-import Tooltip from '../Tooltip';
 import TimerSet from '../TimerSet/TimerSet';
+import useStorage from '../../hooks/useStorage/useStorage';
+import { useNotification } from '../../hooks/useNotification/useNotification';
+import Tooltip from '../Tooltip';
 
 const Header = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.medium}rem;
@@ -37,14 +38,41 @@ export type Props = {
 
 const AIKA_INFO_VISIBILITY_THRESHOLD_PX = 480;
 
+type AppConfig = {
+  notify: boolean;
+  restart: boolean;
+  playSound: boolean;
+};
+
 const TimerApp = memo(
   ({ initialTime = 0, isActive = true, setTitleTime }: Props) => {
-    const [notify, setNotify] = useState<(() => void) | null>(null);
+    const [notify, setNotify] = useState(false);
     const [restart, setRestart] = useState(false);
     const [playSound, setPlaySound] = useState(true);
+
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
     const [isLikelyMobile, setIsLikelyMobile] = useState(false);
     const [showAikaInfoText, setShowAikaInfoText] = useState(true);
+    const [notificationsDenied, setNotificationsDenied] = useState(false);
+    const { showNotification, requestNotificationPermission } =
+      useNotification();
+
+    const { getSavedItem: getSavedAppConfig, setSavedItem: setSavedAppConfig } =
+      useStorage<AppConfig>('appConfig');
+
+    useEffect(() => {
+      const savedConfig = getSavedAppConfig();
+      if (savedConfig) {
+        setNotify(!!savedConfig.notify);
+        setRestart(!!savedConfig.restart);
+        setPlaySound(!!savedConfig.playSound);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+      setSavedAppConfig({ notify, restart, playSound });
+    }, [notify, restart, playSound, setSavedAppConfig]);
 
     useEffect(() => {
       const userAgent = navigator.userAgent;
@@ -95,7 +123,7 @@ const TimerApp = memo(
         playAudio();
       }
       if (notify) {
-        notify();
+        showNotification();
       }
     }
 
@@ -103,6 +131,19 @@ const TimerApp = memo(
       setPlaySound(newValue);
       if (newValue && isLikelyMobile && audio) {
         playAudio();
+      }
+    };
+
+    const handleNotificationToggle = async (newValue: boolean) => {
+      const notificationPermissionGranted =
+        await requestNotificationPermission();
+      if (notificationPermissionGranted && newValue) {
+        setNotify(true);
+      } else {
+        if (!notificationPermissionGranted) {
+          setNotificationsDenied(true);
+        }
+        setNotify(false);
       }
     };
 
@@ -131,21 +172,15 @@ const TimerApp = memo(
           <Toggle isOn={playSound} setIsOn={handleSoundToggle}>
             Sound
           </Toggle>
-          <NotificationToggle setNotify={(notify) => setNotify(() => notify)}>
-            {(isDenied) => (
-              <>
-                Notifications{' '}
-                {isDenied && (
-                  <Tooltip>
-                    {
-                      "Can't enable notifications since they are disabled in the"
-                    }
-                    {' browser settings'}
-                  </Tooltip>
-                )}
-              </>
+          <Toggle isOn={notify} setIsOn={handleNotificationToggle}>
+            Notifications{' '}
+            {notificationsDenied && (
+              <Tooltip>
+                {"Can't enable notifications since they are disabled in the"}
+                {' browser settings'}
+              </Tooltip>
             )}
-          </NotificationToggle>
+          </Toggle>
           <Toggle isOn={restart} setIsOn={setRestart}>
             Restart timer when done
           </Toggle>

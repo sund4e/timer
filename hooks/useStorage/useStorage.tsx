@@ -1,26 +1,21 @@
-type SavedTimerConfig = {
-  id: string;
-  initialTime: number;
-};
-
-function useTimerStorage(key: string): {
-  getSavedTimers: () => SavedTimerConfig[] | null;
-  setSavedTimers: (value: SavedTimerConfig[]) => void;
+function useStorage<T>(key: string): {
+  getSavedItem: () => T | null;
+  setSavedItem: (value: T) => void;
 } {
-  const getSavedTimers = (): SavedTimerConfig[] | null => {
+  const getSavedItem = (): T | null => {
     if (typeof window === 'undefined') {
       return null;
     }
     try {
       const item = window.localStorage.getItem(key);
-      return item ? (JSON.parse(item) as SavedTimerConfig[]) : null;
+      return item ? (JSON.parse(item) as T) : null;
     } catch (error) {
       console.error(`Error reading localStorage key "${key}":`, error);
       return null;
     }
   };
 
-  const setSavedTimers = (value: SavedTimerConfig[]) => {
+  const setSavedItem = (value: T) => {
     if (typeof window !== 'undefined') {
       try {
         window.localStorage.setItem(key, JSON.stringify(value));
@@ -30,7 +25,7 @@ function useTimerStorage(key: string): {
     }
   };
 
-  return { getSavedTimers, setSavedTimers };
+  return { getSavedItem, setSavedItem };
 }
 
-export default useTimerStorage;
+export default useStorage;

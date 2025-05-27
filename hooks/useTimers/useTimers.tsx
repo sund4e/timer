@@ -1,15 +1,19 @@
 import { useCallback, useState, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
-import useTimerStorage from '../useTimerStorage/useTimerStorage';
+import useStorage from '../useStorage/useStorage';
 
-type TimerConfig = {
+type SavedTimerConfig = {
   id: string;
-  initialTime: number; // in seconds
+  initialTime: number;
+};
+
+type TimerConfig = SavedTimerConfig & {
   enterAnimation?: boolean;
 };
 
 const useTimers = (initialTimers: TimerConfig[]) => {
-  const { getSavedTimers, setSavedTimers } = useTimerStorage('timers');
+  const { getSavedItem: getSavedTimers, setSavedItem: setSavedTimers } =
+    useStorage<SavedTimerConfig[]>('timers');
   const [timers, setTimers] = useState<TimerConfig[]>(initialTimers);
 
   useEffect(() => {
