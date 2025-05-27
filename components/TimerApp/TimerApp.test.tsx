@@ -51,6 +51,7 @@ describe('timerApp', () => {
   beforeEach(() => {
     setupAudioMock();
     mockTime();
+    localStorage.clear();
   });
 
   afterEach(() => {
