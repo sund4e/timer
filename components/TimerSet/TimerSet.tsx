@@ -117,7 +117,7 @@ const TimerSet = memo(
         initialTime: initialTime,
         enterAnimation: true,
       });
-      setFocusIndex(newTimerIndex);
+      setCurrentTimerIndex(newTimerIndex);
     };
 
     const removeTimer = () => {
