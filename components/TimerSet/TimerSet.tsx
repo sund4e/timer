@@ -8,12 +8,13 @@ import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 
-const fontSize = 10; //vh
+const fontSizeActive = 20;
+const fontSizeInactive = 5;
 const visibleTimers = 4;
 
 const StyledTimer = styled(Timer)<{ $position: number }>`
   position: absolute;
-  font-size: ${fontSize}vh;
+  font-size: min(${fontSizeActive}vw, ${fontSizeActive}vh);
   transition:
     opacity ${({ theme }) => theme.transition}s ease-out,
     scale ${({ theme }) => theme.transition}s ease-out,
@@ -24,7 +25,13 @@ const StyledTimer = styled(Timer)<{ $position: number }>`
   }
   ${({ $position }) =>
     $position &&
-    `transform: translateY(${$position * fontSize}vh) scale(${$position ? 0.5 : 1});`}
+    `transform: translateY(${
+      $position === 0
+        ? 0
+        : $position > 0
+          ? $position * fontSizeInactive + fontSizeActive / 2
+          : $position * fontSizeInactive - fontSizeActive / 2
+    }vh) scale(${$position ? fontSizeInactive / fontSizeActive : 1});`}
   opacity: ${({ $position }) => (Math.abs($position) >= visibleTimers ? 0 : 1)};
 `;
 
@@ -69,7 +76,7 @@ const TimerSetControls = styled.div<{
   justify-content: center;
   transition: transform ${({ theme }) => theme.transition}s ease-out;
   ${({ $timersLength, $currentTimerIndex }) =>
-    `transform: translateY(${Math.min(visibleTimers, $timersLength - $currentTimerIndex) * fontSize + 1}vh);`}
+    `transform: translateY(${Math.min(visibleTimers, $timersLength - $currentTimerIndex) * fontSizeInactive + fontSizeActive / 2 + 1}vh);`}
   gap: 10px;
   margin-top: 1vh;
 `;
