@@ -138,6 +138,38 @@ describe('timerApp', () => {
     expect(setTitleTime).toHaveBeenCalledWith(initialTime - 1);
   });
 
+  describe('localStorage', () => {
+    it('loads and displays timers from localStorage if present', () => {
+      const savedTimers = [
+        { id: 'timer1', initialTime: 60 * 5 },
+        { id: 'timer2', initialTime: 60 * 10 },
+      ];
+      localStorage.setItem('timers', JSON.stringify(savedTimers));
+      render({ initialTime: 20 * 60 });
+      const displayedTimes = getTimes();
+      expect(displayedTimes).toEqual(['00:05:00', '00:10:00']);
+    });
+
+    it('saves timers to localStorage when they are changed', () => {
+      render({});
+      focusTimer(0);
+      clickButton('add');
+      changeInputValue(3, 5);
+      changeInputValue(8, 1);
+      enter();
+      expect(getTimes()).toEqual(['00:05:00', '00:10:00']);
+
+      const savedDataString = localStorage.getItem('timers');
+      expect(savedDataString).not.toBeNull();
+      const savedData = JSON.parse(savedDataString!);
+
+      expect(savedData).toHaveLength(2);
+      console.log('savedData', savedData);
+      expect(savedData[0].initialTime).toBe(60 * 5);
+      expect(savedData[1].initialTime).toBe(60 * 10);
+    });
+  });
+
   describe('buttons', () => {
     it('inital render shows and focuses start button', () => {
       render();
