@@ -12,10 +12,7 @@ const fontSizeActive = 20;
 const fontSizeInactive = 5;
 const visibleTimers = 4;
 
-const StyledTimer = styled(Timer)<{
-  $position: number;
-  $isSequenceRunning: boolean;
-}>`
+const StyledTimer = styled(Timer)<{ $position: number }>`
   position: absolute;
   font-size: min(${fontSizeActive}vw, ${fontSizeActive}vh);
   transition:
@@ -35,15 +32,7 @@ const StyledTimer = styled(Timer)<{
           ? $position * fontSizeInactive + fontSizeActive / 2
           : $position * fontSizeInactive - fontSizeActive / 2
     }vh) scale(${$position ? fontSizeInactive / fontSizeActive : 1});`}
-  opacity: ${({ $position, $isSequenceRunning }) => {
-    if ($position === 0) {
-      return 1;
-    }
-    if (!$isSequenceRunning && Math.abs($position) <= visibleTimers) {
-      return 1;
-    }
-    return 0;
-  }};
+  opacity: ${({ $position }) => (Math.abs($position) >= visibleTimers ? 0 : 1)};
 `;
 
 const TimerSetWrapper = styled.div`
@@ -305,7 +294,6 @@ const TimerSet = memo(
                 .filter(Boolean)
                 .join(' ')}
               $position={index - currentTimerIndex}
-              $isSequenceRunning={isSequenceRunning}
               onChange={onChangeTimer(index)}
               onDirty={onDirty}
             />
