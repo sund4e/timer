@@ -277,7 +277,10 @@ const TimerSet = memo(
               setTitleTime={setTitleTime}
               onFocus={onFocus(index)}
               isFocused={focusIndex === index}
-              className={[timerConfig.enterAnimation ? 'enter-animation' : '']
+              className={[
+                currentTimerIndex === index ? 'active' : '',
+                timerConfig.enterAnimation ? 'enter-animation' : '',
+              ]
                 .filter(Boolean)
                 .join(' ')}
               $position={index - currentTimerIndex}
