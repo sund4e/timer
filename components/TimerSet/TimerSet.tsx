@@ -38,7 +38,7 @@ const TimerSetWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   gap: 20px; /* Space between timers and controls */
   padding: 20px;
@@ -314,7 +314,7 @@ const TimerSet = memo(
     );
 
     const throttledScrollTimers = useMemo(
-      () => throttle(scrollTimers, 300, { leading: true, trailing: false }),
+      () => throttle(scrollTimers, 200, { leading: true, trailing: false }),
       [scrollTimers]
     );
 
@@ -335,10 +335,14 @@ const TimerSet = memo(
 
     const handleTouchMove = useCallback(
       (event: React.TouchEvent<HTMLDivElement>) => {
+        // Prevent default if we are actively handling timer navigation via touch
+        if (timers.length > 1 && !isSequenceRunning) {
+          event.preventDefault();
+        }
         const deltaY = touchStartY.current - event.touches[0].clientY;
         throttledScrollTimers(deltaY);
       },
-      [throttledScrollTimers]
+      [throttledScrollTimers, timers.length, isSequenceRunning]
     );
 
     const handleWheel = useCallback(
@@ -346,6 +350,7 @@ const TimerSet = memo(
         if (timers.length <= 1 || focusIndex === null) {
           return;
         }
+        event.preventDefault();
         throttledScrollTimers(event.deltaY);
       },
       [timers.length, focusIndex, throttledScrollTimers]

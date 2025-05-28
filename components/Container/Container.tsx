@@ -5,7 +5,7 @@ const MainContainer = styled.main`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   color: ${({ theme }) => theme.colors.primary};
 `;
 
