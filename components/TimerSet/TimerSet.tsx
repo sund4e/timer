@@ -134,7 +134,8 @@ const TimerSet = memo(
     const resetSequence = () => {
       resetTimers();
       setIsNewTimerSet(true);
-      setFocusIndex(0);
+      setCurrentTimerIndex(0);
+      focusStart();
     };
 
     const startSequence = () => {
@@ -163,7 +164,7 @@ const TimerSet = memo(
       if (!isSequenceRunning && document.activeElement === document.body) {
         focusStart();
       }
-    }, [isSequenceRunning, focusStart]);
+    }, [isSequenceRunning, focusStart, isNewTimerSet]); // isNewTimerSet so start is focused after reset
 
     // Set dirty state after sequence first started
     useEffect(() => {

@@ -294,6 +294,10 @@ describe('timerApp', () => {
         clickButton('reset');
         expect(getTime()).toEqual('00:20:00');
 
+        const startButton = getButton('start');
+        expect(startButton).not.toBeNull();
+        expect(document.activeElement).toBe(startButton);
+
         clickButton('start');
         advanceSeconds(1);
         expect(getTime()).toEqual('00:19:59');
