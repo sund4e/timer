@@ -24,6 +24,7 @@ export type Props = {
   onBlur?: () => void;
   className?: string;
   onDirty?: () => void;
+  ['aria-label']?: string;
 };
 
 const getDigits = (seconds: number) => {
@@ -45,6 +46,15 @@ export const getSecondsFromDigits = (digits: number[]) => {
     [Input.seconds]: digits[4] * 10 + digits[5],
   });
 };
+
+const inputLabels = [
+  'Hours tens digit',
+  'Hours units digit',
+  'Minutes tens digit',
+  'Minutes units digit',
+  'Seconds tens digit',
+  'Seconds units digit',
+];
 
 const maxValues = [9, 9, 5, 9, 5, 9];
 const isValidTime = (time: number[]) => {
@@ -176,6 +186,7 @@ const TimeInput = ({
       onFocusCapture={handleFocusCapture}
       onBlurCapture={handleBlurCapture}
       tabIndex={-1}
+      aria-label="Timer duration"
     >
       {time.map((digit, index) => (
         <React.Fragment key={index}>
@@ -184,6 +195,7 @@ const TimeInput = ({
             maxValue={maxValues[index]}
             onChange={handleTimeChange(index)}
             value={digit}
+            aria-label={inputLabels[index]}
           />
           {(index === 1 || index === 3) && <span>:</span>}
         </React.Fragment>

@@ -300,11 +300,19 @@ const TimerSet = memo(
               $timersLength={timers.length}
               $currentTimerIndex={currentTimerIndex}
             >
-              <Button onClick={addTimer} data-testid="add-button">
+              <Button
+                onClick={addTimer}
+                data-testid="add-button"
+                aria-label="Add timer"
+              >
                 <FaPlus fontSize={'70%'} />
               </Button>
               {timers.length > 1 && (
-                <Button onClick={removeTimer} data-testid="remove-button">
+                <Button
+                  onClick={removeTimer}
+                  data-testid="remove-button"
+                  aria-label="Remove timer"
+                >
                   <FaTrash fontSize={'70%'} />
                 </Button>
               )}

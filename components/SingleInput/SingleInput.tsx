@@ -30,9 +30,17 @@ export type Props = {
   className?: string;
   maxValue?: number;
   ref?: React.RefObject<HTMLInputElement | null>;
+  ['aria-label']?: string;
 };
 
-const SingleInput = ({ value, onChange, className, maxValue, ref }: Props) => {
+const SingleInput = ({
+  value,
+  onChange,
+  className,
+  maxValue,
+  ref,
+  ...rest
+}: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const input = ref || inputRef;
   const [isValid, setIsValid] = useState(true);
@@ -69,6 +77,7 @@ const SingleInput = ({ value, onChange, className, maxValue, ref }: Props) => {
       role="textbox"
       value={value}
       size={1}
+      {...rest}
     />
   );
 };
