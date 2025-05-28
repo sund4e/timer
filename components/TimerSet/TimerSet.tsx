@@ -1,4 +1,4 @@
-import { useState, memo, useEffect, useCallback, useRef } from 'react';
+import { useState, memo, useEffect, useCallback, useRef, useMemo } from 'react';
 import styled from 'styled-components';
 import Timer from '../Timer';
 import Button from '../Button/Button';
@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid';
 import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
+import throttle from 'lodash/throttle';
 
 const fontSizeActive = 20;
 const fontSizeInactive = 5;
@@ -293,10 +294,70 @@ const TimerSet = memo(
       [isSequenceRunning, setIsSequenceRunning, focusStart]
     );
 
+    const scrollTimers = useCallback(
+      (deltaY: number) => {
+        if (Math.abs(deltaY) <= 10) return;
+
+        if (deltaY > 10) {
+          setFocusIndex((prevFocusIndex) => {
+            if (prevFocusIndex === null) return 0;
+            return Math.min(prevFocusIndex + 1, timers.length - 1);
+          });
+        } else if (deltaY < -10) {
+          setFocusIndex((prevFocusIndex) => {
+            if (prevFocusIndex === null) return timers.length - 1;
+            return Math.max(prevFocusIndex - 1, 0);
+          });
+        }
+      },
+      [timers.length]
+    );
+
+    const throttledScrollTimers = useMemo(
+      () => throttle(scrollTimers, 300, { leading: true, trailing: false }),
+      [scrollTimers]
+    );
+
+    useEffect(() => {
+      return () => {
+        throttledScrollTimers.cancel();
+      };
+    }, [throttledScrollTimers]);
+
+    const touchStartY = useRef(0);
+
+    const handleTouchStart = useCallback(
+      (event: React.TouchEvent<HTMLDivElement>) => {
+        touchStartY.current = event.touches[0].clientY;
+      },
+      []
+    );
+
+    const handleTouchMove = useCallback(
+      (event: React.TouchEvent<HTMLDivElement>) => {
+        const deltaY = touchStartY.current - event.touches[0].clientY;
+        throttledScrollTimers(deltaY);
+      },
+      [throttledScrollTimers]
+    );
+
+    const handleWheel = useCallback(
+      (event: React.WheelEvent<HTMLDivElement>) => {
+        if (timers.length <= 1 || focusIndex === null) {
+          return;
+        }
+        throttledScrollTimers(event.deltaY);
+      },
+      [timers.length, focusIndex, throttledScrollTimers]
+    );
+
     return (
       <TimerSetWrapper
         onClick={handleWrapperClick}
         data-testid="timer-set-wrapper"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onWheel={handleWheel}
       >
         <TimersList>
           {timers.map((timerConfig, index) => (
