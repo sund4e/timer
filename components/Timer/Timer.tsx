@@ -36,13 +36,13 @@ const Timer = ({
     } else {
       stopTimer();
     }
-  }, [isRunning]);
+  }, [isRunning, startTimer, stopTimer]);
 
   useEffect(() => {
     if (isRunning) {
       setTitleTime(time);
     }
-  }, [time, isRunning]);
+  }, [time, isRunning, setTitleTime]);
 
   function hanldeEnd() {
     onTimeEnd();

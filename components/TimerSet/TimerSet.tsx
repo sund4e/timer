@@ -142,14 +142,14 @@ const TimerSet = memo(
       runSequence();
     };
 
-    const focusStart = () => {
+    const focusStart = useCallback(() => {
       setFocusIndex(null);
       if (startButtonRef.current) {
         startButtonRef.current.focus();
       } else {
         resumeButtonRef.current?.focus();
       }
-    };
+    }, [startButtonRef, resumeButtonRef]);
 
     useEffect(() => {
       const currentTimer = timers[currentTimerIndex];
@@ -163,7 +163,7 @@ const TimerSet = memo(
       if (!isSequenceRunning && document.activeElement === document.body) {
         focusStart();
       }
-    }, [isSequenceRunning]);
+    }, [isSequenceRunning, focusStart]);
 
     // Set dirty state after sequence first started
     useEffect(() => {
@@ -226,6 +226,7 @@ const TimerSet = memo(
       setFocusIndex,
       setIsSequenceRunning,
       isSequenceRunning,
+      focusStart,
     ]);
 
     const moveUp = useCallback(() => {
@@ -249,7 +250,7 @@ const TimerSet = memo(
           setFocusIndex(focusIndex + 1);
         }
       }
-    }, [timers, focusIndex]);
+    }, [timers, focusIndex, focusStart]);
 
     useKeyPressCallBack(null, 'Enter', onEnter);
     useKeyPressCallBack(null, 'ArrowUp', moveUp);

@@ -35,9 +35,10 @@ const Tooltip = ({ children }: Props) => {
   );
 
   useEffect(() => {
-    document.body.appendChild(portalRoot.current);
+    const currentPortalRoot = portalRoot.current;
+    document.body.appendChild(currentPortalRoot);
     return () => {
-      document.body.removeChild(portalRoot.current);
+      document.body.removeChild(currentPortalRoot);
     };
   }, []);
 

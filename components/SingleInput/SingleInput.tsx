@@ -49,7 +49,7 @@ const SingleInput = ({
     if (input.current) {
       input.current.setSelectionRange(0, 0);
     }
-  }, [input.current]);
+  }, [input]);
 
   const onChangeInput = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +61,7 @@ const SingleInput = ({
         setIsValid(true);
       }
     },
-    [onChange]
+    [onChange, maxValue]
   );
 
   return (

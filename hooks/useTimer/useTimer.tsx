@@ -5,6 +5,24 @@ const useTimer = (initialTimeSeconds: number, onTimeEnd: () => void) => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const prevInitialTimeSecods = useRef(initialTimeSeconds);
 
+  const intervalCallback = useCallback(() => {
+    setTimeLeftSeconds((prevTime) => Math.max(0, prevTime - 1));
+  }, []);
+
+  const clearTimer = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  const startTimer = useCallback(() => {
+    if (intervalRef.current) {
+      clearTimer();
+    }
+    intervalRef.current = setInterval(intervalCallback, 1000);
+  }, [intervalCallback, clearTimer]);
+
   useEffect(() => {
     // inital time changed, we should reset timer without calling onTimeEnd
     if (initialTimeSeconds !== prevInitialTimeSecods.current) {
@@ -20,30 +38,12 @@ const useTimer = (initialTimeSeconds: number, onTimeEnd: () => void) => {
         setTimeLeftSeconds(initialTimeSeconds);
       }
     }
-  }, [initialTimeSeconds, timeLeftSeconds, onTimeEnd]);
-
-  const intervalCallback = useCallback(() => {
-    setTimeLeftSeconds((prevTime) => Math.max(0, prevTime - 1));
-  }, []);
-
-  const startTimer = useCallback(() => {
-    if (intervalRef.current) {
-      clearTimer();
-    }
-    intervalRef.current = setInterval(intervalCallback, 1000);
-  }, [intervalCallback]);
-
-  const clearTimer = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }, []);
+  }, [initialTimeSeconds, timeLeftSeconds, onTimeEnd, clearTimer]);
 
   // Cleanup timer on unmount
   useEffect(() => {
     return () => clearTimer();
-  }, []);
+  }, [clearTimer]);
 
   return { time: timeLeftSeconds, startTimer, stopTimer: clearTimer };
 };

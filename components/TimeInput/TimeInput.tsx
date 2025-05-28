@@ -1,5 +1,12 @@
 import styled from 'styled-components';
-import { useState, useEffect, useRef, useCallback, FocusEvent } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  FocusEvent,
+  useMemo,
+} from 'react';
 import { getHms, Input, getSeconds } from './timeConverters';
 import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import SingleInput from '../SingleInput/SingleInput';
@@ -80,14 +87,10 @@ const TimeInput = ({
   const inputRef3 = useRef<HTMLInputElement>(null);
   const inputRef4 = useRef<HTMLInputElement>(null);
   const inputRef5 = useRef<HTMLInputElement>(null);
-  const inputRefs = [
-    inputRef0,
-    inputRef1,
-    inputRef2,
-    inputRef3,
-    inputRef4,
-    inputRef5,
-  ];
+  const inputRefs = useMemo(
+    () => [inputRef0, inputRef1, inputRef2, inputRef3, inputRef4, inputRef5],
+    []
+  );
   const [nextInputToFocus, setNextInputToFocus] = useState(0);
 
   useEffect(() => {
@@ -98,7 +101,7 @@ const TimeInput = ({
     if (nextInputToFocus) {
       inputRefs[nextInputToFocus]?.current?.focus();
     }
-  }, [nextInputToFocus]);
+  }, [nextInputToFocus, inputRefs]);
 
   const onChangeTime = useCallback(
     (time: number[]) => {
@@ -109,8 +112,12 @@ const TimeInput = ({
         }
       }
     },
-    [onChange, time]
+    [onChange, value]
   );
+
+  const findFocusedIndex = useCallback(() => {
+    return inputRefs.findIndex((ref) => ref.current === document.activeElement);
+  }, [inputRefs]);
 
   useEffect(() => {
     const currentIndex = findFocusedIndex();
@@ -119,11 +126,7 @@ const TimeInput = ({
     } else if (!isFocused && currentIndex > -1) {
       inputRefs[currentIndex]?.current?.blur();
     }
-  }, [isFocused]);
-
-  const findFocusedIndex = useCallback(() => {
-    return inputRefs.findIndex((ref) => ref.current === document.activeElement);
-  }, [inputRefs]);
+  }, [isFocused, inputRefs, findFocusedIndex]);
 
   useKeyPressCallBack(wrapperRef.current, 'ArrowRight', () => {
     const currentIndex = findFocusedIndex();
@@ -157,7 +160,7 @@ const TimeInput = ({
         onChangeTime(newTime);
       }
     },
-    [time, inputRefs, onChangeTime]
+    [time, inputRefs, onChangeTime, onDirty]
   );
 
   const handleFocusCapture = useCallback(() => {
@@ -174,7 +177,7 @@ const TimeInput = ({
         onChangeTime(time);
       }
     },
-    [onBlur, time]
+    [onBlur, time, onChangeTime]
   );
 
   return (
