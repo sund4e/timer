@@ -138,6 +138,30 @@ describe('timerApp', () => {
     expect(setTitleTime).toHaveBeenCalledWith(initialTime - 1);
   });
 
+  it('stops the timer sequence when the wrapper is clicked while running', () => {
+    render({ initialTime: 60 });
+    expect(getTime()).toEqual('00:01:00');
+
+    clickButton('start');
+    advanceSeconds(1);
+    expect(getTime()).toEqual('00:00:59');
+    expect(getButton('start')).toBeNull();
+
+    const timerSetWrapper = screen.getByTestId('timer-set-wrapper');
+    act(() => {
+      fireEvent.click(timerSetWrapper);
+    });
+
+    const resumeButton = getButton('resume');
+    expect(resumeButton).not.toBeNull();
+    expect(document.activeElement).toBe(resumeButton);
+
+    // Time should not advance further
+    const currentTime = getTime();
+    advanceSeconds(1);
+    expect(getTime()).toEqual(currentTime);
+  });
+
   describe('localStorage', () => {
     it('loads and displays timers from localStorage if present', () => {
       const savedTimers = [

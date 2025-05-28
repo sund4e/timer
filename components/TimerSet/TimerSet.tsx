@@ -272,8 +272,30 @@ const TimerSet = memo(
       setIsNewTimerSet(true);
     }, []);
 
+    const handleWrapperClick = useCallback(
+      (event: React.MouseEvent<HTMLDivElement>) => {
+        // Prevent click from bubbling up if it originated from a button or input
+        if (
+          event.target instanceof HTMLElement &&
+          (event.target.tagName === 'BUTTON' ||
+            event.target.tagName === 'INPUT')
+        ) {
+          return;
+        }
+
+        if (isSequenceRunning) {
+          setIsSequenceRunning(false);
+          focusStart();
+        }
+      },
+      [isSequenceRunning, setIsSequenceRunning, focusStart]
+    );
+
     return (
-      <TimerSetWrapper>
+      <TimerSetWrapper
+        onClick={handleWrapperClick}
+        data-testid="timer-set-wrapper"
+      >
         <TimersList>
           {timers.map((timerConfig, index) => (
             <StyledTimer
