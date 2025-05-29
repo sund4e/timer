@@ -1,4 +1,4 @@
-import { useState, memo, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import Timer from '../Timer';
 import Button from '../Button/Button';
@@ -15,11 +15,8 @@ const visibleTimers = 4;
 
 const fontSize = `min(${fontSizeActive}vw, ${fontSizeActive}vh)`;
 
-const StyledTimer = styled(Timer)<{ $position: number }>`
+const StyledTimer = styled(Timer)`
   font-size: ${fontSize};
-  &.enter-animation {
-    opacity: 0;
-  }
 `;
 
 const TimerSetWrapper = styled.div`
@@ -86,7 +83,6 @@ const TimerSet = memo(
       addTimerAtIndex(newTimerIndex, {
         id: uuid(),
         initialTime: initialTime,
-        enterAnimation: true,
       });
       setCurrentTimerIndex(newTimerIndex);
     };
@@ -129,13 +125,6 @@ const TimerSet = memo(
         resumeButtonRef.current?.focus();
       }
     }, [startButtonRef, resumeButtonRef]);
-
-    useEffect(() => {
-      const currentTimer = timers[currentTimerIndex];
-      if (currentTimer.enterAnimation) {
-        editTimerAtIndex(currentTimerIndex, { enterAnimation: false });
-      }
-    }, [timers, currentTimerIndex, editTimerAtIndex]);
 
     // Focus start button when sequence stopped and no other element is focused
     useEffect(() => {
@@ -286,13 +275,6 @@ const TimerSet = memo(
               setTitleTime={setTitleTime}
               onFocus={onFocus(index)}
               isFocused={focusIndex === index}
-              className={[
-                currentTimerIndex === index ? 'active' : '',
-                timerConfig.enterAnimation ? 'enter-animation' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              $position={index - currentTimerIndex}
               onChange={onChangeTimer(index)}
               onDirty={onDirty}
             />
