@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion';
 
 const inactiveItemScale = 0.5;
 const maxHeight = 25;
+const fillerHeightPercentage = 50 - maxHeight / 2;
 
 const TimersList = styled.div`
   display: flex;
@@ -13,6 +14,11 @@ const TimersList = styled.div`
   overflow-y: scroll;
   width: 100%;
   height: 100%;
+`;
+
+const Filler = styled.div`
+  height: ${fillerHeightPercentage}%;
+  flex-shrink: 0;
 `;
 
 const Item = styled(motion.div)``;
@@ -51,6 +57,8 @@ const AnimatedItem = ({
       }}
       transition={{
         opacity: { duration: 0.3 },
+        scale: { duration: 0.3 },
+        maxHeight: { duration: 0.3 },
       }}
     >
       {children}
@@ -83,6 +91,7 @@ const TimerList = memo(({ children, selectedIndex }: Props) => {
 
   return (
     <TimersList ref={listRef}>
+      <Filler />
       {children.map((child, index) => (
         <AnimatedItem
           listRef={listRef}
@@ -94,6 +103,7 @@ const TimerList = memo(({ children, selectedIndex }: Props) => {
           {child}
         </AnimatedItem>
       ))}
+      <Filler />
     </TimersList>
   );
 });
