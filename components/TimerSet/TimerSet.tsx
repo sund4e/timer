@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
-import throttle from 'lodash/throttle';
+import TimerList from '../TimerList/TimerList';
 
 const fontSizeActive = 20;
 const fontSizeInactive = 5;
@@ -16,21 +16,10 @@ const visibleTimers = 4;
 const fontSize = `min(${fontSizeActive}vw, ${fontSizeActive}vh)`;
 
 const StyledTimer = styled(Timer)<{ $position: number }>`
-  position: absolute;
   font-size: ${fontSize};
-  transition:
-    opacity ${({ theme }) => theme.transition}s ease-out,
-    scale ${({ theme }) => theme.transition}s ease-out,
-    transform ${({ theme }) => theme.transition}s ease-out;
-  opacity: 1;
   &.enter-animation {
     opacity: 0;
   }
-  ${({ $position }) => {
-    const multiplier = $position === 0 ? 0 : $position > 0 ? 1 : -1; // 0 for center, 1 for up, -1 for down
-    return `transform: translateY(calc(${multiplier * Math.abs($position) * fontSizeInactive}vh + ${multiplier} * ${fontSize} / 2)) scale(${$position ? fontSizeInactive / fontSizeActive : 1});`;
-  }}
-  opacity: ${({ $position }) => (Math.abs($position) >= visibleTimers ? 0 : 1)};
 `;
 
 const TimerSetWrapper = styled.div`
@@ -42,18 +31,6 @@ const TimerSetWrapper = styled.div`
   width: 100%;
   gap: 20px; /* Space between timers and controls */
   padding: 20px;
-`;
-
-const TimersList = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-  gap: 15px; /* Space between individual timers */
-  position: relative; /* Ensure absolute children are contained */
-  overflow: hidden; /* Prevent children from overflowing this container */
-  width: 100%; /* Take full available width */
 `;
 
 const Row = styled.div`
@@ -294,77 +271,12 @@ const TimerSet = memo(
       [isSequenceRunning, setIsSequenceRunning, focusStart]
     );
 
-    const scrollTimers = useCallback(
-      (deltaY: number) => {
-        if (Math.abs(deltaY) <= 10) return;
-
-        if (deltaY > 10) {
-          setFocusIndex((prevFocusIndex) => {
-            if (prevFocusIndex === null) return 0;
-            return Math.min(prevFocusIndex + 1, timers.length - 1);
-          });
-        } else if (deltaY < -10) {
-          setFocusIndex((prevFocusIndex) => {
-            if (prevFocusIndex === null) return timers.length - 1;
-            return Math.max(prevFocusIndex - 1, 0);
-          });
-        }
-      },
-      [timers.length]
-    );
-
-    const throttledScrollTimers = useMemo(
-      () => throttle(scrollTimers, 200, { leading: true, trailing: false }),
-      [scrollTimers]
-    );
-
-    useEffect(() => {
-      return () => {
-        throttledScrollTimers.cancel();
-      };
-    }, [throttledScrollTimers]);
-
-    const touchStartY = useRef(0);
-
-    const handleTouchStart = useCallback(
-      (event: React.TouchEvent<HTMLDivElement>) => {
-        touchStartY.current = event.touches[0].clientY;
-      },
-      []
-    );
-
-    const handleTouchMove = useCallback(
-      (event: React.TouchEvent<HTMLDivElement>) => {
-        // Prevent default if we are actively handling timer navigation via touch
-        if (timers.length > 1 && !isSequenceRunning) {
-          event.preventDefault();
-        }
-        const deltaY = touchStartY.current - event.touches[0].clientY;
-        throttledScrollTimers(deltaY);
-      },
-      [throttledScrollTimers, timers.length, isSequenceRunning]
-    );
-
-    const handleWheel = useCallback(
-      (event: React.WheelEvent<HTMLDivElement>) => {
-        if (timers.length <= 1 || focusIndex === null) {
-          return;
-        }
-        event.preventDefault();
-        throttledScrollTimers(event.deltaY);
-      },
-      [timers.length, focusIndex, throttledScrollTimers]
-    );
-
     return (
       <TimerSetWrapper
         onClick={handleWrapperClick}
         data-testid="timer-set-wrapper"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onWheel={handleWheel}
       >
-        <TimersList>
+        <TimerList selectedIndex={currentTimerIndex}>
           {timers.map((timerConfig, index) => (
             <StyledTimer
               key={timerConfig.id}
@@ -385,30 +297,30 @@ const TimerSet = memo(
               onDirty={onDirty}
             />
           ))}
-          {!isSequenceRunning && focusIndex !== null && (
-            <TimerSetControls
-              $timersLength={timers.length}
-              $currentTimerIndex={currentTimerIndex}
+        </TimerList>
+        {!isSequenceRunning && focusIndex !== null && (
+          <TimerSetControls
+            $timersLength={timers.length}
+            $currentTimerIndex={currentTimerIndex}
+          >
+            <Button
+              onClick={addTimer}
+              data-testid="add-button"
+              aria-label="Add timer"
             >
+              <FaPlus fontSize={'70%'} />
+            </Button>
+            {timers.length > 1 && (
               <Button
-                onClick={addTimer}
-                data-testid="add-button"
-                aria-label="Add timer"
+                onClick={removeTimer}
+                data-testid="remove-button"
+                aria-label="Remove timer"
               >
-                <FaPlus fontSize={'70%'} />
+                <FaTrash fontSize={'70%'} />
               </Button>
-              {timers.length > 1 && (
-                <Button
-                  onClick={removeTimer}
-                  data-testid="remove-button"
-                  aria-label="Remove timer"
-                >
-                  <FaTrash fontSize={'70%'} />
-                </Button>
-              )}
-            </TimerSetControls>
-          )}
-        </TimersList>
+            )}
+          </TimerSetControls>
+        )}
         <Row>
           {isNewTimerSet && (
             <Hidable isHidden={isSequenceRunning}>
