@@ -1,12 +1,9 @@
-import { memo, useEffect, useRef, useState, createRef } from 'react';
+import { memo, useEffect, useRef, createRef } from 'react';
 import styled from 'styled-components';
 import { motion, useInView } from 'framer-motion';
 
-const fontSizeActive = 20;
-const inactiveTimerScale = 0.5;
-const margin = 1;
-
-const fontSize = `min(${fontSizeActive}vw, ${fontSizeActive}vh)`;
+const inactiveItemScale = 0.5;
+const maxHeight = 25;
 
 const TimersList = styled.div`
   display: flex;
@@ -18,20 +15,7 @@ const TimersList = styled.div`
   height: 100%;
 `;
 
-const Item = styled(motion.div)<{
-  $selected: boolean;
-}>`
-  font-size: ${fontSize};
-  transition:
-    opacity ${({ theme }) => theme.transition}s ease-out,
-    scale ${({ theme }) => theme.transition}s ease-out,
-    transform ${({ theme }) => theme.transition}s ease-out;
-  max-height: ${({ $selected }) =>
-    $selected
-      ? `${fontSizeActive + margin}vh`
-      : `${fontSizeActive * inactiveTimerScale + margin}vh`};
-  transform: scale(${({ $selected }) => ($selected ? 1 : inactiveTimerScale)});
-`;
+const Item = styled(motion.div)``;
 
 export type Props = {
   children: React.ReactElement[];
@@ -41,15 +25,14 @@ export type Props = {
 type AnimatedItemProps = {
   children: React.ReactElement;
   index: number;
-  selectedIndex: number;
+  active: boolean;
   ref: React.RefObject<HTMLDivElement | null>;
   listRef: React.RefObject<HTMLDivElement | null>;
 };
 
 const AnimatedItem = ({
   children,
-  index,
-  selectedIndex,
+  active,
   ref,
   listRef,
 }: AnimatedItemProps) => {
@@ -58,9 +41,14 @@ const AnimatedItem = ({
   return (
     <Item
       ref={ref}
-      $selected={index === selectedIndex}
       initial={{ opacity: 0 }}
-      animate={{ opacity: isInView ? 1 : 0 }}
+      animate={{
+        opacity: isInView ? 1 : 0,
+        scale: active ? 1 : inactiveItemScale,
+        maxHeight: active
+          ? `${maxHeight}%`
+          : `${maxHeight * inactiveItemScale}%`,
+      }}
       transition={{
         opacity: { duration: 0.3 },
       }}
@@ -101,7 +89,7 @@ const TimerList = memo(({ children, selectedIndex }: Props) => {
           key={child.key}
           ref={timerRefs.current[index]}
           index={index}
-          selectedIndex={selectedIndex}
+          active={index === selectedIndex}
         >
           {child}
         </AnimatedItem>
