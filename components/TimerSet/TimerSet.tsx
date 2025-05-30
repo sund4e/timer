@@ -265,7 +265,10 @@ const TimerSet = memo(
         onClick={handleWrapperClick}
         data-testid="timer-set-wrapper"
       >
-        <TimerList selectedIndex={currentTimerIndex}>
+        <TimerList
+          selectedIndex={currentTimerIndex}
+          onSelectedIndexChange={setFocusIndex}
+        >
           {timers.map((timerConfig, index) => (
             <StyledTimer
               key={timerConfig.id}
