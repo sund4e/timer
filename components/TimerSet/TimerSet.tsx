@@ -268,6 +268,7 @@ const TimerSet = memo(
         <TimerList
           selectedIndex={currentTimerIndex}
           onSelectedIndexChange={setFocusIndex}
+          allowScrolling={!isSequenceRunning}
         >
           {timers.map((timerConfig, index) => (
             <StyledTimer

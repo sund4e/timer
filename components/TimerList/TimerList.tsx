@@ -12,12 +12,12 @@ const inactiveItemScale = 0.5;
 const maxHeight = 25;
 const fillerHeightPercentage = 50 - maxHeight / 2;
 
-const TimersList = styled.div`
+const TimersList = styled.div<{ $allowScroll: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
-  overflow-y: scroll;
+  overflow-y: ${({ $allowScroll }) => ($allowScroll ? 'scroll' : 'hidden')};
   width: 100%;
   height: 100%;
 `;
@@ -33,6 +33,7 @@ export type Props = {
   children: React.ReactElement[];
   selectedIndex: number;
   onSelectedIndexChange: (index: number) => void;
+  allowScrolling: boolean;
 };
 
 type AnimatedItemProps = {
@@ -106,7 +107,12 @@ const findMiddleItem = (list: HTMLDivElement, items: HTMLDivElement[]) => {
 };
 
 const TimerList = memo(
-  ({ children, selectedIndex, onSelectedIndexChange }: Props) => {
+  ({
+    children,
+    selectedIndex,
+    onSelectedIndexChange,
+    allowScrolling,
+  }: Props) => {
     const timerRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const listRef = useRef<HTMLDivElement>(null);
     const userIsManuallyScrolling = useRef(false);
@@ -180,7 +186,7 @@ const TimerList = memo(
     }, [selectedIndex, children]);
 
     return (
-      <TimersList ref={listRef}>
+      <TimersList ref={listRef} $allowScroll={allowScrolling}>
         <Filler />
         {children.map((child, index) => (
           <AnimatedItem
