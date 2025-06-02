@@ -254,6 +254,14 @@ const TimerSet = memo(
       [isSequenceRunning, setIsSequenceRunning, focusStart]
     );
 
+    const handleScroll = useCallback(
+      (index: number) => {
+        setFocusIndex(null);
+        setCurrentTimerIndex(index);
+      },
+      [setFocusIndex, setCurrentTimerIndex]
+    );
+
     return (
       <TimerSetWrapper
         onClick={handleWrapperClick}
@@ -261,7 +269,7 @@ const TimerSet = memo(
       >
         <TimerList
           selectedIndex={currentTimerIndex}
-          onSelectedIndexChange={setFocusIndex}
+          onSelectedIndexChange={handleScroll}
           allowScrolling={!isSequenceRunning}
         >
           {timers.map((timerConfig, index) => (
