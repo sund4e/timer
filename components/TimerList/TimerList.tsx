@@ -106,11 +106,7 @@ const TimerList = memo(
     useEffect(() => {
       const scrollContainer = listRef.current;
       const handleScrollEnd = () => {
-        console.log('scrollend');
         userIsManuallyScrolling.current = false;
-        automaticScrollIsRunning.current = false;
-
-        console.log('scroll end');
 
         // Adjust filler height after first scroll so that active timer is centered
         if (!fillerHeight && fillerRef.current && listRef.current) {
@@ -154,7 +150,6 @@ const TimerList = memo(
         { length: children.length },
         (_, i) => itemRefs.current[i] || createRef<HTMLDivElement | null>()
       );
-      console.log(itemRefs.current, children.length);
     }
 
     useLayoutEffect(() => {
@@ -164,7 +159,6 @@ const TimerList = memo(
     }, []);
 
     useEffect(() => {
-      console.log('selected index changed', selectedIndex);
       const selectedItem = itemRefs.current[selectedIndex]?.current;
       if (!listRef.current || !itemRefs.current || !selectedItem) {
         return;
@@ -181,6 +175,10 @@ const TimerList = memo(
           behavior: 'smooth',
           block: 'center',
         });
+        const timeout = setTimeout(() => {
+          automaticScrollIsRunning.current = false;
+        }, 1000);
+        return () => clearTimeout(timeout);
       }
     }, [selectedIndex, children, fillerHeight]);
 
