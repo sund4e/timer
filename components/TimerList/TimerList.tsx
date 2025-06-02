@@ -95,6 +95,8 @@ const TimerList = memo(
     const listCenterY = useRef(0);
     const [fillerHeight, setFillerHeight] = useState(0);
     const fillerRef = useRef<HTMLDivElement>(null);
+    const inactiveItemHeight = useRef(0);
+    const activeItemHeight = useRef(0);
 
     const { scrollY } = useScroll({
       container: listRef,
@@ -121,35 +123,31 @@ const TimerList = memo(
       };
     }, [fillerHeight]);
 
-    const scrollLogic = useCallback(() => {
-      userIsManuallyScrolling.current = true;
+    const scrollLogic = useCallback(
+      (scrollPosition: number) => {
+        userIsManuallyScrolling.current = true;
 
-      const currentListCenterY = listCenterY.current;
-      const currentItemRefs = itemRefs.current;
-
-      const index = currentItemRefs.findIndex((item) => {
-        if (!item.current) {
-          return false;
+        if (!listRef.current) {
+          return;
         }
-        const rect = item.current.getBoundingClientRect();
-        return (
-          rect.top <= currentListCenterY && rect.bottom >= currentListCenterY
-        );
-      });
 
-      if (index !== -1 && index !== selectedIndex) {
-        onSelectedIndexChange(index);
-      }
-    }, [selectedIndex, onSelectedIndexChange]);
+        const index = Math.round(scrollPosition / inactiveItemHeight.current);
+        if (index !== -1 && index !== selectedIndex) {
+          onSelectedIndexChange(index);
+        }
+      },
+
+      [selectedIndex, onSelectedIndexChange]
+    );
 
     const handleScroll = useMemo(
       () => throttle(scrollLogic, 150),
       [scrollLogic]
     );
 
-    useMotionValueEvent(scrollY, 'change', () => {
+    useMotionValueEvent(scrollY, 'change', (scrollPositon: number) => {
       if (!automaticScrollIsRunning.current) {
-        handleScroll();
+        handleScroll(scrollPositon);
       }
     });
 
@@ -183,6 +181,22 @@ const TimerList = memo(
         updateListCenter.cancel();
       };
     }, [updateListCenter]);
+
+    useLayoutEffect(() => {
+      if (
+        itemRefs.current.length > 1 &&
+        !activeItemHeight.current &&
+        !inactiveItemHeight.current
+      ) {
+        let inactiveItemIndex = selectedIndex === 0 ? 1 : 0;
+        activeItemHeight.current =
+          itemRefs.current[selectedIndex]?.current?.getBoundingClientRect()
+            .height || 0;
+        inactiveItemHeight.current =
+          itemRefs.current[inactiveItemIndex]?.current?.getBoundingClientRect()
+            .height || 0;
+      }
+    }, [selectedIndex, children, fillerHeight]);
 
     useEffect(() => {
       const selectedItem = itemRefs.current[selectedIndex]?.current;
