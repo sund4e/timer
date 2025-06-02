@@ -9,11 +9,9 @@ import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import TimerList from '../TimerList/TimerList';
 
-const fontSizeActive = 20;
-const fontSizeInactive = 5;
-const visibleTimers = 4;
+const fontSizeInactive = 10;
 
-const fontSize = `min(${fontSizeActive}vw, ${fontSizeActive}vh)`;
+const fontSize = `min(${fontSizeInactive}vw, ${fontSizeInactive}vh)`;
 
 const StyledTimer = styled(Timer)`
   font-size: ${fontSize};
@@ -26,7 +24,6 @@ const TimerSetWrapper = styled.div`
   justify-content: center;
   height: 100%;
   width: 100%;
-  gap: 20px; /* Space between timers and controls */
   padding: 20px;
 `;
 
@@ -46,9 +43,6 @@ const TimerSetControls = styled.div<{
   flex-direction: row;
   width: 100%;
   justify-content: center;
-  transition: transform ${({ theme }) => theme.transition}s ease-out;
-  ${({ $timersLength, $currentTimerIndex }) =>
-    `transform: translateY(${Math.min(visibleTimers + 1, $timersLength - $currentTimerIndex) * fontSizeInactive + fontSizeActive / 2 + 3}vh);`}
   gap: 10px;
   margin-top: 1vh;
 `;

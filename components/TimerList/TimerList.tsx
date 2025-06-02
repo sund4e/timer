@@ -1,4 +1,11 @@
-import { memo, useEffect, useRef, createRef } from 'react';
+import {
+  memo,
+  useEffect,
+  useRef,
+  createRef,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import {
   motion,
@@ -8,9 +15,7 @@ import {
 } from 'motion/react';
 import { throttle } from 'lodash';
 
-const inactiveItemScale = 0.5;
-const maxHeight = 25;
-const fillerHeightPercentage = 50 - maxHeight / 2;
+const activeItemScale = 1.75;
 
 const TimersList = styled.div<{ $allowScroll: boolean }>`
   display: flex;
@@ -22,12 +27,15 @@ const TimersList = styled.div<{ $allowScroll: boolean }>`
   height: 100%;
 `;
 
+// Set initial height to 50% of the list height, corrected after first render
 const Filler = styled.div`
-  height: ${fillerHeightPercentage}%;
+  height: 50%;
   flex-shrink: 0;
 `;
 
-const Item = styled(motion.div)``;
+const Item = styled(motion.div)`
+  margin: 0;
+`;
 
 export type Props = {
   children: React.ReactElement[];
@@ -58,10 +66,7 @@ const AnimatedItem = ({
       initial={{ opacity: 0 }}
       animate={{
         opacity: isInView ? 1 : 0,
-        scale: active ? 1 : inactiveItemScale,
-        maxHeight: active
-          ? `${maxHeight}%`
-          : `${maxHeight * inactiveItemScale}%`,
+        scale: active ? activeItemScale : 1,
       }}
       transition={{
         opacity: { duration: 0.3 },
@@ -74,36 +79,9 @@ const AnimatedItem = ({
   );
 };
 
-const findMiddleItem = (list: HTMLDivElement, items: HTMLDivElement[]) => {
-  const listRect = list.getBoundingClientRect();
-  const listCenterY = listRect.top + listRect.height / 2;
-
-  let closestItemIndex = -1;
-  let minDistance = Infinity;
-
-  items.forEach((item, index) => {
-    const itemRect = item.getBoundingClientRect();
-
-    //Check if item is even visible within the scrollport to avoid unnecessary calculations
-    if (
-      itemRect.height === 0 ||
-      itemRect.width === 0 ||
-      itemRect.bottom < listRect.top ||
-      itemRect.top > listRect.bottom
-    ) {
-      return;
-    }
-
-    const itemCenterY = itemRect.top + itemRect.height / 2;
-    const distance = Math.abs(listCenterY - itemCenterY);
-
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestItemIndex = index;
-    }
-  });
-
-  return closestItemIndex;
+const findCenterY = (element: HTMLDivElement) => {
+  const rect = element.getBoundingClientRect();
+  return rect.top + rect.height / 2;
 };
 
 const TimerList = memo(
@@ -113,10 +91,13 @@ const TimerList = memo(
     onSelectedIndexChange,
     allowScrolling,
   }: Props) => {
-    const timerRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
+    const itemRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const listRef = useRef<HTMLDivElement>(null);
     const userIsManuallyScrolling = useRef(false);
     const automaticScrollIsRunning = useRef(false);
+    const listCenterY = useRef(0);
+    const [fillerHeight, setFillerHeight] = useState(0);
+    const fillerRef = useRef<HTMLDivElement>(null);
 
     const { scrollY } = useScroll({
       container: listRef,
@@ -125,8 +106,19 @@ const TimerList = memo(
     useEffect(() => {
       const scrollContainer = listRef.current;
       const handleScrollEnd = () => {
+        console.log('scrollend');
         userIsManuallyScrolling.current = false;
         automaticScrollIsRunning.current = false;
+
+        console.log('scroll end');
+
+        // Adjust filler height after first scroll so that active timer is centered
+        if (!fillerHeight && fillerRef.current && listRef.current) {
+          setFillerHeight(
+            fillerRef.current?.getBoundingClientRect().height -
+              listRef.current.scrollTop
+          );
+        }
       };
 
       scrollContainer?.addEventListener('scrollend', handleScrollEnd);
@@ -134,40 +126,47 @@ const TimerList = memo(
       return () => {
         scrollContainer?.removeEventListener('scrollend', handleScrollEnd);
       };
-    }, []);
+    }, [fillerHeight]);
 
-    const handleScroll = throttle((latest: number) => {
+    const handleScroll = throttle(() => {
       userIsManuallyScrolling.current = true;
-      onSelectedIndexChange(Math.round(latest / (maxHeight * 2)));
+
+      const index = itemRefs.current.findIndex((item) => {
+        return (
+          item.current.getBoundingClientRect().top <= listCenterY.current &&
+          item.current.getBoundingClientRect().bottom >= listCenterY.current
+        );
+      });
+
+      if (index !== selectedIndex) {
+        onSelectedIndexChange(index);
+      }
     }, 100);
 
-    useMotionValueEvent(scrollY, 'change', (latest) => {
+    useMotionValueEvent(scrollY, 'change', () => {
       if (!automaticScrollIsRunning.current) {
-        handleScroll(latest);
+        handleScroll();
       }
-      // handleScroll(latest);
     });
 
-    if (timerRefs.current.length !== children.length) {
-      timerRefs.current = Array.from(
+    if (itemRefs.current.length !== children.length) {
+      itemRefs.current = Array.from(
         { length: children.length },
-        (_, i) => timerRefs.current[i] || createRef<HTMLDivElement | null>()
+        (_, i) => itemRefs.current[i] || createRef<HTMLDivElement | null>()
       );
+      console.log(itemRefs.current, children.length);
     }
 
-    useEffect(() => {
-      const selectedItem = timerRefs.current[selectedIndex]?.current;
-      if (!listRef.current || !timerRefs.current || !selectedItem) {
-        return;
+    useLayoutEffect(() => {
+      if (listRef.current) {
+        listCenterY.current = findCenterY(listRef.current);
       }
+    }, []);
 
-      const middleItem = findMiddleItem(
-        listRef.current,
-        timerRefs.current.map((ref) => ref.current)
-      );
-
-      if (middleItem === selectedIndex) {
-        userIsManuallyScrolling.current = false;
+    useEffect(() => {
+      console.log('selected index changed', selectedIndex);
+      const selectedItem = itemRefs.current[selectedIndex]?.current;
+      if (!listRef.current || !itemRefs.current || !selectedItem) {
         return;
       }
 
@@ -183,23 +182,26 @@ const TimerList = memo(
           block: 'center',
         });
       }
-    }, [selectedIndex, children]);
+    }, [selectedIndex, children, fillerHeight]);
 
     return (
       <TimersList ref={listRef} $allowScroll={allowScrolling}>
-        <Filler />
+        <Filler
+          ref={fillerRef}
+          style={fillerHeight ? { height: `${fillerHeight}px` } : {}}
+        />
         {children.map((child, index) => (
           <AnimatedItem
             listRef={listRef}
             key={child.key}
-            ref={timerRefs.current[index]}
+            ref={itemRefs.current[index]}
             index={index}
             active={index === selectedIndex}
           >
             {child}
           </AnimatedItem>
         ))}
-        <Filler />
+        <Filler style={fillerHeight ? { height: `${fillerHeight}px` } : {}} />
       </TimersList>
     );
   }
