@@ -6,6 +6,7 @@ import {
   useLayoutEffect,
   useState,
   useCallback,
+  useMemo,
 } from 'react';
 import styled from 'styled-components';
 import {
@@ -120,20 +121,31 @@ const TimerList = memo(
       };
     }, [fillerHeight]);
 
-    const handleScroll = throttle(() => {
+    const scrollLogic = useCallback(() => {
       userIsManuallyScrolling.current = true;
 
-      const index = itemRefs.current.findIndex((item) => {
+      const currentListCenterY = listCenterY.current;
+      const currentItemRefs = itemRefs.current;
+
+      const index = currentItemRefs.findIndex((item) => {
+        if (!item.current) {
+          return false;
+        }
+        const rect = item.current.getBoundingClientRect();
         return (
-          item.current.getBoundingClientRect().top <= listCenterY.current &&
-          item.current.getBoundingClientRect().bottom >= listCenterY.current
+          rect.top <= currentListCenterY && rect.bottom >= currentListCenterY
         );
       });
 
-      if (index !== selectedIndex) {
+      if (index !== -1 && index !== selectedIndex) {
         onSelectedIndexChange(index);
       }
-    }, 100);
+    }, [selectedIndex, onSelectedIndexChange]);
+
+    const handleScroll = useMemo(
+      () => throttle(scrollLogic, 150),
+      [scrollLogic]
+    );
 
     useMotionValueEvent(scrollY, 'change', () => {
       if (!automaticScrollIsRunning.current) {
@@ -156,7 +168,6 @@ const TimerList = memo(
           listCenterY.current = rect.top + rect.height / 2;
         }
       }, 100),
-
       []
     ) as DebouncedFunc<() => void>;
 
