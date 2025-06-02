@@ -27,6 +27,15 @@ const TimersList = styled.div<{ $allowScroll: boolean }>`
   overflow-y: ${({ $allowScroll }) => ($allowScroll ? 'scroll' : 'hidden')};
   width: 100%;
   height: 100%;
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 // Set initial height to 50% of the list height, corrected after first render
