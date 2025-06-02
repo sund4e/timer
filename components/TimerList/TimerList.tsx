@@ -134,6 +134,8 @@ const TimerList = memo(
         const index = Math.round(scrollPosition / inactiveItemHeight.current);
         if (index !== -1 && index !== selectedIndex) {
           onSelectedIndexChange(index);
+        } else {
+          userIsManuallyScrolling.current = false;
         }
       },
 
