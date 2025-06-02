@@ -5,6 +5,7 @@ import {
   createRef,
   useLayoutEffect,
   useState,
+  useCallback,
 } from 'react';
 import styled from 'styled-components';
 import {
@@ -13,7 +14,7 @@ import {
   useScroll,
   useMotionValueEvent,
 } from 'motion/react';
-import { throttle } from 'lodash';
+import { throttle, DebouncedFunc } from 'lodash';
 
 const activeItemScale = 1.75;
 
@@ -77,11 +78,6 @@ const AnimatedItem = ({
       {children}
     </Item>
   );
-};
-
-const findCenterY = (element: HTMLDivElement) => {
-  const rect = element.getBoundingClientRect();
-  return rect.top + rect.height / 2;
 };
 
 const TimerList = memo(
@@ -152,11 +148,30 @@ const TimerList = memo(
       );
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const updateListCenter = useCallback(
+      throttle(() => {
+        if (listRef.current) {
+          const rect = listRef.current.getBoundingClientRect();
+          listCenterY.current = rect.top + rect.height / 2;
+        }
+      }, 100),
+
+      []
+    ) as DebouncedFunc<() => void>;
+
     useLayoutEffect(() => {
-      if (listRef.current) {
-        listCenterY.current = findCenterY(listRef.current);
-      }
-    }, []);
+      updateListCenter(); // Initial calculation
+
+      window.addEventListener('resize', updateListCenter);
+      window.addEventListener('orientationchange', updateListCenter);
+
+      return () => {
+        window.removeEventListener('resize', updateListCenter);
+        window.removeEventListener('orientationchange', updateListCenter);
+        updateListCenter.cancel();
+      };
+    }, [updateListCenter]);
 
     useEffect(() => {
       const selectedItem = itemRefs.current[selectedIndex]?.current;
