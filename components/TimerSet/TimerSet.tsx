@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
-import TimerList from '../TimerList/TimerList';
+import ScrollableList from '../ScrollableList/ScrollableList';
 
 const fontSizeInactive = 10;
 
@@ -267,7 +267,7 @@ const TimerSet = memo(
         onClick={handleWrapperClick}
         data-testid="timer-set-wrapper"
       >
-        <TimerList
+        <ScrollableList
           selectedIndex={currentTimerIndex}
           onSelectedIndexChange={handleScroll}
           allowScrolling={!isSequenceRunning}
@@ -285,7 +285,7 @@ const TimerSet = memo(
               onDirty={onDirty}
             />
           ))}
-        </TimerList>
+        </ScrollableList>
         {!isSequenceRunning && focusIndex !== null && (
           <TimerSetControls
             $timersLength={timers.length}

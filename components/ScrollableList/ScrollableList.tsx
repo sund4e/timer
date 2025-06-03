@@ -19,7 +19,7 @@ import { throttle, DebouncedFunc } from 'lodash';
 
 const activeItemScale = 1.75;
 
-const TimersList = styled.div<{ $allowScroll: boolean }>`
+const List = styled.div<{ $allowScroll: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,7 +91,7 @@ const AnimatedItem = ({
   );
 };
 
-const TimerList = memo(
+const ScrollableList = memo(
   ({
     children,
     selectedIndex,
@@ -223,7 +223,7 @@ const TimerList = memo(
     }, [selectedIndex, children, fillerHeight, getActiveIndex]);
 
     return (
-      <TimersList ref={listRef} $allowScroll={allowScrolling}>
+      <List ref={listRef} $allowScroll={allowScrolling}>
         <Filler
           ref={fillerRef}
           style={fillerHeight ? { height: `${fillerHeight}px` } : {}}
@@ -240,11 +240,11 @@ const TimerList = memo(
           </AnimatedItem>
         ))}
         <Filler style={fillerHeight ? { height: `${fillerHeight}px` } : {}} />
-      </TimersList>
+      </List>
     );
   }
 );
 
-TimerList.displayName = 'TimerList';
+ScrollableList.displayName = 'ScrollableList';
 
-export default TimerList;
+export default ScrollableList;
