@@ -207,10 +207,10 @@ describe('timerApp', () => {
       expect(document.activeElement).toBe(getButton('start'));
     });
 
-    it('inital render shows only start button', () => {
+    it('inital render shows correct buttons', () => {
       render();
       expect(getButton('start')).toBeTruthy();
-      expect(getButton('add')).toBeFalsy();
+      expect(getButton('add')).toBeTruthy();
       expect(getButton('remove')).toBeFalsy();
       expect(getButton('reset')).toBeFalsy();
       expect(getButton('restart')).toBeFalsy();
