@@ -84,6 +84,7 @@ const AnimatedItem = ({
         scale: { duration: 0.3 },
         maxHeight: { duration: 0.3 },
       }}
+      data-testid={active ? 'active-timer' : ''}
     >
       {children}
     </Item>

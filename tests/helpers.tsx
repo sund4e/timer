@@ -16,13 +16,14 @@ export const getTimers = () => {
   return screen.getAllByTestId('time');
 };
 
+export const getActiveTimer = () => {
+  const activeTimer = screen.getByTestId('active-timer').children[0];
+  if (!activeTimer) throw new Error('No active timer found');
+  return activeTimer as HTMLElement;
+};
+
 export const getTime = (): string | null => {
-  const timers = getTimers();
-  const activeTimer = timers.find((timer) =>
-    timer.classList.contains('active')
-  );
-  if (!activeTimer) return null;
-  return getTimerTime(activeTimer);
+  return getTimerTime(getActiveTimer());
 };
 
 export const getTimes = (): string[] => {
@@ -87,15 +88,6 @@ export const getToggle = (text: string) => {
     ) || screen.getByRole('switch', { name: /sound/i });
   if (!toggleInput) throw new Error(`Could not find ${text} toggle input`);
   return toggleInput as HTMLInputElement;
-};
-
-export const getActiveTimer = () => {
-  const timers = getTimers();
-  const activeTimer = timers.find((timer) =>
-    timer.classList.contains('active')
-  );
-  if (!activeTimer) throw new Error('No active timer found');
-  return activeTimer;
 };
 
 export const focusTimer = (index: number) => {

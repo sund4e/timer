@@ -20,6 +20,10 @@ import {
   restoreAudioMock,
   getMockAudioInstance,
 } from '../../tests/audioMock';
+import {
+  mockIntersectionObserver,
+  restoreIntersectionObserver,
+} from '../../tests/interserctionObserverMock';
 
 // --- Mocks ---
 
@@ -51,12 +55,15 @@ describe('timerApp', () => {
   beforeEach(() => {
     setupAudioMock();
     mockTime();
+    mockIntersectionObserver();
     localStorage.clear();
+    Element.prototype.scrollIntoView = jest.fn();
   });
 
   afterEach(() => {
     jest.useRealTimers();
     restoreAudioMock();
+    restoreIntersectionObserver();
     Object.defineProperty(window.navigator, 'userAgent', {
       value: originalUserAgent,
       writable: true,
