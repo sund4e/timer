@@ -152,6 +152,8 @@ const TimerSet = memo(
       if (currentTimerIndex === timers.length - 1) {
         if (restart) {
           setRestartSequence(true);
+        } else {
+          setIsNewTimerSet(true);
         }
         setIsSequenceRunning(false);
       } else {

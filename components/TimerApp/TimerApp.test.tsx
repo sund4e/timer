@@ -269,6 +269,16 @@ describe('timerApp', () => {
       expect(getButton('add')).toBeTruthy();
     });
 
+    it('shows start button after timer done if restart is false', () => {
+      render({ initialTime: 10 });
+      clickButton('start');
+      expect(getButton('start')).toBeFalsy();
+      advanceSeconds(10);
+      expect(getTime()).toEqual('00:00:10');
+      expect(getButton('start')).toBeTruthy();
+      expect(document.activeElement).toBe(getButton('start'));
+    });
+
     describe('resume button', () => {
       it('continues timer', () => {
         render({ initialTime: 20 * 60 });
@@ -633,6 +643,10 @@ describe('timerApp', () => {
     advanceSeconds(9);
     expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
     expect(getMockAudioInstance().play).toHaveBeenCalledTimes(3);
+
+    const startButton = getButton('start');
+    expect(startButton).toBeTruthy();
+    expect(document.activeElement).toBe(startButton);
   });
 
   it('restarts sequence', () => {
