@@ -48,11 +48,23 @@ const Item = styled(motion.div)`
   margin: 0;
 `;
 
+const ControlWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1vh;
+  position: sticky;
+  bottom: 0;
+`;
+
 export type Props = {
   children: React.ReactElement[];
   selectedIndex: number;
   onSelectedIndexChange: (index: number) => void;
   allowScrolling: boolean;
+  controls: React.ReactNode;
 };
 
 type AnimatedItemProps = {
@@ -97,6 +109,7 @@ const ScrollableList = memo(
     selectedIndex,
     onSelectedIndexChange,
     allowScrolling,
+    controls,
   }: Props) => {
     const itemRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const listRef = useRef<HTMLDivElement>(null);
@@ -223,7 +236,7 @@ const ScrollableList = memo(
     }, [selectedIndex, children, fillerHeight, getActiveIndex]);
 
     return (
-      <List ref={listRef} $allowScroll={allowScrolling}>
+      <List ref={listRef} $allowScroll={allowScrolling && children.length > 1}>
         <Filler
           ref={fillerRef}
           style={fillerHeight ? { height: `${fillerHeight}px` } : {}}
@@ -239,6 +252,7 @@ const ScrollableList = memo(
             {child}
           </AnimatedItem>
         ))}
+        {allowScrolling && <ControlWrapper>{controls}</ControlWrapper>}
         <Filler style={fillerHeight ? { height: `${fillerHeight}px` } : {}} />
       </List>
     );

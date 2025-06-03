@@ -35,18 +35,6 @@ const Row = styled.div`
   gap: 10px; /* Space between control buttons */
 `;
 
-const TimerSetControls = styled.div<{
-  $timersLength: number;
-  $currentTimerIndex: number;
-}>`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 1vh;
-`;
-
 export type Props = {
   initialTime: number;
   isActive: boolean;
@@ -273,6 +261,26 @@ const TimerSet = memo(
           selectedIndex={currentTimerIndex}
           onSelectedIndexChange={handleScroll}
           allowScrolling={!isSequenceRunning}
+          controls={
+            <>
+              <Button
+                onClick={addTimer}
+                data-testid="add-button"
+                aria-label="Add timer"
+              >
+                <FaPlus fontSize={'70%'} />
+              </Button>
+              {timers.length > 1 && (
+                <Button
+                  onClick={removeTimer}
+                  data-testid="remove-button"
+                  aria-label="Remove timer"
+                >
+                  <FaTrash fontSize={'70%'} />
+                </Button>
+              )}
+            </>
+          }
         >
           {timers.map((timerConfig, index) => (
             <StyledTimer
@@ -288,29 +296,6 @@ const TimerSet = memo(
             />
           ))}
         </ScrollableList>
-        {!isSequenceRunning && focusIndex !== null && (
-          <TimerSetControls
-            $timersLength={timers.length}
-            $currentTimerIndex={currentTimerIndex}
-          >
-            <Button
-              onClick={addTimer}
-              data-testid="add-button"
-              aria-label="Add timer"
-            >
-              <FaPlus fontSize={'70%'} />
-            </Button>
-            {timers.length > 1 && (
-              <Button
-                onClick={removeTimer}
-                data-testid="remove-button"
-                aria-label="Remove timer"
-              >
-                <FaTrash fontSize={'70%'} />
-              </Button>
-            )}
-          </TimerSetControls>
-        )}
         <Row>
           {isNewTimerSet && (
             <Hidable isHidden={isSequenceRunning}>
