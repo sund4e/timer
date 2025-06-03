@@ -100,7 +100,6 @@ const TimerList = memo(
   }: Props) => {
     const itemRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const listRef = useRef<HTMLDivElement>(null);
-    const userIsManuallyScrolling = useRef(false);
     const automaticScrollIsRunning = useRef(false);
     const listCenterY = useRef(0);
     const [fillerHeight, setFillerHeight] = useState(0);
@@ -112,16 +111,23 @@ const TimerList = memo(
       container: listRef,
     });
 
+    const getActiveIndex = useCallback(() => {
+      if (!listRef.current) {
+        return 0;
+      }
+      const scrollPosition = listRef.current.scrollTop;
+      return Math.round(scrollPosition / inactiveItemHeight.current);
+    }, []);
+
     useEffect(() => {
       const scrollContainer = listRef.current;
       const handleScrollEnd = () => {
-        userIsManuallyScrolling.current = false;
-
+        automaticScrollIsRunning.current = false;
         // Adjust filler height after first scroll so that active timer is centered
-        if (!fillerHeight && fillerRef.current && listRef.current) {
+        if (!fillerHeight && fillerRef.current && scrollContainer) {
           setFillerHeight(
             fillerRef.current?.getBoundingClientRect().height -
-              listRef.current.scrollTop
+              scrollContainer.scrollTop
           );
         }
       };
@@ -133,33 +139,26 @@ const TimerList = memo(
       };
     }, [fillerHeight]);
 
-    const scrollLogic = useCallback(
-      (scrollPosition: number) => {
-        userIsManuallyScrolling.current = true;
+    const scrollLogic = useCallback(() => {
+      if (!listRef.current) {
+        return;
+      }
 
-        if (!listRef.current) {
-          return;
-        }
+      const index = getActiveIndex();
 
-        const index = Math.round(scrollPosition / inactiveItemHeight.current);
-        if (index !== -1 && index !== selectedIndex) {
-          onSelectedIndexChange(index);
-        } else {
-          userIsManuallyScrolling.current = false;
-        }
-      },
-
-      [selectedIndex, onSelectedIndexChange]
-    );
+      if (index !== selectedIndex) {
+        onSelectedIndexChange(index);
+      }
+    }, [selectedIndex, onSelectedIndexChange, getActiveIndex]);
 
     const handleScroll = useMemo(
       () => throttle(scrollLogic, 150),
       [scrollLogic]
     );
 
-    useMotionValueEvent(scrollY, 'change', (scrollPositon: number) => {
+    useMotionValueEvent(scrollY, 'change', () => {
       if (!automaticScrollIsRunning.current) {
-        handleScroll(scrollPositon);
+        handleScroll();
       }
     });
 
@@ -210,29 +209,18 @@ const TimerList = memo(
       }
     }, [selectedIndex, children, fillerHeight]);
 
+    // Scroll to the active item when the selected index changes
     useEffect(() => {
-      const selectedItem = itemRefs.current[selectedIndex]?.current;
-      if (!listRef.current || !itemRefs.current || !selectedItem) {
+      const activeIndex = getActiveIndex();
+      if (activeIndex === selectedIndex) {
         return;
       }
-
-      if (userIsManuallyScrolling.current) {
-        // Scroll was triggered by the user, so we don't need to scroll again
-        return;
-      }
-
-      if (selectedItem) {
-        automaticScrollIsRunning.current = true;
-        selectedItem.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-        const timeout = setTimeout(() => {
-          automaticScrollIsRunning.current = false;
-        }, 1000);
-        return () => clearTimeout(timeout);
-      }
-    }, [selectedIndex, children, fillerHeight]);
+      automaticScrollIsRunning.current = true;
+      itemRefs.current[selectedIndex]?.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }, [selectedIndex, children, fillerHeight, getActiveIndex]);
 
     return (
       <TimersList ref={listRef} $allowScroll={allowScrolling}>
