@@ -16,6 +16,7 @@ import {
   useMotionValueEvent,
 } from 'motion/react';
 import { throttle, DebouncedFunc } from 'lodash';
+import Hidable from '../Hidable/Hidable';
 
 const activeItemScale = 1.75;
 
@@ -48,7 +49,7 @@ const Item = styled(motion.div)`
   margin: 0;
 `;
 
-const ControlWrapper = styled.div`
+const ControlWrapper = styled(Hidable)`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -252,7 +253,7 @@ const ScrollableList = memo(
             {child}
           </AnimatedItem>
         ))}
-        {allowScrolling && <ControlWrapper>{controls}</ControlWrapper>}
+        {<ControlWrapper isHidden={!allowScrolling}>{controls}</ControlWrapper>}
         <Filler style={fillerHeight ? { height: `${fillerHeight}px` } : {}} />
       </List>
     );
