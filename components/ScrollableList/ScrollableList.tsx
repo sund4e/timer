@@ -126,7 +126,7 @@ const ScrollableList = memo(
     });
 
     const getActiveIndex = useCallback(() => {
-      if (!listRef.current) {
+      if (!listRef.current || !inactiveItemHeight.current) {
         return 0;
       }
       const scrollPosition = listRef.current.scrollTop;
@@ -237,7 +237,11 @@ const ScrollableList = memo(
     }, [selectedIndex, children, fillerHeight, getActiveIndex]);
 
     return (
-      <List ref={listRef} $allowScroll={allowScrolling && children.length > 1}>
+      <List
+        ref={listRef}
+        $allowScroll={allowScrolling && children.length > 1}
+        data-testid="scrollable-list"
+      >
         <Filler
           ref={fillerRef}
           style={fillerHeight ? { height: `${fillerHeight}px` } : {}}
