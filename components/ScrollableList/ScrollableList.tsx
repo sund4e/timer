@@ -126,7 +126,7 @@ const ScrollableList = memo(
     });
 
     const getActiveIndex = useCallback(() => {
-      if (!listRef.current || !inactiveItemHeight.current) {
+      if (!listRef.current || itemRefs.current.length <= 1) {
         return 0;
       }
       const scrollPosition = listRef.current.scrollTop;
@@ -226,7 +226,8 @@ const ScrollableList = memo(
     // Scroll to the active item when the selected index changes
     useEffect(() => {
       const activeIndex = getActiveIndex();
-      if (activeIndex === selectedIndex) {
+      // If filler height is not set we need to scroll to correctly set the filler height
+      if (activeIndex === selectedIndex && fillerHeight) {
         return;
       }
       automaticScrollIsRunning.current = true;

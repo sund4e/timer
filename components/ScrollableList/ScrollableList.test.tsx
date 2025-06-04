@@ -25,7 +25,15 @@ const mockGetBoundingClientRect = jest.fn(() => ({
   right: 100,
   toJSON: () => ({}),
 }));
-const scrollIntoView = jest.fn();
+const scrollIntoView = jest.fn().mockImplementation(function (this: Element) {
+  const scrollContainer = this.closest('[data-testid="scrollable-list"]');
+  if (scrollContainer) {
+    act(() => {
+      // Dispatch scrollend event to the scroll container
+      scrollContainer.dispatchEvent(new Event('scrollend'));
+    });
+  }
+});
 const mockScrollYGet = jest.fn();
 let motionValueEventCallback: ((latest: number) => void) | null = null;
 
@@ -140,6 +148,25 @@ describe('ScrollableList', () => {
     ).toBeNull();
   });
 
+  it('centers only item', () => {
+    renderScrollableList({
+      children: [
+        <div key={1} data-testid={'timer'}>
+          Timer
+        </div>,
+      ],
+    });
+    const expectedElement = screen.getByTestId('timer');
+
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    expect(scrollIntoView.mock.calls[0]).toStrictEqual([
+      { behavior: 'smooth', block: 'center' },
+    ]);
+    expect(scrollIntoView.mock.instances[0]).toBe(
+      expectedElement.parentElement
+    );
+  });
+
   it('centers selected item', () => {
     renderScrollableList({ selectedIndex: 1 });
     const expectedElement = getTimer(1);
@@ -179,7 +206,7 @@ describe('ScrollableList', () => {
     scroll(itemHeight / 2 - 1);
     expect(onSelectedIndexChange).not.toHaveBeenCalled();
 
-    scroll(itemHeight / 2 + 1);
+    scroll(itemHeight / 2);
     expect(onSelectedIndexChange).toHaveBeenCalledWith(1);
   });
 });
