@@ -7,13 +7,10 @@ import {
 } from '../../tests/interserctionObserverMock'; // Assuming path
 import React from 'react'; // Standard React import for types and potentially JSX
 
-// Mock Framer Motion hooks and components
-// const mockScrollYGet = jest.fn();
-// const mockScrollYSet = jest.fn(); // If you need to set scrollY for testing programmatic scroll
-// let motionValueEventCallback: ((latest: number) => void) | null = null;
-
 // Default mock for item heights, can be overridden in tests
 const itemHeight = 50;
+const fillerHeight = 100;
+const initialScrollTop = 10; // Scroll position after centering the first item & before updating filler height
 const mockGetBoundingClientRect = jest.fn(() => ({
   height: itemHeight,
   top: 0,
@@ -25,15 +22,7 @@ const mockGetBoundingClientRect = jest.fn(() => ({
   right: 100,
   toJSON: () => ({}),
 }));
-const scrollIntoView = jest.fn().mockImplementation(function (this: Element) {
-  const scrollContainer = this.closest('[data-testid="scrollable-list"]');
-  if (scrollContainer) {
-    act(() => {
-      // Dispatch scrollend event to the scroll container
-      scrollContainer.dispatchEvent(new Event('scrollend'));
-    });
-  }
-});
+const scrollIntoView = jest.fn();
 const mockScrollYGet = jest.fn();
 let motionValueEventCallback: ((latest: number) => void) | null = null;
 
@@ -92,6 +81,17 @@ const renderScrollableList = (overrides?: Partial<ScrollableListProps>) => {
   };
 
   const rendered = render(<ScrollableList {...props} />);
+
+  jest
+    .spyOn(screen.getByTestId('filler'), 'getBoundingClientRect')
+    .mockReturnValue({
+      height: fillerHeight,
+    } as DOMRect);
+  screen.getByTestId('scrollable-list').scrollTop = initialScrollTop;
+  act(() => {
+    jest.runAllTimers(); // trigger debounce
+  });
+
   return {
     ...rendered,
     rerender: (newProps?: Partial<ScrollableListProps>) =>
@@ -127,14 +127,10 @@ describe('ScrollableList', () => {
   });
 
   it('renders its children', () => {
-    try {
-      renderScrollableList();
-      expect(screen.getByText('Timer 1')).toBeInTheDocument();
-      expect(screen.getByText('Timer 2')).toBeInTheDocument();
-      expect(screen.getByText('Timer 3')).toBeInTheDocument();
-    } catch (error) {
-      console.error(error);
-    }
+    renderScrollableList();
+    expect(screen.getByText('Timer 1')).toBeInTheDocument();
+    expect(screen.getByText('Timer 2')).toBeInTheDocument();
+    expect(screen.getByText('Timer 3')).toBeInTheDocument();
   });
 
   it('applies active-timer data-testid to the selected item', () => {
@@ -171,12 +167,20 @@ describe('ScrollableList', () => {
     renderScrollableList({ selectedIndex: 1 });
     const expectedElement = getTimer(1);
 
-    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    expect(scrollIntoView).toHaveBeenCalledTimes(2); // One for the intial render and one after updating filler height
     expect(scrollIntoView.mock.calls[0]).toStrictEqual([
       { behavior: 'smooth', block: 'center' },
     ]);
     expect(scrollIntoView.mock.instances[0]).toBe(
       expectedElement.parentElement
+    );
+  });
+
+  it('calculates filler height so that the selected item is centered', () => {
+    renderScrollableList({ selectedIndex: 0 });
+    const filler = screen.getByTestId('filler');
+    expect(filler).toHaveStyle(
+      `height: ${filler.getBoundingClientRect().height - initialScrollTop}px`
     );
   });
 
@@ -203,10 +207,24 @@ describe('ScrollableList', () => {
       onSelectedIndexChange,
     });
 
-    scroll(itemHeight / 2 - 1);
+    scroll(itemHeight - 1);
     expect(onSelectedIndexChange).not.toHaveBeenCalled();
 
-    scroll(itemHeight / 2);
+    scroll(itemHeight);
     expect(onSelectedIndexChange).toHaveBeenCalledWith(1);
+  });
+
+  it('hanldes over/under scroll on ios', () => {
+    const onSelectedIndexChange = jest.fn();
+    renderScrollableList({
+      selectedIndex: 0,
+      onSelectedIndexChange,
+    });
+
+    scroll(-1);
+    expect(onSelectedIndexChange).not.toHaveBeenCalled();
+
+    scroll(itemHeight * 3 + 1);
+    expect(onSelectedIndexChange).toHaveBeenCalledWith(2);
   });
 });

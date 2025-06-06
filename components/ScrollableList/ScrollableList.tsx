@@ -15,7 +15,7 @@ import {
   useScroll,
   useMotionValueEvent,
 } from 'motion/react';
-import { throttle, DebouncedFunc } from 'lodash';
+import { throttle, debounce, clamp } from 'lodash';
 import Hidable from '../Hidable/Hidable';
 
 const activeItemScale = 1.75;
@@ -115,7 +115,6 @@ const ScrollableList = memo(
     const itemRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const listRef = useRef<HTMLDivElement>(null);
     const automaticScrollIsRunning = useRef(false);
-    const listCenterY = useRef(0);
     const [fillerHeight, setFillerHeight] = useState(0);
     const fillerRef = useRef<HTMLDivElement>(null);
     const inactiveItemHeight = useRef(0);
@@ -130,36 +129,19 @@ const ScrollableList = memo(
         return 0;
       }
       const scrollPosition = listRef.current.scrollTop;
-      return Math.round(scrollPosition / inactiveItemHeight.current);
+      const activeIndex = Math.round(
+        scrollPosition / inactiveItemHeight.current
+      );
+      // On ios the scroll position may go a bit over or under the list boundaries
+      const boundedIndex = clamp(activeIndex, 0, itemRefs.current.length - 1);
+      return boundedIndex;
     }, []);
-
-    useEffect(() => {
-      const scrollContainer = listRef.current;
-      const handleScrollEnd = () => {
-        automaticScrollIsRunning.current = false;
-        // Adjust filler height after first scroll so that active timer is centered
-        if (!fillerHeight && fillerRef.current && scrollContainer) {
-          setFillerHeight(
-            fillerRef.current?.getBoundingClientRect().height -
-              scrollContainer.scrollTop
-          );
-        }
-      };
-
-      scrollContainer?.addEventListener('scrollend', handleScrollEnd);
-
-      return () => {
-        scrollContainer?.removeEventListener('scrollend', handleScrollEnd);
-      };
-    }, [fillerHeight]);
 
     const scrollLogic = useCallback(() => {
       if (!listRef.current) {
         return;
       }
-
       const index = getActiveIndex();
-
       if (index !== selectedIndex) {
         onSelectedIndexChange(index);
       }
@@ -183,30 +165,6 @@ const ScrollableList = memo(
       );
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const updateListCenter = useCallback(
-      throttle(() => {
-        if (listRef.current) {
-          const rect = listRef.current.getBoundingClientRect();
-          listCenterY.current = rect.top + rect.height / 2;
-        }
-      }, 100),
-      []
-    ) as DebouncedFunc<() => void>;
-
-    useLayoutEffect(() => {
-      updateListCenter(); // Initial calculation
-
-      window.addEventListener('resize', updateListCenter);
-      window.addEventListener('orientationchange', updateListCenter);
-
-      return () => {
-        window.removeEventListener('resize', updateListCenter);
-        window.removeEventListener('orientationchange', updateListCenter);
-        updateListCenter.cancel();
-      };
-    }, [updateListCenter]);
-
     useLayoutEffect(() => {
       if (
         itemRefs.current.length > 1 &&
@@ -223,6 +181,21 @@ const ScrollableList = memo(
       }
     }, [selectedIndex, children, fillerHeight]);
 
+    const debouncedScrollEnd = useMemo(
+      () =>
+        debounce(() => {
+          automaticScrollIsRunning.current = false;
+          const scrollContainer = listRef.current;
+          if (!fillerHeight && fillerRef.current && scrollContainer) {
+            setFillerHeight(
+              fillerRef.current?.getBoundingClientRect().height -
+                scrollContainer.scrollTop
+            );
+          }
+        }, 500),
+      [fillerHeight]
+    );
+
     // Scroll to the active item when the selected index changes
     useEffect(() => {
       const activeIndex = getActiveIndex();
@@ -235,7 +208,14 @@ const ScrollableList = memo(
         behavior: 'smooth',
         block: 'center',
       });
-    }, [selectedIndex, children, fillerHeight, getActiveIndex]);
+      debouncedScrollEnd();
+    }, [
+      selectedIndex,
+      children,
+      fillerHeight,
+      getActiveIndex,
+      debouncedScrollEnd,
+    ]);
 
     return (
       <List
@@ -246,6 +226,7 @@ const ScrollableList = memo(
         <Filler
           ref={fillerRef}
           style={fillerHeight ? { height: `${fillerHeight}px` } : {}}
+          data-testid="filler"
         />
         {children.map((child, index) => (
           <AnimatedItem
