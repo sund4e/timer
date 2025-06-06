@@ -98,6 +98,7 @@ const AnimatedItem = ({
         maxHeight: { duration: 0.3 },
       }}
       data-testid={active ? 'active-timer' : ''}
+      layout
     >
       {children}
     </Item>
@@ -118,14 +119,22 @@ const ScrollableList = memo(
     const [fillerHeight, setFillerHeight] = useState(0);
     const fillerRef = useRef<HTMLDivElement>(null);
     const inactiveItemHeight = useRef(0);
-    const activeItemHeight = useRef(0);
+    const selectedIndexRef = useRef(selectedIndex);
+
+    useEffect(() => {
+      selectedIndexRef.current = selectedIndex;
+    }, [selectedIndex]);
 
     const { scrollY } = useScroll({
       container: listRef,
     });
 
     const getActiveIndex = useCallback(() => {
-      if (!listRef.current || itemRefs.current.length <= 1) {
+      if (
+        !listRef.current ||
+        itemRefs.current.length <= 1 ||
+        !inactiveItemHeight.current
+      ) {
         return 0;
       }
       const scrollPosition = listRef.current.scrollTop;
@@ -165,57 +174,80 @@ const ScrollableList = memo(
       );
     }
 
-    useLayoutEffect(() => {
-      if (
-        itemRefs.current.length > 1 &&
-        !activeItemHeight.current &&
-        !inactiveItemHeight.current
-      ) {
-        let inactiveItemIndex = selectedIndex === 0 ? 1 : 0;
-        activeItemHeight.current =
-          itemRefs.current[selectedIndex]?.current?.getBoundingClientRect()
-            .height || 0;
+    const updateItemHeight = useCallback(() => {
+      if (itemRefs.current.length > 1) {
+        let inactiveItemIndex = selectedIndexRef.current === 0 ? 1 : 0;
         inactiveItemHeight.current =
           itemRefs.current[inactiveItemIndex]?.current?.getBoundingClientRect()
             .height || 0;
       }
-    }, [selectedIndex, children, fillerHeight]);
+    }, []);
+
+    const updateFillerHeight = useCallback(() => {
+      const scrollContainer = listRef.current;
+      const selectedIndex = selectedIndexRef.current;
+      if (fillerRef.current && scrollContainer) {
+        setFillerHeight(
+          fillerRef.current?.getBoundingClientRect().height -
+            scrollContainer.scrollTop +
+            selectedIndex * inactiveItemHeight.current
+        );
+      }
+    }, []);
+
+    useLayoutEffect(() => {
+      if (!inactiveItemHeight.current) {
+        updateItemHeight();
+      }
+    }, [updateItemHeight, children.length]);
 
     const debouncedScrollEnd = useMemo(
       () =>
         debounce(() => {
           automaticScrollIsRunning.current = false;
-          const scrollContainer = listRef.current;
-          if (!fillerHeight && fillerRef.current && scrollContainer) {
-            setFillerHeight(
-              fillerRef.current?.getBoundingClientRect().height -
-                scrollContainer.scrollTop
-            );
+          if (!fillerHeight) {
+            updateFillerHeight();
           }
         }, 500),
-      [fillerHeight]
+      [updateFillerHeight, fillerHeight]
     );
 
-    // Scroll to the active item when the selected index changes
-    useEffect(() => {
-      const activeIndex = getActiveIndex();
-      // If filler height is not set we need to scroll to correctly set the filler height
-      if (activeIndex === selectedIndex && fillerHeight) {
-        return;
-      }
+    const centerList = useCallback(() => {
       automaticScrollIsRunning.current = true;
-      itemRefs.current[selectedIndex]?.current?.scrollIntoView({
+      itemRefs.current[selectedIndexRef.current]?.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
       });
       debouncedScrollEnd();
-    }, [
-      selectedIndex,
-      children,
-      fillerHeight,
-      getActiveIndex,
-      debouncedScrollEnd,
-    ]);
+    }, [debouncedScrollEnd]);
+
+    const updateLayoutMeasures = useCallback(() => {
+      console.log('updating layout measures');
+      updateItemHeight();
+      centerList();
+    }, [updateItemHeight, centerList]);
+
+    useLayoutEffect(() => {
+      updateItemHeight(); // Initial calculation
+
+      window.addEventListener('resize', updateLayoutMeasures);
+      window.addEventListener('orientationchange', updateLayoutMeasures);
+
+      return () => {
+        window.removeEventListener('resize', updateLayoutMeasures);
+        window.removeEventListener('orientationchange', updateLayoutMeasures);
+      };
+    }, [updateLayoutMeasures, updateItemHeight]);
+
+    // Scroll to the active item when the selected index changes
+    useEffect(() => {
+      // Do not scroll if the active index is the same as the selected index (user is already scrolling)
+      const activeIndex = getActiveIndex();
+      if (activeIndex === selectedIndex) {
+        return;
+      }
+      centerList();
+    }, [selectedIndex, getActiveIndex, centerList]);
 
     return (
       <List
