@@ -124,6 +124,22 @@ const ScrollableList = memo(
     const controWrapperRef = useRef<HTMLDivElement>(null);
     const inactiveItemHeight = useRef(0);
     const selectedIndexRef = useRef(selectedIndex);
+    const recalculateFillerHeights = useRef(false);
+
+    useEffect(() => {
+      const listElement = listRef.current;
+      if (!listElement) return;
+
+      const observer = new ResizeObserver(() => {
+        recalculateFillerHeights.current = true;
+        updateFillerHeights();
+      });
+      observer.observe(listElement);
+
+      return () => {
+        observer.unobserve(listElement);
+      };
+    }, []);
 
     useEffect(() => {
       selectedIndexRef.current = selectedIndex;
@@ -184,6 +200,10 @@ const ScrollableList = memo(
     }
 
     const updateFillerHeights = useCallback(() => {
+      if (!recalculateFillerHeights.current) {
+        return;
+      }
+
       const scrollContainer = listRef.current;
       if (fillerRef.current && scrollContainer) {
         const containerCenter =
@@ -197,6 +217,8 @@ const ScrollableList = memo(
           topFillerHeight -
             (controWrapperRef.current?.getBoundingClientRect().height || 0)
         );
+
+        recalculateFillerHeights.current = false;
       }
     }, []);
 
