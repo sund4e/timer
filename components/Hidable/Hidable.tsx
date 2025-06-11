@@ -4,6 +4,7 @@ import React from 'react';
 export type Props = {
   children: React.ReactNode;
   isHidden?: boolean;
+  ref?: React.RefObject<HTMLDivElement | null>;
 } & React.ButtonHTMLAttributes<HTMLDivElement>;
 
 const StyledDiv = styled.div<{ $isHidden?: boolean }>`
