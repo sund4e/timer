@@ -58,6 +58,11 @@ describe('timerApp', () => {
     mockIntersectionObserver();
     localStorage.clear();
     Element.prototype.scrollIntoView = jest.fn();
+    global.ResizeObserver = jest.fn(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn(),
+    }));
   });
 
   afterEach(() => {

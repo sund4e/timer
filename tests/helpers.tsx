@@ -17,7 +17,7 @@ export const getTimers = () => {
 };
 
 export const getActiveTimer = () => {
-  const activeTimer = screen.getByTestId('active-timer').children[0];
+  const activeTimer = screen.getByTestId('active-list-item').children[0];
   if (!activeTimer) throw new Error('No active timer found');
   return activeTimer as HTMLElement;
 };

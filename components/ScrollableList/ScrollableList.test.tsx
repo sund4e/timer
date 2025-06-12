@@ -1,30 +1,33 @@
 import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import ScrollableList, { Props as ScrollableListProps } from './ScrollableList';
+import ScrollableList, {
+  activeItemScale,
+  Props as ScrollableListProps,
+} from './ScrollableList';
 import {
   mockIntersectionObserver,
   restoreIntersectionObserver,
 } from '../../tests/interserctionObserverMock'; // Assuming path
 import React from 'react'; // Standard React import for types and potentially JSX
 
-// Default mock for item heights, can be overridden in tests
 const itemHeight = 50;
-const fillerHeight = 100;
-const initialScrollTop = 10; // Scroll position after centering the first item & before updating filler height
-const mockGetBoundingClientRect = jest.fn(() => ({
-  height: itemHeight,
-  top: 0,
-  bottom: itemHeight,
-  y: 0,
-  x: 0,
-  width: 100,
-  left: 0,
-  right: 100,
-  toJSON: () => ({}),
-}));
+const fillerInitialHeight = 100;
+const containerHeight = 500;
+const mockGetBoundingClientRect = jest.fn(function (this: HTMLElement) {
+  const testId = this.getAttribute('data-testid');
+  switch (testId) {
+    case 'scrollable-list':
+      return { height: containerHeight } as DOMRect;
+    case 'filler':
+      return { height: fillerInitialHeight } as DOMRect;
+    default:
+      return { height: itemHeight } as DOMRect;
+  }
+});
 const scrollIntoView = jest.fn();
 const mockScrollYGet = jest.fn();
 let motionValueEventCallback: ((latest: number) => void) | null = null;
+let resizeObserverCallback: ResizeObserverCallback;
 
 const scroll = (scrollPostion: number) => {
   if (motionValueEventCallback) {
@@ -82,12 +85,12 @@ const renderScrollableList = (overrides?: Partial<ScrollableListProps>) => {
 
   const rendered = render(<ScrollableList {...props} />);
 
-  jest
-    .spyOn(screen.getByTestId('filler'), 'getBoundingClientRect')
-    .mockReturnValue({
-      height: fillerHeight,
-    } as DOMRect);
-  screen.getByTestId('scrollable-list').scrollTop = initialScrollTop;
+  if (resizeObserverCallback) {
+    act(() => {
+      resizeObserverCallback([], {} as ResizeObserver);
+    });
+  }
+
   act(() => {
     jest.runAllTimers(); // trigger debounce
   });
@@ -105,13 +108,20 @@ const getTimer = (index: number) => {
 
 describe('ScrollableList', () => {
   const originalScrollIntoView = Element.prototype.scrollIntoView;
-  // let mockListRefCurrent: HTMLDivElement | null = null;
 
   beforeEach(() => {
     jest.useFakeTimers();
     mockIntersectionObserver();
     Element.prototype.scrollIntoView = scrollIntoView;
     Element.prototype.getBoundingClientRect = mockGetBoundingClientRect; // Global mock for all elements
+    global.ResizeObserver = jest.fn((callback) => {
+      resizeObserverCallback = callback;
+      return {
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+        disconnect: jest.fn(),
+      };
+    });
   });
 
   afterEach(() => {
@@ -122,7 +132,7 @@ describe('ScrollableList', () => {
     } else {
       delete (Element.prototype as any).scrollIntoView;
     }
-    delete (Element.prototype as any).getBoundingClientRect; // Clean up global mock
+    delete (Element.prototype as any).getBoundingClientRect;
     jest.clearAllMocks();
   });
 
@@ -135,16 +145,17 @@ describe('ScrollableList', () => {
 
   it('applies active-timer data-testid to the selected item', () => {
     renderScrollableList({ selectedIndex: 1 });
+    const activeItemTestId = 'active-list-item';
     const activeTimerParent = screen
       .getByText('Timer 2')
-      .closest('[data-testid="active-timer"]');
+      .closest(`[data-testid="${activeItemTestId}"]`);
     expect(activeTimerParent).toBeInTheDocument();
     expect(
-      screen.getByText('Timer 1').closest('[data-testid="active-timer"]')
+      screen.getByText('Timer 1').closest(`[data-testid="${activeItemTestId}"]`)
     ).toBeNull();
   });
 
-  it('centers only item', () => {
+  it('does not scroll if only one item', () => {
     renderScrollableList({
       children: [
         <div key={1} data-testid={'timer'}>
@@ -152,7 +163,12 @@ describe('ScrollableList', () => {
         </div>,
       ],
     });
-    const expectedElement = screen.getByTestId('timer');
+    expect(scrollIntoView).not.toHaveBeenCalled();
+  });
+
+  it('centers selected item', () => {
+    renderScrollableList({ selectedIndex: 1 });
+    const expectedElement = getTimer(1);
 
     expect(scrollIntoView).toHaveBeenCalledTimes(1);
     expect(scrollIntoView.mock.calls[0]).toStrictEqual([
@@ -163,25 +179,12 @@ describe('ScrollableList', () => {
     );
   });
 
-  it('centers selected item', () => {
-    renderScrollableList({ selectedIndex: 1 });
-    const expectedElement = getTimer(1);
-
-    expect(scrollIntoView).toHaveBeenCalledTimes(2); // One for the intial render and one after updating filler height
-    expect(scrollIntoView.mock.calls[0]).toStrictEqual([
-      { behavior: 'smooth', block: 'center' },
-    ]);
-    expect(scrollIntoView.mock.instances[0]).toBe(
-      expectedElement.parentElement
-    );
-  });
-
   it('calculates filler height so that the selected item is centered', () => {
     renderScrollableList({ selectedIndex: 0 });
-    const filler = screen.getByTestId('filler');
-    expect(filler).toHaveStyle(
-      `height: ${filler.getBoundingClientRect().height - initialScrollTop}px`
-    );
+    const fillerHeight = parseFloat(screen.getByTestId('filler').style.height);
+    const expectedHeight =
+      containerHeight / 2 - itemHeight / activeItemScale / 2;
+    expect(fillerHeight).toBe(expectedHeight);
   });
 
   it('scrolls to the correct item when selectedIndex prop changes', () => {
@@ -207,10 +210,10 @@ describe('ScrollableList', () => {
       onSelectedIndexChange,
     });
 
-    scroll(itemHeight - 1);
+    scroll(itemHeight / 2 - 1);
     expect(onSelectedIndexChange).not.toHaveBeenCalled();
 
-    scroll(itemHeight);
+    scroll(itemHeight / 2);
     expect(onSelectedIndexChange).toHaveBeenCalledWith(1);
   });
 

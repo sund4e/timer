@@ -18,7 +18,7 @@ import {
 import { throttle, debounce, clamp } from 'lodash';
 import Hidable from '../Hidable/Hidable';
 
-const activeItemScale = 1.75;
+export const activeItemScale = 1.75;
 
 const List = styled.div<{ $allowScroll: boolean }>`
   display: flex;
@@ -98,7 +98,7 @@ const AnimatedItem = ({
         scale: { duration: 0.3 },
         maxHeight: { duration: 0.3 },
       }}
-      data-testid={active ? 'active-timer' : ''}
+      data-testid={active ? 'active-list-item' : 'list-item'}
       {...rest}
       layout
     >
