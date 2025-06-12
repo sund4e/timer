@@ -230,4 +230,31 @@ describe('ScrollableList', () => {
     scroll(itemHeight * 3 + 1);
     expect(onSelectedIndexChange).toHaveBeenCalledWith(2);
   });
+
+  it('recalculates filler height on window resize', () => {
+    renderScrollableList({ selectedIndex: 0 });
+
+    const newContainerHeight = 600;
+    mockGetBoundingClientRect.mockImplementation(function (this: HTMLElement) {
+      const testId = this.getAttribute('data-testid');
+      switch (testId) {
+        case 'scrollable-list':
+          return { height: newContainerHeight } as DOMRect;
+        case 'filler':
+          return { height: fillerInitialHeight } as DOMRect;
+        default:
+          return { height: itemHeight } as DOMRect;
+      }
+    });
+
+    // Simulate resize
+    act(() => {
+      resizeObserverCallback([], {} as ResizeObserver);
+    });
+
+    const filler = screen.getByTestId('filler');
+    const newExpectedHeight =
+      newContainerHeight / 2 - itemHeight / activeItemScale / 2;
+    expect(parseFloat(filler.style.height)).toBe(newExpectedHeight);
+  });
 });
