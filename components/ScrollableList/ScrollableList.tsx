@@ -123,16 +123,16 @@ const ScrollableList = memo(
     const fillerRef = useRef<HTMLDivElement>(null);
     const controWrapperRef = useRef<HTMLDivElement>(null);
     const inactiveItemHeight = useRef(0);
+    const activeItemHeight = useRef(0);
     const selectedIndexRef = useRef(selectedIndex);
-    const recalculateFillerHeights = useRef(false);
+    const recalculateLayoutHeights = useRef(false);
 
     useEffect(() => {
       const listElement = listRef.current;
       if (!listElement) return;
 
       const observer = new ResizeObserver(() => {
-        recalculateFillerHeights.current = true;
-        updateFillerHeights();
+        recalculateLayoutHeights.current = true;
       });
       observer.observe(listElement);
 
@@ -154,16 +154,10 @@ const ScrollableList = memo(
         return 0;
       }
 
-      if (!inactiveItemHeight.current) {
-        const inactiveIndex = selectedIndexRef.current === 0 ? 1 : 0;
-        inactiveItemHeight.current =
-          itemRefs.current[
-            inactiveIndex
-          ].current.getBoundingClientRect().height;
-      }
+      const scrollPosition =
+        listRef.current.scrollTop + activeItemHeight.current / 2;
 
-      const scrollPosition = listRef.current.scrollTop;
-      const activeIndex = Math.round(
+      const activeIndex = Math.floor(
         scrollPosition / inactiveItemHeight.current
       );
       // On ios the scroll position may go a bit over or under the list boundaries
@@ -199,26 +193,30 @@ const ScrollableList = memo(
       );
     }
 
-    const updateFillerHeights = useCallback(() => {
-      if (!recalculateFillerHeights.current) {
+    const updateLayoutHeights = useCallback(() => {
+      if (!recalculateLayoutHeights.current) {
         return;
       }
 
       const scrollContainer = listRef.current;
       if (fillerRef.current && scrollContainer) {
+        activeItemHeight.current =
+          itemRefs.current[
+            selectedIndexRef.current
+          ]?.current?.getBoundingClientRect().height;
+        inactiveItemHeight.current = activeItemHeight.current / activeItemScale;
+
         const containerCenter =
           scrollContainer.getBoundingClientRect().height / 2;
-        const activeItem = itemRefs.current[selectedIndexRef.current]?.current;
-        const inactiveItemHeight =
-          activeItem.getBoundingClientRect().height / activeItemScale;
-        const topFillerHeight = containerCenter - inactiveItemHeight / 2;
+        const topFillerHeight =
+          containerCenter - inactiveItemHeight.current / 2;
         setFillerHeight(topFillerHeight);
         setBottomFillerHeight(
           topFillerHeight -
             (controWrapperRef.current?.getBoundingClientRect().height || 0)
         );
 
-        recalculateFillerHeights.current = false;
+        recalculateLayoutHeights.current = false;
       }
     }, []);
 
@@ -267,7 +265,7 @@ const ScrollableList = memo(
             ref={itemRefs.current[index]}
             index={index}
             active={index === selectedIndex}
-            onAnimationComplete={updateFillerHeights}
+            onAnimationComplete={updateLayoutHeights}
           >
             {child}
           </AnimatedItem>
