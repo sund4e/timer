@@ -122,8 +122,6 @@ const ScrollableList = memo(
     const [bottomFillerHeight, setBottomFillerHeight] = useState(0);
     const fillerRef = useRef<HTMLDivElement>(null);
     const controWrapperRef = useRef<HTMLDivElement>(null);
-    const inactiveItemHeight = useRef(0);
-    const activeItemHeight = useRef(0);
     const selectedIndexRef = useRef(selectedIndex);
     const recalculateLayoutHeights = useRef(false);
 
@@ -214,20 +212,13 @@ const ScrollableList = memo(
 
       const scrollContainer = listRef.current;
       if (fillerRef.current && scrollContainer) {
-        activeItemHeight.current =
-          itemRefs.current[
-            selectedIndexRef.current
-          ]?.current?.getBoundingClientRect().height;
-        inactiveItemHeight.current = activeItemHeight.current / activeItemScale;
-
-        const containerCenter =
-          scrollContainer.getBoundingClientRect().height / 2;
-        const topFillerHeight =
-          containerCenter - inactiveItemHeight.current / 2;
+        const activeItemHeight =
+          itemRefs.current[selectedIndexRef.current]?.current?.clientHeight;
+        const containerCenter = scrollContainer.clientHeight / 2;
+        const topFillerHeight = containerCenter - activeItemHeight / 2;
         setFillerHeight(topFillerHeight);
         setBottomFillerHeight(
-          topFillerHeight -
-            (controWrapperRef.current?.getBoundingClientRect().height || 0)
+          topFillerHeight - (controWrapperRef.current?.clientHeight || 0)
         );
 
         recalculateLayoutHeights.current = false;

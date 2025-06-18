@@ -14,25 +14,36 @@ const itemHeight = 50;
 const activeItemHeight = itemHeight * activeItemScale;
 const fillerInitialHeight = 100;
 const containerHeight = 500;
-const mockGetBoundingClientRect = jest.fn(function (this: HTMLElement) {
-  const testId = this.getAttribute('data-testid');
-  switch (testId) {
-    case 'scrollable-list':
-      return { height: containerHeight } as DOMRect;
-    case 'filler':
-      return { height: fillerInitialHeight } as DOMRect;
-    case 'active-list-item':
-      return { height: activeItemHeight } as DOMRect;
-    default:
-      return { height: itemHeight } as DOMRect;
-  }
-});
+
 const scrollIntoView = jest.fn();
 const mockScrollYGet = jest.fn();
 let motionValueEventCallback: ((latest: number) => void) | null = null;
 let resizeObserverCallback: ResizeObserverCallback;
 let onAnimationCompleteCallback: (() => void) | null = null;
 let clientHeightSpy: jest.SpyInstance;
+
+const mockElementHeights = (
+  containerHeight: number,
+  fillerInitialHeight: number,
+  activeItemHeight: number,
+  itemHeight: number
+) => {
+  clientHeightSpy.mockImplementation(function (this: HTMLElement) {
+    if (this.matches('[data-testid="scrollable-list"]')) {
+      return containerHeight;
+    }
+    if (this.matches('[data-testid="filler"]')) {
+      return fillerInitialHeight;
+    }
+    if (this.matches('[data-testid="active-list-item"]')) {
+      return activeItemHeight;
+    }
+    if (this.matches('[data-testid="list-item"]')) {
+      return itemHeight;
+    }
+    return 0;
+  });
+};
 
 const scroll = (scrollPostion: number) => {
   if (motionValueEventCallback) {
@@ -104,21 +115,12 @@ const renderScrollableList = (overrides?: Partial<ScrollableListProps>) => {
     ...(overrides ? overrides : {}),
   };
 
-  clientHeightSpy.mockImplementation(function (this: HTMLElement) {
-    if (this.matches('[data-testid="scrollable-list"]')) {
-      return containerHeight;
-    }
-    if (this.matches('[data-testid="filler"]')) {
-      return fillerInitialHeight;
-    }
-    if (this.matches('[data-testid="active-list-item"]')) {
-      return activeItemHeight;
-    }
-    if (this.matches('[data-testid="list-item"]')) {
-      return itemHeight;
-    }
-    return 0;
-  });
+  mockElementHeights(
+    containerHeight,
+    fillerInitialHeight,
+    activeItemHeight,
+    itemHeight
+  );
 
   const rendered = render(<ScrollableList {...props} />);
 
@@ -152,7 +154,6 @@ describe('ScrollableList', () => {
     jest.useFakeTimers();
     mockIntersectionObserver();
     Element.prototype.scrollIntoView = scrollIntoView;
-    Element.prototype.getBoundingClientRect = mockGetBoundingClientRect; // Global mock for all elements
     clientHeightSpy = jest.spyOn(HTMLElement.prototype, 'clientHeight', 'get');
     global.ResizeObserver = jest.fn((callback) => {
       resizeObserverCallback = callback;
@@ -172,7 +173,6 @@ describe('ScrollableList', () => {
     } else {
       delete (Element.prototype as any).scrollIntoView;
     }
-    delete (Element.prototype as any).getBoundingClientRect;
     clientHeightSpy.mockRestore();
     jest.clearAllMocks();
   });
@@ -223,8 +223,7 @@ describe('ScrollableList', () => {
   it('calculates filler height so that the selected item is centered', () => {
     renderScrollableList({ selectedIndex: 0 });
     const fillerHeight = parseFloat(screen.getByTestId('filler').style.height);
-    const expectedHeight =
-      containerHeight / 2 - itemHeight / activeItemScale / 2;
+    const expectedHeight = containerHeight / 2 - activeItemHeight / 2;
     expect(fillerHeight).toBe(expectedHeight);
   });
 
@@ -248,26 +247,20 @@ describe('ScrollableList', () => {
     renderScrollableList({ selectedIndex: 0 });
 
     const newContainerHeight = 600;
-    mockGetBoundingClientRect.mockImplementation(function (this: HTMLElement) {
-      const testId = this.getAttribute('data-testid');
-      switch (testId) {
-        case 'scrollable-list':
-          return { height: newContainerHeight } as DOMRect;
-        case 'filler':
-          return { height: fillerInitialHeight } as DOMRect;
-        default:
-          return { height: itemHeight } as DOMRect;
-      }
-    });
-
+    mockElementHeights(
+      newContainerHeight,
+      fillerInitialHeight,
+      activeItemHeight,
+      itemHeight
+    );
     // Simulate resize
     act(() => {
       resizeObserverCallback([], {} as ResizeObserver);
     });
+    completeAnimation();
 
     const filler = screen.getByTestId('filler');
-    const newExpectedHeight =
-      newContainerHeight / 2 - itemHeight / activeItemScale / 2;
+    const newExpectedHeight = newContainerHeight / 2 - activeItemHeight / 2;
     expect(parseFloat(filler.style.height)).toBe(newExpectedHeight);
   });
 
