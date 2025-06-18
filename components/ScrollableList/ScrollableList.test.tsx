@@ -11,6 +11,7 @@ import {
 import React from 'react'; // Standard React import for types and potentially JSX
 
 const itemHeight = 50;
+const activeItemHeight = itemHeight * activeItemScale;
 const fillerInitialHeight = 100;
 const containerHeight = 500;
 const mockGetBoundingClientRect = jest.fn(function (this: HTMLElement) {
@@ -20,6 +21,8 @@ const mockGetBoundingClientRect = jest.fn(function (this: HTMLElement) {
       return { height: containerHeight } as DOMRect;
     case 'filler':
       return { height: fillerInitialHeight } as DOMRect;
+    case 'active-list-item':
+      return { height: activeItemHeight } as DOMRect;
     default:
       return { height: itemHeight } as DOMRect;
   }
@@ -28,6 +31,8 @@ const scrollIntoView = jest.fn();
 const mockScrollYGet = jest.fn();
 let motionValueEventCallback: ((latest: number) => void) | null = null;
 let resizeObserverCallback: ResizeObserverCallback;
+let onAnimationCompleteCallback: (() => void) | null = null;
+let clientHeightSpy: jest.SpyInstance;
 
 const scroll = (scrollPostion: number) => {
   if (motionValueEventCallback) {
@@ -38,6 +43,15 @@ const scroll = (scrollPostion: number) => {
     });
   } else {
     throw new Error('motionValueEventCallback was not captured by the mock');
+  }
+};
+
+const completeAnimation = () => {
+  const callback = onAnimationCompleteCallback;
+  if (callback) {
+    act(() => {
+      callback();
+    });
   }
 };
 
@@ -59,10 +73,17 @@ jest.mock('motion/react', () => {
         motionValueEventCallback = null;
       };
     }),
+    motion: {
+      ...originalMotion.motion,
+      div: jest.fn(({ onAnimationComplete, ...props }) => {
+        onAnimationCompleteCallback = onAnimationComplete;
+        return <originalMotion.motion.div {...props} />;
+      }),
+    },
   };
 });
 
-const timers = [1, 2, 3].map((i) => ({
+const timers = [1, 2, 3, 4].map((i) => ({
   text: `Timer ${i}`,
   dataTestId: `timer-${i}`,
 }));
@@ -83,6 +104,22 @@ const renderScrollableList = (overrides?: Partial<ScrollableListProps>) => {
     ...(overrides ? overrides : {}),
   };
 
+  clientHeightSpy.mockImplementation(function (this: HTMLElement) {
+    if (this.matches('[data-testid="scrollable-list"]')) {
+      return containerHeight;
+    }
+    if (this.matches('[data-testid="filler"]')) {
+      return fillerInitialHeight;
+    }
+    if (this.matches('[data-testid="active-list-item"]')) {
+      return activeItemHeight;
+    }
+    if (this.matches('[data-testid="list-item"]')) {
+      return itemHeight;
+    }
+    return 0;
+  });
+
   const rendered = render(<ScrollableList {...props} />);
 
   if (resizeObserverCallback) {
@@ -90,6 +127,8 @@ const renderScrollableList = (overrides?: Partial<ScrollableListProps>) => {
       resizeObserverCallback([], {} as ResizeObserver);
     });
   }
+
+  completeAnimation();
 
   act(() => {
     jest.runAllTimers(); // trigger debounce
@@ -114,6 +153,7 @@ describe('ScrollableList', () => {
     mockIntersectionObserver();
     Element.prototype.scrollIntoView = scrollIntoView;
     Element.prototype.getBoundingClientRect = mockGetBoundingClientRect; // Global mock for all elements
+    clientHeightSpy = jest.spyOn(HTMLElement.prototype, 'clientHeight', 'get');
     global.ResizeObserver = jest.fn((callback) => {
       resizeObserverCallback = callback;
       return {
@@ -133,6 +173,7 @@ describe('ScrollableList', () => {
       delete (Element.prototype as any).scrollIntoView;
     }
     delete (Element.prototype as any).getBoundingClientRect;
+    clientHeightSpy.mockRestore();
     jest.clearAllMocks();
   });
 
@@ -203,34 +244,6 @@ describe('ScrollableList', () => {
     );
   });
 
-  it('calls onSelectedIndexChange when list is scrolled sufficiently to change active items', () => {
-    const onSelectedIndexChange = jest.fn();
-    renderScrollableList({
-      selectedIndex: 0,
-      onSelectedIndexChange,
-    });
-
-    scroll(itemHeight / 2 - 1);
-    expect(onSelectedIndexChange).not.toHaveBeenCalled();
-
-    scroll(itemHeight / 2);
-    expect(onSelectedIndexChange).toHaveBeenCalledWith(1);
-  });
-
-  it('hanldes over/under scroll on ios', () => {
-    const onSelectedIndexChange = jest.fn();
-    renderScrollableList({
-      selectedIndex: 0,
-      onSelectedIndexChange,
-    });
-
-    scroll(-1);
-    expect(onSelectedIndexChange).not.toHaveBeenCalled();
-
-    scroll(itemHeight * 3 + 1);
-    expect(onSelectedIndexChange).toHaveBeenCalledWith(2);
-  });
-
   it('recalculates filler height on window resize', () => {
     renderScrollableList({ selectedIndex: 0 });
 
@@ -256,5 +269,60 @@ describe('ScrollableList', () => {
     const newExpectedHeight =
       newContainerHeight / 2 - itemHeight / activeItemScale / 2;
     expect(parseFloat(filler.style.height)).toBe(newExpectedHeight);
+  });
+
+  describe('scrolling', () => {
+    const mockItemOffsets = () => {
+      const items = screen.getAllByTestId(/list-item/);
+      let accumulatedOffset = fillerInitialHeight;
+      items.forEach((item, index) => {
+        const isItemActive = index === 0; // Based on initial selectedIndex
+        const currentItemHeight = isItemActive ? activeItemHeight : itemHeight;
+
+        Object.defineProperty(item, 'offsetHeight', {
+          value: currentItemHeight,
+        });
+        Object.defineProperty(item, 'offsetTop', { value: accumulatedOffset });
+        accumulatedOffset += currentItemHeight;
+      });
+    };
+
+    const getItemCenter = (item: HTMLElement) => {
+      return item.offsetTop + item.offsetHeight / 2;
+    };
+
+    it('selects the item that is in the middle of the container', () => {
+      const onSelectedIndexChange = jest.fn();
+      renderScrollableList({
+        selectedIndex: 0,
+        onSelectedIndexChange,
+      });
+      mockItemOffsets();
+      const items = screen.getAllByTestId(/list-item/);
+
+      const indexToSelect = 2;
+      const itemCenter = getItemCenter(items[indexToSelect]);
+      const targetScrollTop = itemCenter - containerHeight / 2;
+      scroll(targetScrollTop);
+      expect(onSelectedIndexChange).toHaveBeenCalledWith(2);
+    });
+
+    it('selects the item whose center is closest to the viewport center during a scroll', () => {
+      const onSelectedIndexChange = jest.fn();
+      renderScrollableList({
+        selectedIndex: 0,
+        onSelectedIndexChange,
+      });
+      mockItemOffsets();
+      const items = screen.getAllByTestId(/list-item/);
+      const item2Center = getItemCenter(items[2]);
+      const item3Center = getItemCenter(items[3]);
+      const midpoint = (item2Center + item3Center) / 2;
+      const scrollTopAtMidpoint = midpoint - containerHeight / 2;
+      scroll(scrollTopAtMidpoint);
+      expect(onSelectedIndexChange).toHaveBeenCalledWith(2);
+      scroll(scrollTopAtMidpoint + 1);
+      expect(onSelectedIndexChange).toHaveBeenCalledWith(3);
+    });
   });
 });

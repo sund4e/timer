@@ -15,7 +15,7 @@ import {
   useMotionValueEvent,
   MotionProps,
 } from 'motion/react';
-import { throttle, debounce, clamp } from 'lodash';
+import { throttle, debounce } from 'lodash';
 import Hidable from '../Hidable/Hidable';
 
 export const activeItemScale = 1.75;
@@ -150,19 +150,33 @@ const ScrollableList = memo(
     });
 
     const getActiveIndex = useCallback(() => {
-      if (!listRef.current || itemRefs.current.length <= 1) {
-        return 0;
+      if (
+        !listRef.current ||
+        itemRefs.current.length <= 1 ||
+        !fillerRef.current
+      ) {
+        return selectedIndexRef.current;
       }
+      const viewportCenter =
+        listRef.current.scrollTop + listRef.current.clientHeight / 2;
 
-      const scrollPosition =
-        listRef.current.scrollTop + activeItemHeight.current / 2;
+      let closestItemIndex = 0;
+      let smallestDistance = Infinity;
 
-      const activeIndex = Math.floor(
-        scrollPosition / inactiveItemHeight.current
-      );
-      // On ios the scroll position may go a bit over or under the list boundaries
-      const boundedIndex = clamp(activeIndex, 0, itemRefs.current.length - 1);
-      return boundedIndex;
+      itemRefs.current.forEach((itemRef, index) => {
+        const itemElement = itemRef.current;
+        if (!itemElement) return;
+
+        const itemCenter = itemElement.offsetTop + itemElement.offsetHeight / 2;
+        const distance = Math.abs(viewportCenter - itemCenter);
+
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          closestItemIndex = index;
+        }
+      });
+
+      return closestItemIndex;
     }, []);
 
     const scrollLogic = useCallback(() => {
