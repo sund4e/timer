@@ -19,7 +19,6 @@ const scrollIntoView = jest.fn();
 const mockScrollYGet = jest.fn();
 let motionValueEventCallback: ((latest: number) => void) | null = null;
 let resizeObserverCallback: ResizeObserverCallback;
-let onAnimationCompleteCallback: (() => void) | null = null;
 let clientHeightSpy: jest.SpyInstance;
 
 const mockElementHeights = (
@@ -57,15 +56,6 @@ const scroll = (scrollPostion: number) => {
   }
 };
 
-const completeAnimation = () => {
-  const callback = onAnimationCompleteCallback;
-  if (callback) {
-    act(() => {
-      callback();
-    });
-  }
-};
-
 jest.mock('motion/react', () => {
   const originalMotion = jest.requireActual('motion/react');
   return {
@@ -84,13 +74,6 @@ jest.mock('motion/react', () => {
         motionValueEventCallback = null;
       };
     }),
-    motion: {
-      ...originalMotion.motion,
-      div: jest.fn(({ onAnimationComplete, ...props }) => {
-        onAnimationCompleteCallback = onAnimationComplete;
-        return <originalMotion.motion.div {...props} />;
-      }),
-    },
   };
 });
 
@@ -129,8 +112,6 @@ const renderScrollableList = (overrides?: Partial<ScrollableListProps>) => {
       resizeObserverCallback([], {} as ResizeObserver);
     });
   }
-
-  completeAnimation();
 
   act(() => {
     jest.runAllTimers(); // trigger debounce
@@ -257,7 +238,6 @@ describe('ScrollableList', () => {
     act(() => {
       resizeObserverCallback([], {} as ResizeObserver);
     });
-    completeAnimation();
 
     const filler = screen.getByTestId('filler');
     const newExpectedHeight = newContainerHeight / 2 - activeItemHeight / 2;

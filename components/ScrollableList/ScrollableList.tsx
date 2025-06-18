@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
   useMemo,
+  useLayoutEffect,
 } from 'react';
 import styled from 'styled-components';
 import {
@@ -123,14 +124,13 @@ const ScrollableList = memo(
     const fillerRef = useRef<HTMLDivElement>(null);
     const controWrapperRef = useRef<HTMLDivElement>(null);
     const selectedIndexRef = useRef(selectedIndex);
-    const recalculateLayoutHeights = useRef(false);
 
     useEffect(() => {
       const listElement = listRef.current;
       if (!listElement) return;
 
       const observer = new ResizeObserver(() => {
-        recalculateLayoutHeights.current = true;
+        updateLayoutHeights();
       });
       observer.observe(listElement);
 
@@ -206,10 +206,6 @@ const ScrollableList = memo(
     }
 
     const updateLayoutHeights = useCallback(() => {
-      if (!recalculateLayoutHeights.current) {
-        return;
-      }
-
       const scrollContainer = listRef.current;
       if (fillerRef.current && scrollContainer) {
         const activeItemHeight =
@@ -220,8 +216,6 @@ const ScrollableList = memo(
         setBottomFillerHeight(
           topFillerHeight - (controWrapperRef.current?.clientHeight || 0)
         );
-
-        recalculateLayoutHeights.current = false;
       }
     }, []);
 
@@ -252,6 +246,10 @@ const ScrollableList = memo(
       centerList();
     }, [selectedIndex, getActiveIndex, centerList]);
 
+    useLayoutEffect(() => {
+      updateLayoutHeights();
+    }, [selectedIndex, children.length, updateLayoutHeights]);
+
     return (
       <List
         ref={listRef}
@@ -270,7 +268,6 @@ const ScrollableList = memo(
             ref={itemRefs.current[index]}
             index={index}
             active={index === selectedIndex}
-            onAnimationComplete={updateLayoutHeights}
           >
             {child}
           </AnimatedItem>
