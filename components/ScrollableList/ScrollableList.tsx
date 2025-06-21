@@ -60,9 +60,12 @@ const ControlWrapper = styled(Hidable)`
   position: sticky;
   bottom: 0;
 `;
+export interface ChildWithKey extends Omit<React.ReactElement, 'key'> {
+  key: string;
+}
 
 export type Props = {
-  children: React.ReactElement[];
+  children: ChildWithKey[];
   selectedIndex: number;
   onSelectedIndexChange: (index: number) => void;
   allowScrolling: boolean;
@@ -116,14 +119,48 @@ const ScrollableList = memo(
     allowScrolling,
     controls,
   }: Props) => {
-    const itemRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
+    const itemRefs = useRef(
+      new Map<
+        string,
+        { element: React.RefObject<HTMLDivElement | null>; index: number }
+      >()
+    );
     const listRef = useRef<HTMLDivElement>(null);
     const automaticScrollIsRunning = useRef(false);
     const [fillerHeight, setFillerHeight] = useState(0);
     const [bottomFillerHeight, setBottomFillerHeight] = useState(0);
     const fillerRef = useRef<HTMLDivElement>(null);
     const controWrapperRef = useRef<HTMLDivElement>(null);
-    const selectedIndexRef = useRef(selectedIndex);
+    const selectedItemKey = useRef('');
+
+    const getRef = (
+      key: string,
+      index: number
+    ): React.RefObject<HTMLDivElement | null> => {
+      const existingRef = itemRefs.current.get(key);
+      itemRefs.current.set(key, {
+        element: existingRef
+          ? existingRef.element
+          : createRef<HTMLDivElement>(),
+        index,
+      });
+      return itemRefs.current.get(key)!.element;
+    };
+
+    const updateLayoutHeights = useCallback(() => {
+      const scrollContainer = listRef.current;
+      if (fillerRef.current && scrollContainer) {
+        const activeItemHeight =
+          itemRefs.current.get(selectedItemKey.current)?.element.current
+            ?.clientHeight || 0;
+        const containerCenter = scrollContainer.clientHeight / 2;
+        const topFillerHeight = containerCenter - activeItemHeight / 2;
+        setFillerHeight(topFillerHeight);
+        setBottomFillerHeight(
+          topFillerHeight - (controWrapperRef.current?.clientHeight || 0)
+        );
+      }
+    }, []);
 
     useEffect(() => {
       const listElement = listRef.current;
@@ -137,11 +174,11 @@ const ScrollableList = memo(
       return () => {
         observer.unobserve(listElement);
       };
-    }, []);
+    }, [updateLayoutHeights]);
 
     useEffect(() => {
-      selectedIndexRef.current = selectedIndex;
-    }, [selectedIndex]);
+      selectedItemKey.current = children[selectedIndex].key;
+    }, [selectedIndex, children]);
 
     const { scrollY } = useScroll({
       container: listRef,
@@ -150,10 +187,10 @@ const ScrollableList = memo(
     const getActiveIndex = useCallback(() => {
       if (
         !listRef.current ||
-        itemRefs.current.length <= 1 ||
+        itemRefs.current.size <= 1 ||
         !fillerRef.current
       ) {
-        return selectedIndexRef.current;
+        return 0;
       }
       const viewportCenter =
         listRef.current.scrollTop + listRef.current.clientHeight / 2;
@@ -161,8 +198,9 @@ const ScrollableList = memo(
       let closestItemIndex = 0;
       let smallestDistance = Infinity;
 
-      itemRefs.current.forEach((itemRef, index) => {
-        const itemElement = itemRef.current;
+      let index = 0;
+      itemRefs.current.forEach((itemRef) => {
+        const itemElement = itemRef.element.current;
         if (!itemElement) return;
 
         const itemCenter = itemElement.offsetTop + itemElement.offsetHeight / 2;
@@ -172,6 +210,7 @@ const ScrollableList = memo(
           smallestDistance = distance;
           closestItemIndex = index;
         }
+        index = index + 1;
       });
 
       return closestItemIndex;
@@ -198,27 +237,6 @@ const ScrollableList = memo(
       }
     });
 
-    if (itemRefs.current.length !== children.length) {
-      itemRefs.current = Array.from(
-        { length: children.length },
-        (_, i) => itemRefs.current[i] || createRef<HTMLDivElement | null>()
-      );
-    }
-
-    const updateLayoutHeights = useCallback(() => {
-      const scrollContainer = listRef.current;
-      if (fillerRef.current && scrollContainer) {
-        const activeItemHeight =
-          itemRefs.current[selectedIndexRef.current]?.current?.clientHeight;
-        const containerCenter = scrollContainer.clientHeight / 2;
-        const topFillerHeight = containerCenter - activeItemHeight / 2;
-        setFillerHeight(topFillerHeight);
-        setBottomFillerHeight(
-          topFillerHeight - (controWrapperRef.current?.clientHeight || 0)
-        );
-      }
-    }, []);
-
     const debouncedScrollEnd = useMemo(
       () =>
         debounce(() => {
@@ -229,10 +247,12 @@ const ScrollableList = memo(
 
     const centerList = useCallback(() => {
       automaticScrollIsRunning.current = true;
-      itemRefs.current[selectedIndexRef.current]?.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
+      itemRefs.current
+        .get(selectedItemKey.current)
+        ?.element.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
       debouncedScrollEnd();
     }, [debouncedScrollEnd]);
 
@@ -265,7 +285,7 @@ const ScrollableList = memo(
           <AnimatedItem
             listRef={listRef}
             key={child.key}
-            ref={itemRefs.current[index]}
+            ref={getRef(child.key, index)}
             index={index}
             active={index === selectedIndex}
           >

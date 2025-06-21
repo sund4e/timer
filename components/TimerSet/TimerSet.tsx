@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
-import ScrollableList from '../ScrollableList/ScrollableList';
+import ScrollableList, { ChildWithKey } from '../ScrollableList/ScrollableList';
 
 const fontSizeInactive = 10;
 
@@ -282,19 +282,21 @@ const TimerSet = memo(
             </>
           }
         >
-          {timers.map((timerConfig, index) => (
-            <StyledTimer
-              key={timerConfig.id}
-              initialTime={timerConfig.initialTime}
-              isRunning={currentTimerIndex === index && isSequenceRunning} // TODO: Move restart to TimerSet
-              onTimeEnd={onTimerEnd}
-              setTitleTime={setTitleTime}
-              onFocus={onFocus(index)}
-              isFocused={focusIndex === index}
-              onChange={onChangeTimer(index)}
-              onDirty={onDirty}
-            />
-          ))}
+          {
+            timers.map((timerConfig, index) => (
+              <StyledTimer
+                key={timerConfig.id}
+                initialTime={timerConfig.initialTime}
+                isRunning={currentTimerIndex === index && isSequenceRunning} // TODO: Move restart to TimerSet
+                onTimeEnd={onTimerEnd}
+                setTitleTime={setTitleTime}
+                onFocus={onFocus(index)}
+                isFocused={focusIndex === index}
+                onChange={onChangeTimer(index)}
+                onDirty={onDirty}
+              />
+            )) as ChildWithKey[]
+          }
         </ScrollableList>
         <Row>
           {isNewTimerSet && (

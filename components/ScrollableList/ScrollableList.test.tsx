@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ScrollableList, {
   activeItemScale,
+  ChildWithKey,
   Props as ScrollableListProps,
 } from './ScrollableList';
 import {
@@ -77,17 +78,26 @@ jest.mock('motion/react', () => {
   };
 });
 
+type TimerMock = {
+  text: string;
+  dataTestId: string;
+};
+
 const timers = [1, 2, 3, 4].map((i) => ({
   text: `Timer ${i}`,
   dataTestId: `timer-${i}`,
 }));
 
-const renderScrollableList = (overrides?: Partial<ScrollableListProps>) => {
-  const defaultChildren = timers.map((timer, index) => (
-    <div key={index} data-testid={timer.dataTestId}>
+const createChildFromTimer = (timer: TimerMock, key: string | number) => {
+  return (
+    <div key={key} data-testid={timer.dataTestId}>
       {timer.text}
     </div>
-  ));
+  ) as ChildWithKey;
+};
+
+const renderScrollableList = (overrides?: Partial<ScrollableListProps>) => {
+  const defaultChildren = timers.map(createChildFromTimer);
 
   const props = {
     selectedIndex: 0,
@@ -180,10 +190,10 @@ describe('ScrollableList', () => {
   it('does not scroll if only one item', () => {
     renderScrollableList({
       children: [
-        <div key={1} data-testid={'timer'}>
+        <div key={'key'} data-testid={'timer'}>
           Timer
         </div>,
-      ],
+      ] as ChildWithKey[],
     });
     expect(scrollIntoView).not.toHaveBeenCalled();
   });
@@ -244,7 +254,7 @@ describe('ScrollableList', () => {
     expect(parseFloat(filler.style.height)).toBe(newExpectedHeight);
   });
 
-  describe('scrolling', () => {
+  describe('user manually scrolling', () => {
     const mockItemOffsets = () => {
       const items = screen.getAllByTestId(/list-item/);
       let accumulatedOffset = fillerInitialHeight;
@@ -296,6 +306,27 @@ describe('ScrollableList', () => {
       expect(onSelectedIndexChange).toHaveBeenCalledWith(2);
       scroll(scrollTopAtMidpoint + 1);
       expect(onSelectedIndexChange).toHaveBeenCalledWith(3);
+    });
+
+    it('works after removal of elements', () => {
+      const onSelectedIndexChange = jest.fn();
+      const initialTimers = timers;
+      const { rerender } = renderScrollableList({
+        selectedIndex: 2,
+        children: initialTimers.map(createChildFromTimer),
+        onSelectedIndexChange,
+      });
+
+      const udpatedTimers = initialTimers.filter((timer, index) => index !== 1);
+      rerender({ children: udpatedTimers.map(createChildFromTimer) });
+
+      mockItemOffsets();
+      const items = screen.getAllByTestId(/list-item/);
+      const expectedIndex = 1;
+      const itemCenter = getItemCenter(items[expectedIndex]);
+      const targetScrollTop = itemCenter - containerHeight / 2;
+      scroll(targetScrollTop);
+      expect(onSelectedIndexChange).toHaveBeenCalledWith(expectedIndex);
     });
   });
 });
