@@ -198,7 +198,6 @@ const ScrollableList = memo(
       let closestItemIndex = 0;
       let smallestDistance = Infinity;
 
-      let index = 0;
       itemRefs.current.forEach((itemRef) => {
         const itemElement = itemRef.element.current;
         if (!itemElement) return;
@@ -208,9 +207,8 @@ const ScrollableList = memo(
 
         if (distance < smallestDistance) {
           smallestDistance = distance;
-          closestItemIndex = index;
+          closestItemIndex = itemRef.index;
         }
-        index = index + 1;
       });
 
       return closestItemIndex;

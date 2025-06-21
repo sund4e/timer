@@ -88,9 +88,9 @@ const timers = [1, 2, 3, 4].map((i) => ({
   dataTestId: `timer-${i}`,
 }));
 
-const createChildFromTimer = (timer: TimerMock, key: string | number) => {
+const createChildFromTimer = (timer: TimerMock) => {
   return (
-    <div key={key} data-testid={timer.dataTestId}>
+    <div key={timer.dataTestId} data-testid={timer.dataTestId}>
       {timer.text}
     </div>
   ) as ChildWithKey;
@@ -318,6 +318,31 @@ describe('ScrollableList', () => {
       });
 
       const udpatedTimers = initialTimers.filter((timer, index) => index !== 1);
+      rerender({ children: udpatedTimers.map(createChildFromTimer) });
+
+      mockItemOffsets();
+      const items = screen.getAllByTestId(/list-item/);
+      const expectedIndex = 1;
+      const itemCenter = getItemCenter(items[expectedIndex]);
+      const targetScrollTop = itemCenter - containerHeight / 2;
+      scroll(targetScrollTop);
+      expect(onSelectedIndexChange).toHaveBeenCalledWith(expectedIndex);
+    });
+
+    it('works after adding of elements', () => {
+      const onSelectedIndexChange = jest.fn();
+      const initialTimers = timers;
+      const { rerender } = renderScrollableList({
+        selectedIndex: 0,
+        children: initialTimers.map(createChildFromTimer),
+        onSelectedIndexChange,
+      });
+
+      const udpatedTimers = [
+        initialTimers[0],
+        { text: 'New timer', dataTestId: 'newTimer' },
+        ...initialTimers.slice(0),
+      ];
       rerender({ children: udpatedTimers.map(createChildFromTimer) });
 
       mockItemOffsets();
