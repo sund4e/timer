@@ -20,13 +20,12 @@ const Menu = styled.div<{
   padding-top: ${({ theme }) => theme.fontSizes.medium * 2}rem;
   display: flex;
   flex-direction: column;
-  backdrop-filter: blur(10px);
-  color: ${({ theme }) => theme.colors.primary};
+  backdrop-filter: blur(20px);
+  color: ${({ theme }) => theme.colors.light};
   &:before {
-    opacity: 0.2;
+    opacity: 0.8;
     background-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0px 0px 100px ${({ theme }) => theme.colors.light} inset;
-    border-left: 0.5px solid rgba(255, 255, 255, 0.7);
+    border-left: 0.5px solid ${({ theme }) => theme.colors.primary};
     content: '';
     position: absolute;
     top: 0;

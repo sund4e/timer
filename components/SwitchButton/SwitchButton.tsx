@@ -21,7 +21,7 @@ const StyledButton = styled.button<{
   div {
     width: ${({ theme }) => theme.fontSizes.medium}rem;
     height: 5px;
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.colors.light};
     border-radius: 10px;
     transition: all 0.3s linear;
     position: relative;

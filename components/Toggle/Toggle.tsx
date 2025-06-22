@@ -41,6 +41,7 @@ const Span = styled.div<{
   bottom: 0;
   background-color: ${({ theme }) => theme.colors.highlight};
   transition: ${({ theme }) => theme.transition}s;
+  border: 1px solid ${({ theme }) => theme.colors.light};
   border-radius: 34px;
   opacity: ${({ $isOn }) => ($isOn ? 1 : 0.5)};
   &:before {
