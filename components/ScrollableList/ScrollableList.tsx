@@ -245,12 +245,20 @@ const ScrollableList = memo(
 
     const centerList = useCallback(() => {
       automaticScrollIsRunning.current = true;
-      itemRefs.current
-        .get(selectedItemKey.current)
-        ?.element.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
+      const element = itemRefs.current.get(selectedItemKey.current)?.element
+        .current;
+
+      if (element) {
+        // Defer the scroll until the browser is ready for the next paint.
+        // This ensures all layout calculations from the completed animation
+        // have been processed.
+        requestAnimationFrame(() => {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
         });
+      }
       debouncedScrollEnd();
     }, [debouncedScrollEnd]);
 
@@ -286,6 +294,7 @@ const ScrollableList = memo(
             ref={getRef(child.key, index)}
             index={index}
             active={index === selectedIndex}
+            onAnimationComplete={() => console.log('onAnimationComplete')}
           >
             {child}
           </AnimatedItem>

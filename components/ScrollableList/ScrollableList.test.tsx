@@ -21,6 +21,7 @@ const mockScrollYGet = jest.fn();
 let motionValueEventCallback: ((latest: number) => void) | null = null;
 let resizeObserverCallback: ResizeObserverCallback;
 let clientHeightSpy: jest.SpyInstance;
+let requestAnimationFrameSpy: jest.SpyInstance;
 
 const mockElementHeights = (
   containerHeight: number,
@@ -146,6 +147,12 @@ describe('ScrollableList', () => {
     mockIntersectionObserver();
     Element.prototype.scrollIntoView = scrollIntoView;
     clientHeightSpy = jest.spyOn(HTMLElement.prototype, 'clientHeight', 'get');
+    requestAnimationFrameSpy = jest
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation((cb: FrameRequestCallback) => {
+        cb(0);
+        return 0;
+      });
     global.ResizeObserver = jest.fn((callback) => {
       resizeObserverCallback = callback;
       return {
@@ -164,6 +171,7 @@ describe('ScrollableList', () => {
     } else {
       delete (Element.prototype as any).scrollIntoView;
     }
+    requestAnimationFrameSpy.mockRestore();
     clientHeightSpy.mockRestore();
     jest.clearAllMocks();
   });
