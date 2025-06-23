@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useRef, ChangeEvent, useCallback, useState } from 'react';
+import tinycolor from 'tinycolor2';
 
 const StyledInput = styled.input<{
   $isInvalid: boolean;
@@ -8,16 +9,19 @@ const StyledInput = styled.input<{
   border-style: none;
   caret-color: transparents;
   background-color: transparent;
+  border-radius: ${({ theme }) => theme.radius}rem;
+  border: 3px solid transparent;
+  outline: none;
   &:focus {
-    outline: none;
-    opacity: 0.5;
+    background-color: ${({ theme }) =>
+      tinycolor(theme.colors.highlight).setAlpha(0.2).toRgbString()};
   }
   text-align: center;
-  padding: 0;
+  padding: 0vw 0.5vw;
   font-size: inherit;
   color: inherit;
   max-width: 1ch;
-  margin: 1vw;
+  margin: 1vw 0.5vw;
   transition: ${({ theme }) => theme.transition}s;
   caret-color: transparent;
   ${({ theme, $isInvalid }) =>
