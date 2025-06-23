@@ -83,6 +83,9 @@ const TimerSet = memo(
     }, [restartSequence, restart]);
 
     const runSequence = () => {
+      if (window['umami']) {
+        window['umami'].track('Start timer');
+      }
       setIsSequenceRunning(true);
       setFocusIndex(null);
     };
