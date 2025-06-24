@@ -17,11 +17,11 @@ const StyledInput = styled.input<{
       tinycolor(theme.colors.highlight).setAlpha(0.2).toRgbString()};
   }
   text-align: center;
-  padding: 0vw 0.5vw;
+  padding: 0;
   font-size: inherit;
   color: inherit;
   max-width: 1ch;
-  margin: 1vw 0.5vw;
+  margin: 0;
   transition: ${({ theme }) => theme.transition}s;
   caret-color: transparent;
   ${({ theme, $isInvalid }) =>

@@ -9,13 +9,7 @@ import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import ScrollableList, { ChildWithKey } from '../ScrollableList/ScrollableList';
 
-const fontSizeInactive = 10;
-
-const fontSize = `min(${fontSizeInactive}vw, ${fontSizeInactive}vh)`;
-
-const StyledTimer = styled(Timer)`
-  font-size: ${fontSize};
-`;
+const StyledTimer = styled(Timer)``;
 
 const TimerSetWrapper = styled.div`
   display: flex;
