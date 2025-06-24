@@ -86,6 +86,7 @@ const AnimatedItem = ({
   active,
   ref,
   listRef,
+  index,
   ...rest
 }: AnimatedItemProps) => {
   const isInView = useInView(ref, { amount: 0.9, root: listRef });
@@ -98,6 +99,7 @@ const AnimatedItem = ({
         opacity: isInView ? (active ? 1 : 0.8) : 0,
         scale: active ? activeItemScale : 1,
         margin: active ? `1.8em` : 0,
+        ...(index === 0 ? { marginTop: 0 } : {}),
       }}
       transition={{
         opacity: { duration: 0.3 },
@@ -296,7 +298,6 @@ const ScrollableList = memo(
             ref={getRef(child.key, index)}
             index={index}
             active={index === selectedIndex}
-            onAnimationComplete={() => console.log('onAnimationComplete')}
           >
             {child}
           </AnimatedItem>
