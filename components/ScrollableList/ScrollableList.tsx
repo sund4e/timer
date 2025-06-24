@@ -97,7 +97,7 @@ const AnimatedItem = ({
       animate={{
         opacity: isInView ? (active ? 1 : 0.8) : 0,
         scale: active ? activeItemScale : 1,
-        margin: active ? `1.5em` : 0,
+        margin: active ? `1.8em` : 0,
       }}
       transition={{
         opacity: { duration: 0.3 },

@@ -10,11 +10,10 @@ const StyledInput = styled.input<{
   caret-color: transparents;
   background-color: transparent;
   border-radius: ${({ theme }) => theme.radius}rem;
-  border: 3px solid transparent;
   outline: none;
   &:focus {
     background-color: ${({ theme }) =>
-      tinycolor(theme.colors.highlight).setAlpha(0.5).toRgbString()};
+      tinycolor(theme.colors.highlight).setAlpha(0.3).toRgbString()};
     color: ${({ theme }) => theme.colors.dark};
   }
   text-align: center;
