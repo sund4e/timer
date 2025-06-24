@@ -156,7 +156,7 @@ const ScrollableList = memo(
           itemRefs.current.get(selectedItemKey.current)?.element.current
             ?.clientHeight || 0;
         const containerCenter = scrollContainer.clientHeight / 2;
-        const topFillerHeight = containerCenter - activeItemHeight / 2;
+        const topFillerHeight = containerCenter - activeItemHeight;
         setFillerHeight(topFillerHeight);
         setBottomFillerHeight(
           topFillerHeight - (controWrapperRef.current?.clientHeight || 0)
