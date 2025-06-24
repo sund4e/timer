@@ -14,7 +14,8 @@ const StyledInput = styled.input<{
   outline: none;
   &:focus {
     background-color: ${({ theme }) =>
-      tinycolor(theme.colors.highlight).setAlpha(0.2).toRgbString()};
+      tinycolor(theme.colors.highlight).setAlpha(0.5).toRgbString()};
+    color: ${({ theme }) => theme.colors.dark};
   }
   text-align: center;
   padding: 0;
