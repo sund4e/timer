@@ -17,7 +17,7 @@ const StyledInput = styled.input<{
     color: ${({ theme }) => theme.colors.dark};
   }
   text-align: center;
-  padding: 0;
+  padding: 1px;
   font-size: inherit;
   color: inherit;
   max-width: 1ch;
