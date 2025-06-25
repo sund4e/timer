@@ -8,6 +8,7 @@ import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import ScrollableList, { ChildWithKey } from '../ScrollableList/ScrollableList';
+import useWakeLock from '../../hooks/useWakeLock/useWakeLock';
 
 const StyledTimer = styled(Timer)``;
 
@@ -53,6 +54,7 @@ const TimerSet = memo(
     const startButtonRef = useRef<HTMLButtonElement>(null);
     const resumeButtonRef = useRef<HTMLButtonElement>(null);
     const [isNewTimerSet, setIsNewTimerSet] = useState(true);
+    useWakeLock(isSequenceRunning);
 
     const addTimer = () => {
       const newTimerIndex = currentTimerIndex + 1;
