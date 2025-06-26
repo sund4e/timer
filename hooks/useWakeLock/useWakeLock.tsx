@@ -20,47 +20,59 @@ function useWakeLock() {
     return video;
   }, []);
 
-  const playVideo = useCallback(async () => {
+  const playVideo = useCallback(() => {
     if (!videoRef.current) {
       videoRef.current = createVideo();
     }
-    await videoRef.current.play();
+
+    // Fire-and-forget the play command. Do not await it.
+    // This ensures the call is synchronous with the user's tap
+    // Otherwise won't work with iOS
+    const playPromise = videoRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        // Autoplay was prevented.
+        console.error('Fallback Wake Lock (video) failed to play:', err);
+      });
+    }
   }, [createVideo]);
 
-  const request = useCallback(async () => {
+  const request = useCallback(() => {
     if (document.visibilityState !== 'visible') {
       return;
     }
 
     if (navigator.wakeLock) {
-      try {
-        if (!wakeLock.current) {
-          wakeLock.current = await navigator.wakeLock.request('screen');
-          console.log('Native Wake Lock acquired');
-        }
-      } catch (err) {
-        console.error('Native Wake Lock request failed:', err);
-      }
+      navigator.wakeLock
+        .request('screen')
+        .then((lock) => {
+          wakeLock.current = lock;
+        })
+        .catch((err) => {
+          console.error('Native Wake Lock request failed:', err);
+        });
       return;
     }
 
+    // Fallback for iOS and other browsers: silent video
     try {
-      await playVideo();
-      console.log('Fallback Wake Lock enabled (video playing)');
+      playVideo();
     } catch (err) {
       console.error('Fallback Wake Lock (video) failed to play:', err);
     }
   }, [playVideo]);
 
-  const release = useCallback(async () => {
+  const release = useCallback(() => {
+    // Release the native lock if it exists
     if (wakeLock.current) {
-      await wakeLock.current.release();
-      wakeLock.current = null;
-      console.log('Native Wake Lock released');
+      wakeLock.current.release().then(() => {
+        wakeLock.current = null;
+      });
     }
+
+    // Pause the video if the fallback is active
     if (videoRef.current) {
       videoRef.current.pause();
-      console.log('Fallback Wake Lock released (video paused)');
     }
   }, []);
 

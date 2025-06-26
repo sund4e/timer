@@ -57,17 +57,6 @@ const TimerSet = memo(
     const { request: requestWakeLock, release: releaseWakeLock } =
       useWakeLock();
 
-    useEffect(() => {
-      if (isSequenceRunning) {
-        requestWakeLock();
-      } else {
-        releaseWakeLock();
-      }
-      return () => {
-        releaseWakeLock();
-      };
-    }, [isSequenceRunning, requestWakeLock, releaseWakeLock]);
-
     const addTimer = () => {
       const newTimerIndex = currentTimerIndex + 1;
       addTimerAtIndex(newTimerIndex, {
@@ -91,9 +80,10 @@ const TimerSet = memo(
     }, [restartSequence, restart]);
 
     const runSequence = () => {
-      if (window['umami']) {
-        window['umami'].track('Start timer');
+      if (window.umami) {
+        window.umami.track('Start timer');
       }
+      requestWakeLock();
       setIsSequenceRunning(true);
       setFocusIndex(null);
     };
@@ -118,6 +108,12 @@ const TimerSet = memo(
         resumeButtonRef.current?.focus();
       }
     }, [startButtonRef, resumeButtonRef]);
+
+    const stopTimer = useCallback(() => {
+      releaseWakeLock();
+      setIsSequenceRunning(false);
+      focusStart();
+    }, [focusStart, releaseWakeLock, setIsSequenceRunning]);
 
     // Focus start button when sequence stopped and no other element is focused
     useEffect(() => {
@@ -154,7 +150,7 @@ const TimerSet = memo(
         } else {
           setIsNewTimerSet(true);
         }
-        setIsSequenceRunning(false);
+        stopTimer();
       } else {
         setCurrentTimerIndex(
           Math.min(currentTimerIndex + 1, timers.length - 1)
@@ -176,20 +172,20 @@ const TimerSet = memo(
         focusStart();
       } else {
         if (isSequenceRunning) {
-          setIsSequenceRunning(false);
-          focusStart();
+          stopTimer();
         } else {
           setFocusIndex(currentTimerIndex);
           setIsSequenceRunning(true);
         }
       }
     }, [
-      focusIndex,
+      stopTimer,
       currentTimerIndex,
       setFocusIndex,
       setIsSequenceRunning,
       isSequenceRunning,
       focusStart,
+      focusIndex,
     ]);
 
     const moveUp = useCallback(() => {
@@ -248,11 +244,10 @@ const TimerSet = memo(
         }
 
         if (isSequenceRunning) {
-          setIsSequenceRunning(false);
-          focusStart();
+          stopTimer();
         }
       },
-      [isSequenceRunning, setIsSequenceRunning, focusStart]
+      [isSequenceRunning, stopTimer]
     );
 
     const handleScroll = useCallback(
