@@ -349,7 +349,7 @@ describe('ScrollableList', () => {
       const udpatedTimers = [
         initialTimers[0],
         { text: 'New timer', dataTestId: 'newTimer' },
-        ...initialTimers.slice(0),
+        ...initialTimers.slice(1),
       ];
       rerender({ children: udpatedTimers.map(createChildFromTimer) });
 
