@@ -48,7 +48,7 @@ const Filler = styled.div`
 
 const Item = styled(motion.div)`
   margin: 0;
-  font-size: 3vw;
+  font-size: 5vmin;
 `;
 
 const ControlWrapper = styled(Hidable)`
