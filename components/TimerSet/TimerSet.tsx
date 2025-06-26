@@ -54,7 +54,19 @@ const TimerSet = memo(
     const startButtonRef = useRef<HTMLButtonElement>(null);
     const resumeButtonRef = useRef<HTMLButtonElement>(null);
     const [isNewTimerSet, setIsNewTimerSet] = useState(true);
-    useWakeLock(isSequenceRunning);
+    const { request: requestWakeLock, release: releaseWakeLock } =
+      useWakeLock();
+
+    useEffect(() => {
+      if (isSequenceRunning) {
+        requestWakeLock();
+      } else {
+        releaseWakeLock();
+      }
+      return () => {
+        releaseWakeLock();
+      };
+    }, [isSequenceRunning, requestWakeLock, releaseWakeLock]);
 
     const addTimer = () => {
       const newTimerIndex = currentTimerIndex + 1;
