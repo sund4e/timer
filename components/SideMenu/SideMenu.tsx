@@ -12,6 +12,7 @@ const Menu = styled.div<{
   top: 0;
   height: 100%;
   width: 300px;
+  box-sizing: border-box;
   transition: transform 0.4s ease-in-out;
   transform: translateX(
     ${({ $isOpen }: { $isOpen: boolean }) => ($isOpen ? 0 : 100)}%
