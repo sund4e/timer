@@ -19,7 +19,7 @@ import {
 import { throttle, debounce } from 'lodash';
 import Hidable from '../Hidable/Hidable';
 
-export const activeItemScale = 4;
+export const activeItemScale = 2;
 
 const List = styled.div<{ $allowScroll: boolean }>`
   display: flex;
@@ -48,7 +48,7 @@ const Filler = styled.div`
 
 const Item = styled(motion.div)`
   margin: 0;
-  font-size: 5vmin;
+  font-size: 10vmin;
 `;
 
 const ControlWrapper = styled(Hidable)`
@@ -96,9 +96,9 @@ const AnimatedItem = ({
       ref={ref}
       initial={{ opacity: 0 }}
       animate={{
-        opacity: isInView ? (active ? 1 : 0.8) : 0,
+        opacity: isInView ? (active ? 1 : 0.5) : 0,
         scale: active ? activeItemScale : 1,
-        margin: active ? `1.8em` : 0,
+        margin: active ? `0.5em` : 0,
         ...(index === 0 ? { marginTop: 0 } : {}),
       }}
       transition={{
