@@ -7,7 +7,6 @@ const StyledInput = styled.input<{
 }>`
   opacity: 1;
   border-style: none;
-  caret-color: transparents;
   background-color: transparent;
   border-radius: ${({ theme }) => theme.radius}rem;
   outline: none;
