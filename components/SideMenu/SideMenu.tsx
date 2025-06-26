@@ -17,7 +17,6 @@ const Menu = styled.div<{
     ${({ $isOpen }: { $isOpen: boolean }) => ($isOpen ? 0 : 100)}%
   );
   padding: ${({ theme }) => theme.fontSizes.medium}rem;
-  padding-top: ${({ theme }) => theme.fontSizes.medium * 2}rem;
   display: flex;
   flex-direction: column;
   backdrop-filter: blur(20px);
