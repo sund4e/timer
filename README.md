@@ -4,12 +4,9 @@ TODO:
 
 - CI/CD: run tests, ts compile and lint, deploy only after that
 - Revisit eslint.config.js hacks
-- Fix editor config to show lint and ts errors
-- Add ts errors to lint
-- Improved test coverage
-- Rewrite notification logic
-- Make focus clearer: Increase contrast by darkeining background when focused
-- Update text to less lame
+- filler bottom height not working on android?
+- feeback button
+- remove input cursor on andoid
 
 ---
 
