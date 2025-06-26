@@ -28,6 +28,7 @@ const Row = styled.div`
   width: 100%;
   justify-content: center;
   gap: 10px; /* Space between control buttons */
+  margin-bottom: 20px;
 `;
 
 export type Props = {
