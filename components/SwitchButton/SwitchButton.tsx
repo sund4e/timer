@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import { MouseEvent as ReactMouseEvent } from 'react';
+import { motion } from 'motion/react';
 
-const StyledButton = styled.button<{
-  $isOpen: boolean;
-}>`
+const StyledButton = styled.button`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -17,29 +16,15 @@ const StyledButton = styled.button<{
   &:focus {
     outline: none;
   }
+`;
 
-  div {
-    width: ${({ theme }) => theme.fontSizes.medium}rem;
-    height: 5px;
-    background-color: ${({ theme }) => theme.colors.light};
-    border-radius: 10px;
-    transition: all 0.3s linear;
-    position: relative;
-    transform-origin: 1px;
-
-    &:first-child {
-      transform: ${({ $isOpen }) => ($isOpen ? 'rotate(45deg)' : 'rotate(0)')};
-    }
-
-    &:nth-child(2) {
-      opacity: ${({ $isOpen }) => ($isOpen ? '0' : '1')};
-    }
-
-    &:nth-child(3) {
-      transform: ${({ $isOpen }: { $isOpen: boolean }) =>
-        $isOpen ? 'rotate(-45deg)' : 'rotate(0)'};
-    }
-  }
+const Bar = styled(motion.div)`
+  width: ${({ theme }) => theme.fontSizes.medium}rem;
+  height: 5px;
+  background-color: ${({ theme }) => theme.colors.light};
+  border-radius: 10px;
+  position: relative;
+  transform-origin: 1px;
 `;
 
 const SwitchButton = ({
@@ -51,10 +36,19 @@ const SwitchButton = ({
   onClick: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
   className?: string;
 }) => (
-  <StyledButton className={className} $isOpen={isOpen} onClick={onClick}>
-    <div />
-    <div />
-    <div />
+  <StyledButton className={className} onClick={onClick}>
+    <Bar
+      animate={{ rotate: isOpen ? 45 : 0 }}
+      transition={{ duration: 0.3, ease: 'linear' }}
+    />
+    <Bar
+      animate={{ opacity: isOpen ? 0 : 1 }}
+      transition={{ duration: 0.3, ease: 'linear' }}
+    />
+    <Bar
+      animate={{ rotate: isOpen ? -45 : 0 }}
+      transition={{ duration: 0.3, ease: 'linear' }}
+    />
   </StyledButton>
 );
 
