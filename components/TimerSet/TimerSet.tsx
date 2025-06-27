@@ -6,7 +6,7 @@ import useKeyPressCallBack from '../../hooks/useTimer/useKeyPressCallback';
 import { v4 as uuid } from 'uuid';
 import Hidable from '../Hidable/Hidable';
 import useTimers from '../../hooks/useTimers/useTimers';
-import { FaPlus, FaTrash } from 'react-icons/fa';
+import { GoPlus as Plus, GoTrash as Trash } from 'react-icons/go';
 import ScrollableList, { ChildWithKey } from '../ScrollableList/ScrollableList';
 import useWakeLock from '../../hooks/useWakeLock/useWakeLock';
 
@@ -303,7 +303,7 @@ const TimerSet = memo(
             data-testid="add-button"
             aria-label="Add timer"
           >
-            <FaPlus fontSize={'70%'} />
+            <Plus />
           </Button>
           {timers.length > 1 && (
             <Button
@@ -311,7 +311,7 @@ const TimerSet = memo(
               data-testid="remove-button"
               aria-label="Remove timer"
             >
-              <FaTrash fontSize={'70%'} />
+              <Trash />
             </Button>
           )}
         </ControlWrapper>

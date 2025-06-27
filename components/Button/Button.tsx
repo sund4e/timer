@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { motion, HTMLMotionProps } from 'motion/react';
 import React from 'react';
 import { useTheme } from 'styled-components';
+import tinycolor from 'tinycolor2';
 
 const StyledButton = styled(motion.button)<{ $isHidden?: boolean }>`
   background-color: transparent;
@@ -17,8 +18,10 @@ const StyledButton = styled(motion.button)<{ $isHidden?: boolean }>`
   }
 
   &:active:not(:disabled) {
-    color: ${({ theme }) => theme.colors.highlight};
-    border-color: ${({ theme }) => theme.colors.highlight};
+    color: ${({ theme }) =>
+      tinycolor(theme.colors.light).setAlpha(0.7).toRgbString()};
+    border-color: ${({ theme }) =>
+      tinycolor(theme.colors.light).setAlpha(0.7).toRgbString()};
   }
 
   &:focus {
