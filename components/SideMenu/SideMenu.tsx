@@ -2,6 +2,14 @@ import styled from 'styled-components';
 import { useState, MouseEvent as ReactMouseEvent } from 'react';
 import SwitchButton from '../SwitchButton';
 import { Theme } from '../../styles/theme';
+import { Box } from '../Box/Box';
+
+const Header = styled.h1`
+  font-size: ${({ theme }) => theme.fontSizes.medium}rem;
+  margin: ${({ theme }) => theme.fontSizes.medium / 5}rem;
+`;
+
+const MenuContent = styled(Box)``;
 
 const Menu = styled.div<{
   $isOpen: boolean;
@@ -11,7 +19,7 @@ const Menu = styled.div<{
   right: 0;
   top: 0;
   height: 100%;
-  width: 300px;
+  width: 350px;
   box-sizing: border-box;
   transition: transform 0.4s ease-in-out;
   transform: translateX(
@@ -22,6 +30,18 @@ const Menu = styled.div<{
   flex-direction: column;
   backdrop-filter: blur(20px);
   color: ${({ theme }) => theme.colors.light};
+
+  @media (max-height: 400px) {
+    width: 90%;
+    align-items: flex-start;
+  }
+
+  @media (max-height: 400px) and (max-width: 800px) {
+    .aika-info {
+      display: none;
+    }
+  }
+
   &:before {
     opacity: 0.8;
     background-color: ${({ theme }) => theme.colors.primary};
@@ -65,7 +85,8 @@ const SideMenu = ({ children, className }: Props) => {
   return (
     <>
       <Menu $isOpen={isOpen} className={className} onClick={onClickMenu}>
-        {children}
+        <Header>Aika Timer</Header>
+        <MenuContent>{children}</MenuContent>
       </Menu>
       <StyledButton isOpen={isOpen} onClick={onClickButton} />
     </>

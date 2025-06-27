@@ -6,11 +6,7 @@ import TimerSet from '../TimerSet/TimerSet';
 import useStorage from '../../hooks/useStorage/useStorage';
 import { useNotification } from '../../hooks/useNotification/useNotification';
 import Tooltip from '../Tooltip';
-
-const Header = styled.h1`
-  font-size: ${({ theme }) => theme.fontSizes.medium}rem;
-  margin-bottom: ${({ theme }) => theme.fontSizes.medium / 5}rem;
-`;
+import { Box } from '../Box/Box';
 
 const SubHeader = styled.h2`
   font-size: ${({ theme }) => theme.fontSizes.medium * 0.5}rem;
@@ -30,13 +26,17 @@ const Wrapper = styled.div`
   overflow: hidden;
 `;
 
+const MenuSection = styled(Box)`
+  width: 300px;
+  flex-direction: column;
+  flex-wrap: no-wrap;
+`;
+
 export type Props = {
   initialTime: number;
   isActive: boolean;
   setTitleTime: (seconds: number) => void;
 };
-
-const AIKA_INFO_VISIBILITY_THRESHOLD_PX = 480;
 
 type AppConfig = {
   notify: boolean;
@@ -52,7 +52,6 @@ const TimerApp = memo(
 
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
     const [isLikelyMobile, setIsLikelyMobile] = useState(false);
-    const [showAikaInfoText, setShowAikaInfoText] = useState(true);
     const [notificationsDenied, setNotificationsDenied] = useState(false);
     const { showNotification, requestNotificationPermission } =
       useNotification();
@@ -93,21 +92,6 @@ const TimerApp = memo(
         setPlaySound(false);
       }
     }, [isLikelyMobile]);
-
-    useEffect(() => {
-      const checkHeight = () => {
-        if (window.innerHeight < AIKA_INFO_VISIBILITY_THRESHOLD_PX) {
-          setShowAikaInfoText(false);
-        } else {
-          setShowAikaInfoText(true);
-        }
-      };
-
-      window.addEventListener('resize', checkHeight);
-      checkHeight();
-
-      return () => window.removeEventListener('resize', checkHeight);
-    }, []);
 
     function playAudio() {
       if (audio) {
@@ -157,33 +141,37 @@ const TimerApp = memo(
           restart={restart}
         />
         <SideMenu>
-          <Header>Aika Timer</Header>
-          {showAikaInfoText && (
-            <>
-              <SubHeader>What is Aika?</SubHeader>
-              <Text>
-                {
-                  'Aika means "time" in Finnish. It\'s a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Perfect for Pomodoro productivity, time-boxed meetings, and the 20-20-20 eye care technique.'
-                }
-              </Text>
-            </>
-          )}
-          <SubHeader>Settings</SubHeader>
-          <Toggle isOn={playSound} setIsOn={handleSoundToggle}>
-            Sound
-          </Toggle>
-          <Toggle isOn={notify} setIsOn={handleNotificationToggle}>
-            Notifications{' '}
-            {notificationsDenied && (
-              <Tooltip>
-                {"Can't enable notifications since they are disabled in the"}
-                {' browser settings'}
-              </Tooltip>
-            )}
-          </Toggle>
-          <Toggle isOn={restart} setIsOn={setRestart}>
-            Restart timer when done
-          </Toggle>
+          <MenuSection className="aika-info">
+            <SubHeader>What is Aika?</SubHeader>
+            <Text>
+              {
+                'Aika means "time" in Finnish. It\'s a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Perfect for Pomodoro productivity, time-boxed meetings, and the 20-20-20 eye care technique.'
+              }
+            </Text>
+          </MenuSection>
+          <MenuSection>
+            <SubHeader>Settings</SubHeader>
+            <Toggle isOn={playSound} setIsOn={handleSoundToggle}>
+              Sound
+            </Toggle>
+            <Toggle isOn={notify} setIsOn={handleNotificationToggle}>
+              Notifications{' '}
+              {notificationsDenied && (
+                <Tooltip>
+                  {"Can't enable notifications since they are disabled in the"}
+                  {' browser settings'}
+                </Tooltip>
+              )}
+            </Toggle>
+            <Toggle isOn={restart} setIsOn={setRestart}>
+              Restart timer when done
+            </Toggle>
+          </MenuSection>
+          {/* <MenuSection>
+            <Button>
+              <LuMessageSquareMore />
+            </Button>
+          </MenuSection> */}
         </SideMenu>
       </Wrapper>
     );
