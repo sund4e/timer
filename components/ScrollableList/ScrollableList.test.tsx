@@ -222,7 +222,8 @@ describe('ScrollableList', () => {
   it('calculates filler height so that the selected item is centered', () => {
     renderScrollableList({ selectedIndex: 0 });
     const fillerHeight = parseFloat(screen.getByTestId('filler').style.height);
-    const expectedHeight = containerHeight / 2 - activeItemHeight;
+    const expectedHeight =
+      containerHeight / 2 - activeItemHeight / activeItemScale;
     expect(fillerHeight).toBe(expectedHeight);
   });
 
@@ -258,7 +259,8 @@ describe('ScrollableList', () => {
     });
 
     const filler = screen.getByTestId('filler');
-    const newExpectedHeight = newContainerHeight / 2 - activeItemHeight;
+    const newExpectedHeight =
+      newContainerHeight / 2 - activeItemHeight / activeItemScale;
     expect(parseFloat(filler.style.height)).toBe(newExpectedHeight);
   });
 

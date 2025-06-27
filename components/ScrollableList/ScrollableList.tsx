@@ -142,7 +142,8 @@ const ScrollableList = memo(
           itemRefs.current.get(selectedItemKey.current)?.element.current
             ?.clientHeight || 0;
         const containerCenter = scrollContainer.clientHeight / 2;
-        const fillerHeight = containerCenter - activeItemHeight;
+        const fillerHeight =
+          containerCenter - activeItemHeight / activeItemScale;
         setFillerHeight(fillerHeight);
       }
     }, []);
