@@ -18,15 +18,15 @@ const StyledButton = styled(motion.button)<{ $isHidden?: boolean }>`
   }
 
   &:active:not(:disabled) {
-    color: ${({ theme }) =>
-      tinycolor(theme.colors.light).setAlpha(0.7).toRgbString()};
-    border-color: ${({ theme }) =>
-      tinycolor(theme.colors.light).setAlpha(0.7).toRgbString()};
+    color: white;
+    border-color: white;
   }
 
   &:focus {
     outline: none;
-    border: 1px solid ${({ theme }) => theme.colors.light};
+    border: 1px solid
+      ${({ theme }) =>
+        tinycolor(theme.colors.light).setAlpha(0.7).toRgbString()};
   }
 
   &:disabled {
