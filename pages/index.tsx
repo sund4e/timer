@@ -39,7 +39,9 @@ const Home = () => {
           {time > 0 ? `${toTimeString(time)} - ${APP_NAME}` : APP_DEFAULT_TITLE}
         </title>
         <meta name="description" content={APP_DESCRIPTION} />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <meta
           name="keywords"
           content="online timer, countdown timer, pomodoro timer, meeting timer, 20-20-20 rule, minimalist timer, fullscreen timer, free timer, no ads"

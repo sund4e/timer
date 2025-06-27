@@ -31,7 +31,7 @@ export function useNotification(): {
 
   const showNotification = useCallback(() => {
     if (isBrowserSupported) {
-      new Notification(`Time's up!`);
+      new Notification(`Time's up!`, { icon: '/logo.png' });
     }
   }, [isBrowserSupported]);
 
