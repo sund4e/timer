@@ -33,8 +33,9 @@ const GlobalStyle = createGlobalStyle`
     font-weight: 600; /* Headings are semibold */
   }
 
-  button {
-    font-family: inherit; /* Ensure buttons use the GeneralSans font */
+  button,
+  input {
+    font-family: inherit; /* Ensure buttons and inputs use the correct font */
   }
 `;
 
