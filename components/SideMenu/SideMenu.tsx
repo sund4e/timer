@@ -3,6 +3,7 @@ import { useState, MouseEvent as ReactMouseEvent } from 'react';
 import SwitchButton from '../SwitchButton';
 import { Theme } from '../../styles/theme';
 import { Box } from '../Box/Box';
+import { motion } from 'motion/react';
 
 const Header = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.medium}rem;
@@ -16,7 +17,7 @@ const MenuContent = styled(Box)`
   }
 `;
 
-const Menu = styled.div<{
+const Menu = styled(motion.div)<{
   $isOpen: boolean;
   theme: Theme;
 }>`
@@ -26,10 +27,6 @@ const Menu = styled.div<{
   height: 100%;
   width: 350px;
   box-sizing: border-box;
-  transition: transform 0.4s ease-in-out;
-  transform: translateX(
-    ${({ $isOpen }: { $isOpen: boolean }) => ($isOpen ? 0 : 100)}%
-  );
   padding: ${({ theme }) => theme.fontSizes.medium}rem;
   display: flex;
   flex-direction: column;
@@ -89,7 +86,14 @@ const SideMenu = ({ children, className }: Props) => {
 
   return (
     <>
-      <Menu $isOpen={isOpen} className={className} onClick={onClickMenu}>
+      <Menu
+        $isOpen={isOpen}
+        className={className}
+        onClick={onClickMenu}
+        initial={false}
+        animate={{ translateX: isOpen ? 0 : '100%' }}
+        transition={{ duration: 0.4, ease: 'easeInOut' }}
+      >
         <Header>Aika Timer</Header>
         <MenuContent>{children}</MenuContent>
       </Menu>
