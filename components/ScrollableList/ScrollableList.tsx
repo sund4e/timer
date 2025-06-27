@@ -17,7 +17,6 @@ import {
   MotionProps,
 } from 'motion/react';
 import { throttle, debounce } from 'lodash';
-import Hidable from '../Hidable/Hidable';
 
 export const activeItemScale = 2;
 
@@ -50,17 +49,6 @@ const Item = styled(motion.div)`
   margin: 0;
   font-size: 10vmin;
 `;
-
-const ControlWrapper = styled(Hidable)`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 1vh;
-  position: sticky;
-  bottom: 0;
-`;
 export interface ChildWithKey extends Omit<React.ReactElement, 'key'> {
   key: string;
 }
@@ -70,7 +58,6 @@ export type Props = {
   selectedIndex: number;
   onSelectedIndexChange: (index: number) => void;
   allowScrolling: boolean;
-  controls: React.ReactNode;
 };
 
 type AnimatedItemProps = {
@@ -121,7 +108,6 @@ const ScrollableList = memo(
     selectedIndex,
     onSelectedIndexChange,
     allowScrolling,
-    controls,
   }: Props) => {
     const itemRefs = useRef(
       new Map<
@@ -132,9 +118,7 @@ const ScrollableList = memo(
     const listRef = useRef<HTMLDivElement>(null);
     const automaticScrollIsRunning = useRef(false);
     const [fillerHeight, setFillerHeight] = useState(0);
-    const [bottomFillerHeight, setBottomFillerHeight] = useState(0);
     const fillerRef = useRef<HTMLDivElement>(null);
-    const controWrapperRef = useRef<HTMLDivElement>(null);
     const selectedItemKey = useRef('');
 
     const getRef = (
@@ -158,11 +142,8 @@ const ScrollableList = memo(
           itemRefs.current.get(selectedItemKey.current)?.element.current
             ?.clientHeight || 0;
         const containerCenter = scrollContainer.clientHeight / 2;
-        const topFillerHeight = containerCenter - activeItemHeight;
-        setFillerHeight(topFillerHeight);
-        setBottomFillerHeight(
-          topFillerHeight - (controWrapperRef.current?.clientHeight || 0)
-        );
+        const fillerHeight = containerCenter - activeItemHeight;
+        setFillerHeight(fillerHeight);
       }
     }, []);
 
@@ -302,16 +283,7 @@ const ScrollableList = memo(
             {child}
           </AnimatedItem>
         ))}
-        {
-          <ControlWrapper ref={controWrapperRef} isHidden={!allowScrolling}>
-            {controls}
-          </ControlWrapper>
-        }
-        <Filler
-          style={
-            bottomFillerHeight ? { height: `${bottomFillerHeight}px` } : {}
-          }
-        />
+        <Filler style={fillerHeight ? { height: `${fillerHeight}px` } : {}} />
       </List>
     );
   }

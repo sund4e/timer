@@ -167,11 +167,6 @@ const TimerApp = memo(
               Restart timer when done
             </Toggle>
           </MenuSection>
-          {/* <MenuSection>
-            <Button>
-              <LuMessageSquareMore />
-            </Button>
-          </MenuSection> */}
         </SideMenu>
       </Wrapper>
     );

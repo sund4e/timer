@@ -31,6 +31,18 @@ const Row = styled.div`
   margin-bottom: 20px;
 `;
 
+const ControlWrapper = styled(Hidable)`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  @media (max-height: 400px) {
+    margin-bottom: 10px;
+  }
+`;
+
 export type Props = {
   initialTime: number;
   isActive: boolean;
@@ -268,26 +280,6 @@ const TimerSet = memo(
           selectedIndex={currentTimerIndex}
           onSelectedIndexChange={handleScroll}
           allowScrolling={!isSequenceRunning}
-          controls={
-            <>
-              <Button
-                onClick={addTimer}
-                data-testid="add-button"
-                aria-label="Add timer"
-              >
-                <FaPlus fontSize={'70%'} />
-              </Button>
-              {timers.length > 1 && (
-                <Button
-                  onClick={removeTimer}
-                  data-testid="remove-button"
-                  aria-label="Remove timer"
-                >
-                  <FaTrash fontSize={'70%'} />
-                </Button>
-              )}
-            </>
-          }
         >
           {
             timers.map((timerConfig, index) => (
@@ -305,6 +297,24 @@ const TimerSet = memo(
             )) as ChildWithKey[]
           }
         </ScrollableList>
+        <ControlWrapper isHidden={isSequenceRunning}>
+          <Button
+            onClick={addTimer}
+            data-testid="add-button"
+            aria-label="Add timer"
+          >
+            <FaPlus fontSize={'70%'} />
+          </Button>
+          {timers.length > 1 && (
+            <Button
+              onClick={removeTimer}
+              data-testid="remove-button"
+              aria-label="Remove timer"
+            >
+              <FaTrash fontSize={'70%'} />
+            </Button>
+          )}
+        </ControlWrapper>
         <Row>
           {isNewTimerSet && (
             <Hidable isHidden={isSequenceRunning}>
