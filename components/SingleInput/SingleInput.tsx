@@ -10,6 +10,7 @@ const StyledInput = styled.input<{
   background-color: transparent;
   border-radius: ${({ theme }) => theme.radius}rem;
   outline: none;
+  user-select: none;
   &:focus {
     background-color: ${({ theme }) =>
       tinycolor(theme.colors.highlight).setAlpha(0.3).toRgbString()};
