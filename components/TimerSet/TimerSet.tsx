@@ -23,20 +23,19 @@ const TimerSetWrapper = styled.div`
 `;
 
 const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: center;
-  gap: 10px; /* Space between control buttons */
+  display: grid;
+  place-items: center;
   margin-bottom: 20px;
 `;
 
-const ControlWrapper = styled(Hidable)`
+const ActionButtonContainer = styled(Hidable)`
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: center;
   gap: 10px;
+  grid-column: 1;
+  grid-row: 1;
+`;
+
+const ControlWrapper = styled(Row)`
   margin-bottom: 40px;
   @media (max-height: 400px) {
     margin-bottom: 10px;
@@ -297,15 +296,23 @@ const TimerSet = memo(
             )) as ChildWithKey[]
           }
         </ScrollableList>
-        <ControlWrapper isHidden={isSequenceRunning}>
-          <Button
-            onClick={addTimer}
-            data-testid="add-button"
-            aria-label="Add timer"
+        <ControlWrapper>
+          <ActionButtonContainer
+            isHidden={isSequenceRunning}
+            style={timers.length <= 1 ? {} : { marginRight: '75px' }}
           >
-            <Plus />
-          </Button>
-          {timers.length > 1 && (
+            <Button
+              onClick={addTimer}
+              data-testid="add-button"
+              aria-label="Add timer"
+            >
+              <Plus />
+            </Button>
+          </ActionButtonContainer>
+          <ActionButtonContainer
+            isHidden={timers.length <= 1 || isSequenceRunning}
+            style={{ marginLeft: '75px' }}
+          >
             <Button
               onClick={removeTimer}
               data-testid="remove-button"
@@ -313,34 +320,30 @@ const TimerSet = memo(
             >
               <Trash />
             </Button>
-          )}
+          </ActionButtonContainer>
         </ControlWrapper>
         <Row>
-          {isNewTimerSet && (
-            <Hidable isHidden={isSequenceRunning}>
-              <Button
-                onClick={startSequence}
-                data-testid="start-button"
-                ref={startButtonRef}
-              >
-                Start
-              </Button>
-            </Hidable>
-          )}
-          {!isNewTimerSet && (
-            <Hidable isHidden={isSequenceRunning}>
-              <Button onClick={resetSequence} data-testid="reset-button">
-                {'Reset'}
-              </Button>
-              <Button
-                onClick={runSequence}
-                data-testid="resume-button"
-                ref={resumeButtonRef}
-              >
-                Resume
-              </Button>
-            </Hidable>
-          )}
+          <ActionButtonContainer isHidden={!isNewTimerSet || isSequenceRunning}>
+            <Button
+              onClick={startSequence}
+              data-testid="start-button"
+              ref={startButtonRef}
+            >
+              Start
+            </Button>
+          </ActionButtonContainer>
+          <ActionButtonContainer isHidden={isNewTimerSet || isSequenceRunning}>
+            <Button onClick={resetSequence} data-testid="reset-button">
+              {'Reset'}
+            </Button>
+            <Button
+              onClick={runSequence}
+              data-testid="resume-button"
+              ref={resumeButtonRef}
+            >
+              Resume
+            </Button>
+          </ActionButtonContainer>
         </Row>
       </TimerSetWrapper>
     );
