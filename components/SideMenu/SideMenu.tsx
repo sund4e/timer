@@ -9,7 +9,12 @@ const Header = styled.h1`
   margin: ${({ theme }) => theme.fontSizes.medium / 5}rem;
 `;
 
-const MenuContent = styled(Box)``;
+const MenuContent = styled(Box)`
+  @media (max-height: 400px) {
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+`;
 
 const Menu = styled.div<{
   $isOpen: boolean;
@@ -31,7 +36,7 @@ const Menu = styled.div<{
   backdrop-filter: blur(20px);
   color: ${({ theme }) => theme.colors.light};
 
-  @media (max-height: 400px) {
+  @media (max-height: 500px) {
     width: 90%;
     align-items: flex-start;
   }

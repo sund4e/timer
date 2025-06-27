@@ -10,7 +10,7 @@ import { Box } from '../Box/Box';
 
 const SubHeader = styled.h2`
   font-size: ${({ theme }) => theme.fontSizes.medium * 0.5}rem;
-  margin-bottom: ${({ theme }) => theme.fontSizes.medium / 5}rem;
+  margin: ${({ theme }) => theme.fontSizes.medium / 5}rem 0;
 `;
 
 const Text = styled.p`
@@ -27,7 +27,6 @@ const Wrapper = styled.div`
 `;
 
 const MenuSection = styled(Box)`
-  width: 300px;
   flex-direction: column;
   flex-wrap: no-wrap;
 `;
