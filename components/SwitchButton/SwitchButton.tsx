@@ -20,7 +20,7 @@ const StyledButton = styled.button`
 
 const Bar = styled(motion.div)`
   width: ${({ theme }) => theme.fontSizes.medium}rem;
-  height: 5px;
+  height: 3px;
   background-color: ${({ theme }) => theme.colors.light};
   border-radius: 10px;
   position: relative;
