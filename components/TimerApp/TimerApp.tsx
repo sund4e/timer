@@ -159,6 +159,9 @@ const TimerApp = memo(
               {
                 'Aika means "time" in Finnish. It\'s a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Perfect for Pomodoro productivity, time-boxed meetings, and the 20-20-20 eye care technique.'
               }
+              <p>
+                <MenuLink href="/read-more">Read more</MenuLink>
+              </p>
             </Text>
           </MenuSection>
           <MenuSection>
