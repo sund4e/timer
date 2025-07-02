@@ -114,12 +114,21 @@ const TimerSet = memo(
 
     const focusStart = useCallback(() => {
       setFocusIndex(null);
-      if (startButtonRef.current) {
-        startButtonRef.current.focus();
-      } else {
-        resumeButtonRef.current?.focus();
-      }
-    }, [startButtonRef, resumeButtonRef]);
+
+      // Defer the focus logic until after the next browser paint to ensure
+      // computed styles are up-to-date.
+      requestAnimationFrame(() => {
+        const startButtonParent = startButtonRef.current?.parentElement;
+        if (
+          startButtonParent &&
+          window.getComputedStyle(startButtonParent).opacity === '1'
+        ) {
+          startButtonRef.current?.focus();
+        } else {
+          resumeButtonRef.current?.focus();
+        }
+      });
+    }, []);
 
     const stopTimer = useCallback(() => {
       releaseWakeLock();
@@ -173,7 +182,7 @@ const TimerSet = memo(
     const onEnter = useCallback(() => {
       const activeElement = document.activeElement as HTMLElement | null;
 
-      if (activeElement?.tagName === 'BUTTON') {
+      if (!isSequenceRunning && activeElement?.tagName === 'BUTTON') {
         // default event is prevented, we need to simulate click
         activeElement.click();
         activeElement.blur();

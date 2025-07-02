@@ -76,6 +76,13 @@ describe('timerApp', () => {
     });
   });
 
+  const getActiveElement = () => {
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
+    return document.activeElement;
+  };
+
   it('runs timer after start', () => {
     render({ initialTime: 20 * 60 });
     expect(getTime()).toEqual('00:20:00');
@@ -150,29 +157,29 @@ describe('timerApp', () => {
     expect(setTitleTime).toHaveBeenCalledWith(initialTime - 1);
   });
 
-  // it('stops the timer sequence when the wrapper is clicked while running', () => {
-  //   render({ initialTime: 60 });
-  //   expect(getTime()).toEqual('00:01:00');
+  it('stops the timer sequence when the wrapper is clicked while running', () => {
+    render({ initialTime: 60 });
+    expect(getTime()).toEqual('00:01:00');
 
-  //   clickButton('start');
-  //   advanceSeconds(1);
-  //   expect(getTime()).toEqual('00:00:59');
-  //   expect(getButton('start')).toBeNull();
+    clickButton('start');
+    advanceSeconds(1);
+    expect(getTime()).toEqual('00:00:59');
+    expect(getButton('start')).toBeNull();
 
-  //   const timerSetWrapper = screen.getByTestId('timer-set-wrapper');
-  //   act(() => {
-  //     fireEvent.click(timerSetWrapper);
-  //   });
+    const timerSetWrapper = screen.getByTestId('timer-set-wrapper');
+    act(() => {
+      fireEvent.click(timerSetWrapper);
+    });
 
-  //   const resumeButton = getButton('resume');
-  //   expect(resumeButton).not.toBeNull();
-  //   expect(document.activeElement).toBe(resumeButton);
+    const resumeButton = getButton('resume');
+    expect(resumeButton).not.toBeNull();
+    expect(document.activeElement).toBe(resumeButton);
 
-  //   // Time should not advance further
-  //   const currentTime = getTime();
-  //   advanceSeconds(1);
-  //   expect(getTime()).toEqual(currentTime);
-  // });
+    // Time should not advance further
+    const currentTime = getTime();
+    advanceSeconds(1);
+    expect(getTime()).toEqual(currentTime);
+  });
 
   describe('localStorage', () => {
     it('loads and displays timers from localStorage if present', () => {
@@ -209,7 +216,7 @@ describe('timerApp', () => {
     it('inital render shows and focuses start button', () => {
       render();
       expect(getButton('start')).toBeTruthy();
-      expect(document.activeElement).toBe(getButton('start'));
+      expect(getActiveElement()).toEqual(getButton('start'));
     });
 
     it('inital render shows correct buttons', () => {
@@ -281,7 +288,7 @@ describe('timerApp', () => {
       advanceSeconds(10);
       expect(getTime()).toEqual('00:00:10');
       expect(getButton('start')).toBeTruthy();
-      expect(document.activeElement).toBe(getButton('start'));
+      expect(getActiveElement()).toEqual(getButton('start'));
     });
 
     describe('resume button', () => {
@@ -318,7 +325,7 @@ describe('timerApp', () => {
 
         const startButton = getButton('start');
         expect(startButton).not.toBeNull();
-        expect(document.activeElement).toBe(startButton);
+        expect(getActiveElement()).toEqual(startButton);
 
         clickButton('start');
         advanceSeconds(1);
@@ -328,63 +335,61 @@ describe('timerApp', () => {
   });
 
   describe('enter', () => {
-    // it('focuses resume button if focused', () => {
-    //   render();
-    //   clickButton('start');
-    //   expect(document.activeElement).toBe(document.body);
-    //   enter();
-    //   expect(document.activeElement).toBe(getButton('resume'));
-    // });
+    it('focuses resume button if focused', () => {
+      render();
+      clickButton('start');
+      enter();
+      expect(getActiveElement()).toEqual(getButton('resume'));
+    });
 
-    // it('focuses and triggers start and resume buttons correctly', () => {
-    //   render({ initialTime: 10 });
-    //   const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    //   act(() => {
-    //     inputs[0].focus();
-    //   });
-    //   expect(document.activeElement).toBe(inputs[0]);
+    it('focuses and triggers start and resume buttons correctly', () => {
+      render({ initialTime: 10 });
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      act(() => {
+        inputs[0].focus();
+      });
+      expect(document.activeElement).toBe(inputs[0]);
 
-    //   enter();
-    //   expect(document.activeElement).toBe(getButton('start'));
+      enter();
+      expect(getActiveElement()).toEqual(getButton('start'));
 
-    //   enter();
-    //   expect(getTime()).toEqual('00:00:10');
-    //   advanceSeconds(1);
-    //   expect(getTime()).toEqual('00:00:09');
+      enter();
+      expect(getTime()).toEqual('00:00:10');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
 
-    //   enter();
-    //   expect(document.activeElement).toBe(getButton('resume'));
-    //   advanceSeconds(1);
-    //   expect(getTime()).toEqual('00:00:09');
+      enter();
+      expect(getActiveElement()).toEqual(getButton('resume'));
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
 
-    //   enter();
-    //   expect(document.activeElement).toBe(document.body);
-    //   advanceSeconds(1);
-    //   expect(getTime()).toEqual('00:00:08');
-    // });
+      enter();
+      expect(document.activeElement).toBe(document.body);
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:08');
+    });
 
-    // it('stops timer if running', () => {
-    //   render({ initialTime: 10 });
-    //   expect(getTime()).toEqual('00:00:10');
-    //   clickButton('start');
-    //   advanceSeconds(1);
-    //   expect(getTime()).toEqual('00:00:09');
+    it('stops timer if running', () => {
+      render({ initialTime: 10 });
+      expect(getTime()).toEqual('00:00:10');
+      clickButton('start');
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
 
-    //   enter();
-    //   advanceSeconds(1);
-    //   expect(getTime()).toEqual('00:00:09');
-    // });
+      enter();
+      advanceSeconds(1);
+      expect(getTime()).toEqual('00:00:09');
+    });
 
     it('focuses start button if not running and triggers start', () => {
       render({ initialTime: 10 });
       expect(getTime()).toEqual('00:00:10');
       const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      fireEvent.focus(inputs[2]);
-      advanceSeconds(1);
-      expect(getTime()).toEqual('00:00:10');
-
+      act(() => {
+        fireEvent.focus(inputs[2]);
+      });
       enter();
-      expect(document.activeElement).toBe(getButton('start'));
+      expect(getActiveElement()).toEqual(getButton('start'));
       advanceSeconds(1);
       expect(getTime()).toEqual('00:00:10');
 
@@ -649,6 +654,9 @@ describe('timerApp', () => {
     expect(getTimes()).toEqual(['00:00:10', '00:00:10', '00:00:10']);
     expect(getMockAudioInstance().play).toHaveBeenCalledTimes(3);
 
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
     const startButton = getButton('start');
     expect(startButton).toBeTruthy();
     expect(document.activeElement).toBe(startButton);
