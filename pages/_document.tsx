@@ -36,6 +36,7 @@ export default class MyDocument extends Document {
 
   render() {
     const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+    const appVersion = process.env.NEXT_PUBLIC_APP_VERSION;
 
     return (
       <Html lang="en">
@@ -45,7 +46,7 @@ export default class MyDocument extends Document {
               defer
               src="https://cloud.umami.is/script.js"
               data-website-id={umamiWebsiteId}
-              data-tag="version-1.0"
+              data-tag={`version-${appVersion}`}
             />
           )}
           <meta
