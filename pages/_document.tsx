@@ -45,6 +45,7 @@ export default class MyDocument extends Document {
               defer
               src="https://cloud.umami.is/script.js"
               data-website-id={umamiWebsiteId}
+              data-tag="version-1.0"
             />
           )}
           <meta
