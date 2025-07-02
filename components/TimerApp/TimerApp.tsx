@@ -7,10 +7,12 @@ import useStorage from '../../hooks/useStorage/useStorage';
 import { useNotification } from '../../hooks/useNotification/useNotification';
 import Tooltip from '../Tooltip';
 import { Box } from '../Box/Box';
+import Link from 'next/link';
 
 const SubHeader = styled.h2`
-  font-size: ${({ theme }) => theme.fontSizes.medium * 0.5}rem;
+  font-size: ${({ theme }) => theme.fontSizes.medium * 0.6}rem;
   margin: ${({ theme }) => theme.fontSizes.medium / 5}rem 0;
+  font-weight: 400;
 `;
 
 const Text = styled.p`
@@ -29,6 +31,17 @@ const Wrapper = styled.div`
 const MenuSection = styled(Box)`
   flex-direction: column;
   flex-wrap: no-wrap;
+`;
+
+const MenuLink = styled(Link)`
+  color: ${({ theme }) => theme.colors.light};
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export type Props = {

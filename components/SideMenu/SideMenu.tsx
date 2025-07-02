@@ -8,6 +8,7 @@ import { motion } from 'motion/react';
 const Header = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.medium}rem;
   margin: ${({ theme }) => theme.fontSizes.medium / 5}rem;
+  font-weight: 400;
 `;
 
 const MenuContent = styled(Box)`
