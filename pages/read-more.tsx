@@ -1,6 +1,24 @@
 import styled from 'styled-components';
 import Container from '../components/Container';
 import Head from 'next/head';
+import Link from 'next/link';
+import { IoIosArrowBack } from 'react-icons/io';
+
+const BackButton = styled(Link)`
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  color: white;
+  font-size: 2rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.light};
+  }
+`;
 
 const ReadMoreContainer = styled.div`
   padding: 2rem;
@@ -44,6 +62,9 @@ const ReadMorePage = () => {
       <Head>
         <title>About- Aika Timer</title>
       </Head>
+      <BackButton href="/">
+        <IoIosArrowBack />
+      </BackButton>
       <Container>
         <ReadMoreContainer>
           <Title>About Aika</Title>
