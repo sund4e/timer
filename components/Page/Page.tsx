@@ -11,14 +11,15 @@ const Header = styled.header`
 `;
 
 const PostContainer = styled.div`
-  padding: 5rem;
-  color: white;
+  padding: 5rem 20rem;
+  color: ${({ theme }) => theme.colors.light};
   display: flex;
   flex-direction: column;
   align-items: left;
-  height: 100%;
   background-color: ${({ theme }) => theme.colors.primary};
   opacity: 0.8;
+  box-sizing: border-box;
+  min-height: 100vh;
 `;
 
 export const Page = ({

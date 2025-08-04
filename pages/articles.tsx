@@ -3,6 +3,7 @@ import { Page } from '../components/Page/Page';
 
 const Title = styled.h1`
   font-size: 3rem;
+  margin-top: 5rem;
 `;
 
 const PostList = styled.ul`
@@ -31,11 +32,14 @@ const ReadMorePage = () => {
           it"
     >
       <Title>
-        Articles about how timers can help in life and science behind it
+        Master Your Time: Timers That Boost Focus, Productivity, and Wellbeing
       </Title>
       <PostList>
         <PostItem>
-          <PostLink href="/blog/pomodoro-technique" rel="noopener noreferrer">
+          <PostLink
+            href="/articles/pomodoro-technique"
+            rel="noopener noreferrer"
+          >
             What Is the Pomodoro Technique and How to Use It for Better Focus
           </PostLink>
         </PostItem>

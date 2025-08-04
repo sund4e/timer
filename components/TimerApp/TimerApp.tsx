@@ -23,9 +23,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  height: 100%;
   align-items: center;
   overflow: hidden;
+  height: 100dvh;
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const MenuSection = styled(Box)`
@@ -160,7 +161,7 @@ const TimerApp = memo(
                 'Aika means "time" in Finnish. It\'s a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Perfect for Pomodoro productivity, time-boxed meetings, and the 20-20-20 eye care technique.'
               }
               <p>
-                <MenuLink href="/read-more">Read more</MenuLink>
+                <MenuLink href="/articles">Read more</MenuLink>
               </p>
             </Text>
           </MenuSection>
