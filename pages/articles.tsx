@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 import { Page } from '../components/Page/Page';
 import { articles } from '../data/articles/index';
+import { Title } from '../components/ArticlePage/ArticlePage';
 import Link from 'next/link';
 
-const Title = styled.h1`
-  font-size: 3rem;
-  margin-top: 5rem;
+const SubTitle = styled.p`
+  font-size: 1.2rem;
+  opacity: 0.8;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  max-width: 70ch;
 `;
 
 const PostList = styled.ul`
@@ -56,10 +60,13 @@ const PostLink = styled(Link)`
 
 const ArticlesPage = () => {
   return (
-    <Page title="Aika - Articles on Productivity, Time Management, and Wellbeing">
-      <Title>
-        Master Your Time: Timers That Boost Focus, Productivity, and Wellbeing
-      </Title>
+    <Page title="Aika | Science-Backed Guides on Time Management & Productivity">
+      <Title>Time, Well Spent: The Science of Focus and Productivity</Title>
+      <SubTitle>
+        Science-backed articles on using timers to boost focus, productivity,
+        and wellbeing. Explore our guides and improve how you work, learn, and
+        live.
+      </SubTitle>
       <PostList>
         {articles.map((article) => (
           <PostItemContainer key={article.slug}>

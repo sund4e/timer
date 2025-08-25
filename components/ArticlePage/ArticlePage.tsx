@@ -4,9 +4,9 @@ import { Article } from '../../data/articles/index';
 import Link from 'next/link';
 import Button from '../Button/Button';
 
-const Title = styled.h1`
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
+export const Title = styled.h1`
+  font-size: 3rem;
+  margin-top: 5rem;
 `;
 
 const ContentContainer = styled.div`
