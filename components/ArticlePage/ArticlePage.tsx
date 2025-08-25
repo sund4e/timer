@@ -50,7 +50,6 @@ const ContentContainer = styled.div`
 `;
 
 const ActionButton = styled(Button)`
-  margin-top: 2rem;
   font-size: 1.2rem;
   background-color: ${({ theme }) => theme.colors.primary};
   border: 1px solid ${({ theme }) => theme.colors.light};
@@ -59,6 +58,25 @@ const ActionButton = styled(Button)`
   &:hover:not(:disabled) {
     border: 1px solid white;
     color: white;
+  }
+`;
+
+const ActionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 2rem;
+`;
+
+const BackLink = styled(Link)`
+  margin-top: 1.5rem;
+  color: ${({ theme }) => theme.colors.light};
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 1;
   }
 `;
 
@@ -74,9 +92,12 @@ const ArticlePage = ({ article }: ArticlePageProps) => {
     >
       <Title>{article.title}</Title>
       <ContentContainer dangerouslySetInnerHTML={{ __html: article.content }} />
-      <Link href="/" passHref>
-        <ActionButton>Go to Aika</ActionButton>
-      </Link>
+      <ActionsContainer>
+        <Link href="/" passHref>
+          <ActionButton>Go to Aika</ActionButton>
+        </Link>
+        <BackLink href="/articles">« Back to all articles</BackLink>
+      </ActionsContainer>
     </Page>
   );
 };
