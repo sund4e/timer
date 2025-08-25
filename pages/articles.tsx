@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { Page } from '../components/Page/Page';
+import { articles } from '../data/articles';
+import Link from 'next/link';
 
 const Title = styled.h1`
   font-size: 3rem;
@@ -14,63 +16,61 @@ const PostList = styled.ul`
   justify-content: space-between;
 `;
 
-const PostItem = styled.li`
+const PostItemContainer = styled.li`
   margin-bottom: 1.5rem;
   flex: 0 0 auto;
   width: 45%;
   border: 1px solid;
   padding: 1rem;
   border-radius: ${({ theme }) => theme.radius}rem;
+  transition: border-color 0.2s ease-in-out;
   &:hover {
-    color: white;
-    a {
+    border-color: white;
+    h3,
+    p {
       color: white;
+      opacity: 1;
     }
   }
 `;
 
-const PostLink = styled.a`
-  font-size: 1.5rem;
-  color: ${({ theme }) => theme.colors.light};
+const PostLink = styled(Link)`
   text-decoration: none;
+  color: ${({ theme }) => theme.colors.light};
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s ease-in-out;
+  }
+
+  p {
+    font-size: 1rem;
+    opacity: 0.8;
+    transition:
+      color 0.2s ease-in-out,
+      opacity 0.2s ease-in-out;
+  }
 `;
 
-const ReadMorePage = () => {
+const ArticlesPage = () => {
   return (
-    <Page
-      title="Aika - Articles about how timers can help in life and science behind
-          it"
-    >
+    <Page title="Aika - Articles on Productivity, Time Management, and Wellbeing">
       <Title>
         Master Your Time: Timers That Boost Focus, Productivity, and Wellbeing
       </Title>
       <PostList>
-        <PostItem>
-          <PostLink
-            href="/articles/pomodoro-technique"
-            rel="noopener noreferrer"
-          >
-            What Is the Pomodoro Technique and How to Use It for Better Focus
-          </PostLink>
-        </PostItem>
-        <PostItem>
-          <PostLink href="#" target="_blank" rel="noopener noreferrer">
-            Mastering the Pomodoro Technique
-          </PostLink>
-        </PostItem>
-        <PostItem>
-          <PostLink href="#" target="_blank" rel="noopener noreferrer">
-            Why Taking Breaks is Crucial for Your Eyes (20-20-20 Rule)
-          </PostLink>
-        </PostItem>
-        <PostItem>
-          <PostLink href="#" target="_blank" rel="noopener noreferrer">
-            The Story Behind Aika Timer
-          </PostLink>
-        </PostItem>
+        {articles.map((article) => (
+          <PostItemContainer key={article.slug}>
+            <PostLink href={`/articles/${article.slug}`}>
+              <h3>{article.title}</h3>
+              <p>{article.abstract}</p>
+            </PostLink>
+          </PostItemContainer>
+        ))}
       </PostList>
     </Page>
   );
 };
 
-export default ReadMorePage;
+export default ArticlesPage;
