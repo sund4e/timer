@@ -13,7 +13,7 @@ const ContentContainer = styled.div`
   h2 {
     font-size: 2rem;
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   h3 {
