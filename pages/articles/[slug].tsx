@@ -1,7 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import ArticlePage from '../../components/ArticlePage/ArticlePage';
-import { articles, Article } from '../../data/articles';
+import { articles, Article } from '../../data/articles/index';
 
 interface PostProps {
   article?: Article;
