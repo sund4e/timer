@@ -43,6 +43,10 @@ const ContentContainer = styled.div`
   strong {
     font-weight: 600;
   }
+
+  a {
+    color: ${({ theme }) => theme.colors.light};
+  }
 `;
 
 const ActionButton = styled(Button)`

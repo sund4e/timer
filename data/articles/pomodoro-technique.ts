@@ -4,81 +4,173 @@ export const pomodoroTechnique: Article = {
   slug: 'pomodoro-technique',
   title: 'What Is the Pomodoro Technique and How to Use It for Better Focus',
   abstract:
-    'A time management strategy that breaks work into short, focused intervals, helping to reduce mental fatigue and make large tasks feel manageable.',
+    'A simple yet powerful time management method to combat distraction, improve productivity, and build stronger focus and better work habits.',
   content: `
-      <h2>What is the Pomodoro Technique?</h2>
       <p>
-        The Pomodoro Technique is a time management strategy that breaks work
-        into short, focused intervals. Traditionally, it&apos;s:
-      </p>
-      <ul>
-        <li>25 minutes of focused work (called a “Pomodoro”)</li>
-        <li>5-minute break</li>
-        <li>Repeat 4 times, then take a longer 15–30 minute break</li>
-      </ul>
-      <p>
-        This structure helps reduce mental fatigue and makes large tasks feel
-        manageable.
+        In an age of constant notifications, multitasking, and digital distractions,
+        staying focused on one task for an extended period can be challenging. One
+        proven method to combat distraction and improve productivity is the Pomodoro
+        Technique.
       </p>
       <p>
-        It was created by Francesco Cirillo in the late 1980s. The name
-        “Pomodoro” comes from the tomato-shaped kitchen timer he used.
+        This time management strategy has gained worldwide popularity because of its
+        simplicity and effectiveness. In this article, we’ll explore what the Pomodoro
+        Technique is, how it works, and how you can use it to build stronger focus
+        and better work habits.
       </p>
 
-      <h2>Why the Pomodoro Technique Works (Backed by Psychology)</h2>
-      <h3>1. It reduces procrastination</h3>
+      <h2>What Is the Pomodoro Technique?</h2>
       <p>
-        Committing to just 25 minutes feels much easier than “I need to write
-        this whole paper” or “I have to finish this project.” It&apos;s a way
-        to trick your brain into starting.
+        The Pomodoro Technique is a time management method developed by Francesco
+        Cirillo in the late 1980s. Cirillo named it after the tomato-shaped
+        kitchen timer he used while studying — “pomodoro” means “tomato” in
+        Italian (<a href="https://francescocirillo.com/pages/pomodoro-technique" target="_blank" rel="noopener noreferrer">Cirillo, Official Site</a>).
       </p>
-      <h3>2. It matches your brain’s natural focus rhythms</h3>
+      <p>The core idea is simple:</p>
+      <ul>
+        <li>
+          Break your work into focused intervals of 25 minutes, known as
+          “Pomodoros.”
+        </li>
+        <li>After each Pomodoro, take a short break of 5 minutes.</li>
+        <li>
+          After completing four Pomodoros, take a longer break of 15–30 minutes.
+        </li>
+      </ul>
       <p>
-        Studies suggest that our brain can only focus deeply for short bursts
-        — often around 20–30 minutes at a time. Pomodoro sessions work with
-        this rhythm.
+        This structured approach is based on the principle that frequent breaks
+        improve mental agility (<a href="https://francescocirillo.com/pages/pomodoro-technique" target="_blank" rel="noopener noreferrer">Cirillo, Official Site</a>).
       </p>
-      <h3>3. It builds momentum</h3>
+
+      <h2>Why the Pomodoro Technique Works</h2>
       <p>
-        Every completed Pomodoro feels like a small win. That sense of
-        progress fuels motivation, especially when you&apos;re tired or
-        overwhelmed.
+        Several cognitive science and psychology principles explain why the
+        Pomodoro Technique is effective:
       </p>
-      <h3>4. It helps manage ADHD and executive dysfunction</h3>
+      <h3>Combats mental fatigue</h3>
       <p>
-        People with ADHD often struggle with task initiation, attention
-        switching, and time blindness. Pomodoro offers:
+        Research shows that sustained attention decreases over time, and brief
+        mental breaks can restore focus (<a href="https://doi.org/10.1016/j.cognition.2010.12.007" target="_blank" rel="noopener noreferrer">Ariga & Lleras, 2011</a>).
+      </p>
+      <h3>Reduces procrastination</h3>
+      <p>
+        Breaking work into small, time-boxed intervals lowers the psychological
+        barrier to starting tasks (<a href="https://psycnet.apa.org/record/2007-00436-004" target="_blank" rel="noopener noreferrer">Steel, 2007</a>).
+      </p>
+      <h3>Encourages deep work</h3>
+      <p>
+        Time blocking is a known productivity strategy that helps protect focus
+        and reduce multitasking (<a href="https://www.calnewport.com/books/deep-work/" target="_blank" rel="noopener noreferrer">Newport, 2016</a>).
+      </p>
+      <h3>Improves motivation</h3>
+      <p>
+        Tracking completed Pomodoros provides visible progress, which boosts
+        intrinsic motivation (<a href="https://psycnet.apa.org/record/2000-13324-007" target="_blank" rel="noopener noreferrer">Deci & Ryan, 2000</a>).
+      </p>
+
+      <h2>How to Use the Pomodoro Technique Step by Step</h2>
+      <p>
+        Here’s a practical way to start using the Pomodoro Technique in your
+        daily routine:
+      </p>
+      <ol>
+        <li>Choose a task you want to work on.</li>
+        <li>
+          Set a timer for 25 minutes and work on the task without distractions.
+        </li>
+        <li>When the timer rings, mark one Pomodoro complete.</li>
+        <li>
+          Take a 5-minute break — stretch, walk, or rest your eyes. Regular
+          short breaks also support eye health by reducing digital strain
+          (<a href="https://doi.org/10.1038/s41598-018-21461-4" target="_blank" rel="noopener noreferrer">Sheppard & Wolffsohn, 2018</a>).
+        </li>
+        <li>Repeat this cycle four times.</li>
+        <li>
+          After four Pomodoros, take a longer 15–30 minute break. Longer breaks
+          help consolidate learning and restore energy (<a href="https://doi.org/10.1016/j.tins.2011.07.001" target="_blank" rel="noopener noreferrer">Mednick et al., 2011</a>).
+        </li>
+      </ol>
+      <p>
+        Consistency is key. Over time, your brain adapts to this rhythm, making
+        focus and productivity more natural (<a href="https://doi.org/10.1037/0033-295X.111.2.353" target="_blank" rel="noopener noreferrer">Cepeda et al., 2006</a>).
+      </p>
+
+      <h2>Tips to Maximize the Pomodoro Technique</h2>
+      <h3>Eliminate distractions</h3>
+      <p>
+        Digital interruptions are proven to reduce productivity and increase
+        error rates (<a href="https://doi.org/10.1145/1357054.1357072" target="_blank" rel="noopener noreferrer">Mark et al., 2008</a>).
+      </p>
+      <h3>Batch small tasks</h3>
+      <p>
+        Grouping similar small tasks together improves efficiency through task
+        batching (<a href="https://doi.org/10.1145/985692.985715" target="_blank" rel="noopener noreferrer">González & Mark, 2004</a>).
+      </p>
+      <h3>Adjust the timing</h3>
+      <p>
+        Some people prefer longer or shorter intervals; flexibility helps adapt
+        the technique to different working styles (<a href="https://francescocirillo.com/pages/pomodoro-technique" target="_blank" rel="noopener noreferrer">Cirillo, Official Site</a>).
+      </p>
+      <h3>Track progress</h3>
+      <p>
+        Self-monitoring is strongly linked to improved goal achievement and
+        productivity (<a href="https://doi.org/10.1037/bul0000025" target="_blank" rel="noopener noreferrer">Harkin et al., 2016</a>).
+      </p>
+
+      <h2>Who Should Try the Pomodoro Technique?</h2>
+      <p>
+        The Pomodoro Technique can benefit anyone, but it’s especially effective
+        for:
       </p>
       <ul>
-        <li>A visible, predictable structure</li>
-        <li>Built-in breaks (which reduce burnout)</li>
-        <li>An external time anchor</li>
+        <li>
+          Students, since spaced learning improves retention and reduces mental
+          overload (<a href="https://doi.org/10.1037/0033-295X.111.2.353" target="_blank" rel="noopener noreferrer">Cepeda et al., 2006</a>).
+        </li>
+        <li>
+          Remote workers, who often face more interruptions and fragmented
+          attention (<a href="https://doi.org/10.1257/app.20130400" target="_blank" rel="noopener noreferrer">Bloom et al., 2015</a>).
+        </li>
+        <li>
+          Knowledge workers such as writers, programmers, or designers, who
+          need extended focus to produce high-quality deep work
+          (<a href="https://www.calnewport.com/books/deep-work/" target="_blank" rel="noopener noreferrer">Newport, 2016</a>).
+        </li>
+        <li>
+          People with ADHD, who may benefit from structured intervals and
+          externalized time management (<a href="https://www.sciencedirect.com/science/article/abs/pii/S0272735819300727" target="_blank" rel="noopener noreferrer">Kofler et al., 2019</a>).
+        </li>
       </ul>
 
-      <h2>How to Start Using Pomodoro (No Apps Needed)</h2>
+      <h2>Conclusion</h2>
       <p>
-        You can literally just use a kitchen timer or a stopwatch app. But if
-        you want a cleaner, more focused experience, there are minimalist
-        Pomodoro timers that reduce distractions and help you get started
-        fast.
+        The Pomodoro Technique is more than just a productivity hack — it’s a
+        scientifically supported way to structure work and rest for optimal
+        performance. By working in short, focused bursts and taking regular
+        breaks, you can improve your ability to concentrate, reduce
+        procrastination, and achieve more in less time.
+      </p>
+      <p>
+        Whether you’re studying, working remotely, or managing a busy schedule,
+        trying out this simple technique may help you find a better rhythm for
+        focus and productivity.
       </p>
 
       <h2>How to use Aika for Pomodoro Technique:</h2>
       <p>
-        Aika is a free, web-based Pomodoro timer. Here&apos;s how to set up a
-        full session in under a minute:
+        Aika is a free, web-based Pomodoro timer you can use right now without signup or download required. Here&apos;s how to set up a full session in under a minute:
       </p>
       <ol>
         <li>Set your first 25-minute timer</li>
         <li>
-          Add a 5-minute timer using the <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2z"></path></svg> icon. This will be your break.
+          Add a 5-minute timer using the plus icon ( <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2z"></path></svg>). This will be your break.
         </li>
         <li>
           Repeat to create 4 Pomodoro/break cycles. For the final timer, set a
           longer break (e.g. 30 minutes).
         </li>
         <li>
-          Open the <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg> side menu to enable notifications and “Restart timer
+          Open the side menu ( <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>) to enable notifications and “Restart timer
           when done.”
         </li>
         <li>
@@ -86,37 +178,7 @@ export const pomodoroTechnique: Article = {
         </li>
       </ol>
       <p>
-        That&apos;s it! You’ve set up a complete Pomodoro routine with no
-        signup or download.
-      </p>
-
-      <h2>Final Thoughts: The Power Is in the Simplicity</h2>
-      <p>
-        The Pomodoro Technique isn’t flashy and that&apos;s the point. It
-        helps you return to the basics of focus: short, intense effort,
-        followed by rest.
-      </p>
-      <p>
-        Whether you’re studying, coding, or trying to manage your time better
-        with ADHD, Pomodoro can help. Tools like Aika can make it effortless
-        to build the habit.
-      </p>
-
-      <h2>Frequently Asked Questions</h2>
-      <h3>How long is a Pomodoro session?</h3>
-      <p>
-        Traditionally, 25 minutes of focused work followed by a 5-minute
-        break.
-      </p>
-      <h3>Do I need a special app to use Pomodoro?</h3>
-      <p>
-        No. You can use any timer — though minimalist Pomodoro apps make it
-        easier to automate breaks.
-      </p>
-      <h3>Is Pomodoro good for ADHD?</h3>
-      <p>
-        Yes. Its structure helps manage time blindness, overwhelm, and task
-        switching.
+        That&apos;s it! You’ve set up a complete Pomodoro routine in Aika.
       </p>
   `,
 };
