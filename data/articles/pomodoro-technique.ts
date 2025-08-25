@@ -148,6 +148,8 @@ export const pomodoroTechnique: Article = {
         </li>
       </ul>
 
+
+
       <h2>Conclusion</h2>
       <p>
         The Pomodoro Technique is more than just a productivity hack — it’s a
@@ -162,22 +164,76 @@ export const pomodoroTechnique: Article = {
         focus and productivity.
       </p>
 
-      <h2>How to use Aika for Pomodoro Technique:</h2>
+      <h2>Frequently Asked Questions about the Pomodoro Technique</h2>
+      <h3>Q: How long should a Pomodoro be?</h3>
       <p>
-        Aika is a free, web-based Pomodoro timer you can use right now without signup or download required. Here&apos;s how to set up a full session in under a minute:
+        A Pomodoro is traditionally 25 minutes of focused work followed by a
+        5-minute break (<a href="https://francescocirillo.com/pages/pomodoro-technique" target="_blank" rel="noopener noreferrer">Cirillo, Official Site</a>).
+        However, some people experiment with longer sessions, like 50/10 or
+        90/20, depending on their focus levels.
+      </p>
+      <h3>Q: Does the Pomodoro Technique work for studying?</h3>
+      <p>
+        Yes. Research shows that breaking study time into intervals with breaks
+        improves retention and reduces fatigue (<a href="https://doi.org/10.1037/0033-295X.111.2.353" target="_blank" rel="noopener noreferrer">Cepeda et al., 2006</a>).
+        Many students find it helps them stay consistent with revision.
+      </p>
+      <h3>Q: Is the Pomodoro Technique good for ADHD?</h3>
+      <p>
+        Yes. Structured intervals and external timers can help people with ADHD
+        maintain focus and manage time more effectively (<a href="https://www.sciencedirect.com/science/article/abs/pii/S0272735819300727" target="_blank" rel="noopener noreferrer">Kofler et al., 2019</a>).
+      </p>
+      <h3>Q: Can I change the length of a Pomodoro?</h3>
+      <p>
+        Absolutely. The method is flexible. While the original uses 25/5, you
+        can adjust to 15/3 for quick tasks or 50/10 for deep work.
+      </p>
+      <h3>Q: Do I need a special app for the Pomodoro Technique?</h3>
+      <p>
+        Not necessarily. A kitchen timer, stopwatch, or phone timer works fine.
+        However, using a dedicated Pomodoro timer makes it easier to track
+        intervals and progress. You can try a free timer here: <a href="/">Aika Timer</a>.
+      </p>
+
+            <h2>How to use Aika for Pomodoro Technique:</h2>
+      <p>
+        Aika is a free, web-based Pomodoro timer you can use right now without
+        signup or download required. Here&apos;s how to set up a full session in
+        under a minute:
       </p>
       <ol>
         <li>Set your first 25-minute timer</li>
         <li>
-          Add a 5-minute timer using the plus icon ( <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2z"></path></svg>). This will be your break.
+          Add a 5-minute timer using the plus icon (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            style="display: inline-block; vertical-align: middle; margin-right: 4px;"
+          >
+            <path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2z"></path>
+          </svg>
+          ). This will be your break.
         </li>
         <li>
           Repeat to create 4 Pomodoro/break cycles. For the final timer, set a
           longer break (e.g. 30 minutes).
         </li>
         <li>
-          Open the side menu ( <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>) to enable notifications and “Restart timer
-          when done.”
+          Open the side menu (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            style="display: inline-block; vertical-align: middle; margin-right: 4px;"
+          >
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+          </svg>
+          ) to enable notifications and “Restart timer when done.”
         </li>
         <li>
           Press Start. When notified, alternate between focus and rest.
