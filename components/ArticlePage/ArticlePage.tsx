@@ -68,7 +68,10 @@ interface ArticlePageProps {
 
 const ArticlePage = ({ article }: ArticlePageProps) => {
   return (
-    <Page title={`${article.title} - Aika Timer`}>
+    <Page
+      title={`${article.title} - Aika Timer`}
+      description={article.description}
+    >
       <Title>{article.title}</Title>
       <ContentContainer dangerouslySetInnerHTML={{ __html: article.content }} />
       <Link href="/" passHref>

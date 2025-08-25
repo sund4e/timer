@@ -24,15 +24,18 @@ const PostContainer = styled.div`
 
 export const Page = ({
   title,
+  description,
   children,
 }: {
   title: string;
+  description?: string;
   children: React.ReactNode;
 }) => {
   return (
     <>
       <Head>
         <title>{title}</title>
+        {description && <meta name="description" content={description} />}
       </Head>
       <Header>
         <Logo />

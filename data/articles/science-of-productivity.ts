@@ -5,6 +5,8 @@ export const scienceOfProductivity: Article = {
   title: 'The Science of Productivity: How Timers Can Help',
   abstract:
     'Explore the scientific basis of timer-based productivity, examining insights from psychology, neuroscience, and education research to understand why timers work.',
+  description:
+    'Explore the scientific basis of timer-based productivity, examining insights from psychology, neuroscience, and education research to understand why timers work.',
   content: `
       <p>
         In the modern world of constant notifications, endless to-do lists, and
