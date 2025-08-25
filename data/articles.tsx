@@ -77,14 +77,14 @@ export const articles: Article[] = [
         <ol>
           <li>Set your first 25-minute timer</li>
           <li>
-            Add a 5-minute timer using the ➕ icon. This will be your break.
+            Add a 5-minute timer using the <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2z"></path></svg> icon. This will be your break.
           </li>
           <li>
             Repeat to create 4 Pomodoro/break cycles. For the final timer, set a
             longer break (e.g. 30 minutes).
           </li>
           <li>
-            Open the ⚙️ side menu to enable notifications and “Restart timer
+            Open the <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg> side menu to enable notifications and “Restart timer
             when done.”
           </li>
           <li>
