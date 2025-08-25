@@ -15,7 +15,7 @@ const SubHeader = styled.h2`
   font-weight: 400;
 `;
 
-const Text = styled.p`
+const Text = styled.div`
   margin-top: ${({ theme }) => theme.fontSizes.medium / 5}rem;
 `;
 
