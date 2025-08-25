@@ -8,10 +8,14 @@ const Header = styled.header`
   top: 2rem;
   left: 5rem;
   z-index: 10;
+
+  @media (max-width: 768px) {
+    left: 1.5rem;
+    top: 1.5rem;
+  }
 `;
 
 const PostContainer = styled.div`
-  padding: 5rem 20rem;
   color: ${({ theme }) => theme.colors.light};
   display: flex;
   flex-direction: column;
@@ -20,6 +24,14 @@ const PostContainer = styled.div`
   opacity: 0.8;
   box-sizing: border-box;
   min-height: 100vh;
+  width: 100%;
+  max-width: 1200px; /* Adjust this value as needed */
+  margin: 0 auto;
+  padding: 5rem 2rem;
+
+  @media (max-width: 768px) {
+    padding: 6rem 1.5rem 3rem;
+  }
 `;
 
 type PageProps = {

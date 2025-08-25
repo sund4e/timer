@@ -1,8 +1,15 @@
 import styled from 'styled-components';
 import { Page } from '../components/Page/Page';
 import { articles } from '../data/articles/index';
-import { Title } from '../components/ArticlePage/ArticlePage';
+import { Title as PageTitle } from '../components/ArticlePage/ArticlePage';
 import Link from 'next/link';
+
+const Title = styled(PageTitle)`
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+    margin-top: 4rem;
+  }
+`;
 
 const SubTitle = styled.p`
   font-size: 1.2rem;
@@ -18,16 +25,21 @@ const PostList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  gap: 2rem; /* Adds space between items */
 `;
 
 const PostItemContainer = styled.li`
   margin-bottom: 1.5rem;
-  flex: 0 0 auto;
-  width: 45%;
+  flex: 1 1 45%; /* Allows items to grow and shrink */
+  min-width: 300px; /* Prevents items from becoming too narrow */
   border: 1px solid;
   padding: 1rem;
   border-radius: ${({ theme }) => theme.radius}rem;
   transition: border-color 0.2s ease-in-out;
+
+  @media (max-width: 768px) {
+    flex-basis: 100%; /* Makes items full-width on mobile */
+  }
 
   &:hover {
     border-color: white;
