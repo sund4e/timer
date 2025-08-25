@@ -48,6 +48,14 @@ const ContentContainer = styled.div`
 const ActionButton = styled(Button)`
   margin-top: 2rem;
   font-size: 1.2rem;
+  background-color: ${({ theme }) => theme.colors.primary};
+  border: 1px solid ${({ theme }) => theme.colors.light};
+  transition: all 0.2s ease-in-out;
+
+  &:hover:not(:disabled) {
+    border: 1px solid white;
+    color: white;
+  }
 `;
 
 interface ArticlePageProps {
@@ -60,7 +68,7 @@ const ArticlePage = ({ article }: ArticlePageProps) => {
       <Title>{article.title}</Title>
       <ContentContainer dangerouslySetInnerHTML={{ __html: article.content }} />
       <Link href="/" passHref>
-        <ActionButton as="a">Go to Aika</ActionButton>
+        <ActionButton>Go to Aika</ActionButton>
       </Link>
     </Page>
   );

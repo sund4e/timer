@@ -34,25 +34,28 @@ const StyledButton = styled(motion.button)<{ $isHidden?: boolean }>`
   }
 `;
 
-const Button = ({ children, ...rest }: HTMLMotionProps<'button'>) => {
-  const theme = useTheme();
-  return (
-    <StyledButton
-      transition={{
-        duration: theme.transition,
-        ease: 'easeOut',
-        bounce: 0,
-      }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      layout
-      {...rest}
-    >
-      {children}
-    </StyledButton>
-  );
-};
+const Button = React.forwardRef<HTMLButtonElement, HTMLMotionProps<'button'>>(
+  ({ children, ...rest }, ref) => {
+    const theme = useTheme();
+    return (
+      <StyledButton
+        ref={ref}
+        transition={{
+          duration: theme.transition,
+          ease: 'easeOut',
+          bounce: 0,
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        layout
+        {...rest}
+      >
+        {children}
+      </StyledButton>
+    );
+  }
+);
 
 Button.displayName = 'Button';
 
