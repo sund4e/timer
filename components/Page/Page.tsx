@@ -4,14 +4,10 @@ import Head from 'next/head';
 import Logo from '../Logo/Logo';
 
 const Header = styled.header`
-  position: fixed;
-  top: 2rem;
-  left: 5rem;
-  z-index: 10;
+  padding-bottom: 3rem;
 
   @media (max-width: 768px) {
-    left: 1.5rem;
-    top: 1.5rem;
+    padding-bottom: 1rem;
   }
 `;
 
@@ -25,12 +21,11 @@ const PostContainer = styled.div`
   box-sizing: border-box;
   min-height: 100vh;
   width: 100%;
-  max-width: 1200px; /* Adjust this value as needed */
   margin: 0 auto;
-  padding: 5rem 2rem;
+  padding: 3rem 15rem 5rem;
 
   @media (max-width: 768px) {
-    padding: 6rem 1.5rem 3rem;
+    padding: 4rem 1.5rem 3rem;
   }
 `;
 
@@ -86,11 +81,13 @@ export const Page = ({
           />
         )}
       </Head>
-      <Header>
-        <Logo />
-      </Header>
       <Container>
-        <PostContainer>{children}</PostContainer>
+        <PostContainer>
+          <Header>
+            <Logo />
+          </Header>
+          {children}
+        </PostContainer>
       </Container>
     </>
   );
