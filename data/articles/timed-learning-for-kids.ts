@@ -60,7 +60,7 @@ export const timedLearningForKids: Article = {
       <h3>1. Attention Spans and Task Segmentation</h3>
       <p>
         Breaking tasks into smaller timed intervals has a strong basis in
-        cognitive psychology. The concept is similar to the Pomodoro Technique
+        cognitive psychology. The concept is similar to the <a href="/articles/pomodoro-technique">Pomodoro Technique</a>
         used by adults, but in children, it has even greater developmental
         impact.
       </p>
@@ -69,7 +69,8 @@ export const timedLearningForKids: Article = {
         into short, defined time blocks, children stay engaged longer and
         experience less fatigue (<a href="https://doi.org/10.1037/0022-0663.94.4.720" target="_blank" rel="noopener noreferrer">Schraw & Olafson, Journal of Educational Psychology</a>).
         By creating boundaries, timers reduce the feeling of an overwhelming or
-        endless task.
+        endless task. Timers don’t just help kids—adults benefit too, as shown in
+        <a href="/articles/science-of-productivity">The Science of Productivity: How Timers Can Help</a>.
       </p>
       <h3>2. Time Perception and Self-Regulation</h3>
       <p>

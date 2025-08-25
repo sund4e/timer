@@ -46,6 +46,7 @@ export const pomodoroTechnique: Article = {
 
       <h2>Why the Pomodoro Technique Works</h2>
       <p>
+        The Pomodoro Technique is effective because it aligns with several principles of <a href="/articles/science-of-productivity">the science of productivity</a>.
         Several cognitive science and psychology principles explain why the
         Pomodoro Technique is effective:
       </p>
@@ -84,9 +85,7 @@ export const pomodoroTechnique: Article = {
         </li>
         <li>When the timer rings, mark one Pomodoro complete.</li>
         <li>
-          Take a 5-minute break — stretch, walk, or rest your eyes. Regular
-          short breaks also support eye health by reducing digital strain
-          (<a href="https://doi.org/10.1038/s41598-018-21461-4" target="_blank" rel="noopener noreferrer">Sheppard & Wolffsohn, 2018</a>).
+          Take a 5-minute break — stretch, walk, or rest your eyes. For computer work, a structured break like the <a href="/articles/20-20-20-rule">20-20-20 rule</a> can be especially effective at reducing digital eye strain.
         </li>
         <li>Repeat this cycle four times.</li>
         <li>

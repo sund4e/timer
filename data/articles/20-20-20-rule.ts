@@ -125,7 +125,7 @@ export const the202020Rule: Article = {
       <h3>Timers and Attention Regulation</h3>
       <p>
         Break reminders are not just about physical health. Research on
-        productivity techniques such as the Pomodoro Technique shows that timed
+        productivity techniques such as the <a href="/articles/pomodoro-technique">Pomodoro Technique</a> shows that timed
         breaks improve sustained attention, reduce fatigue, and support better
         performance (<a href="https://pubmed.ncbi.nlm.nih.gov/20854894" target="_blank" rel="noopener noreferrer">Ariga & Lleras, Cognition</a>).
         The same principle applies to eye health breaks.

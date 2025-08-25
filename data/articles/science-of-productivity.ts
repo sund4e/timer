@@ -135,14 +135,14 @@ export const scienceOfProductivity: Article = {
         Students benefit from timer-based studying because it structures effort,
         prevents cramming, and encourages distributed practice. A review of
         self-regulated learning techniques highlights time management and planned
-        breaks as key predictors of academic success (<a href="https://doi.org/10.1016/S0742-051X(02)00001-9" target="_blank" rel="noopener noreferrer">Zimmerman, Teaching and Teacher Education</a>).
+        breaks as key predictors of academic success (<a href="https://doi.org/10.1016/S0742-051X(02)00001-9" target="_blank" rel="noopener noreferrer">Zimmerman, Teaching and Teacher Education</a>). These same principles are also highly effective for younger students, as explored in our guide to <a href="/articles/timed-learning-for-kids">timed learning for children</a>.
       </p>
       <h3>Knowledge Work and Remote Work</h3>
       <p>
         With blurred work–life boundaries, remote workers are prone to
         “always-on” fatigue. Research on knowledge workers shows that setting
         clear boundaries around focus and rest preserves performance and prevents
-        burnout (<a href="https://doi.org/10.1146/annurev-orgpsych-041015-062531" target="_blank" rel="noopener noreferrer">Maslach & Leiter, Annual Review of Organizational Psychology</a>).
+        burnout (<a href="https://doi.org/10.1146/annurev-orgpsych-041015-062531" target="_blank" rel="noopener noreferrer">Maslach & Leiter, Annual Review of Organizational Psychology</a>). This applies not just to individual work but also to collaborative tasks, where techniques like <a href="/articles/timed-meetings">timeboxing meetings</a> can drastically improve efficiency.
       </p>
       <h3>Software and Agile Teams</h3>
       <p>

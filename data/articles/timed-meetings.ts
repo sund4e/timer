@@ -74,7 +74,7 @@ export const timedMeetings: Article = {
       <p>
         This method is rooted in both behavioral psychology and productivity
         science. By setting temporal constraints, timeboxing creates urgency,
-        focus, and accountability.
+        focus, and accountability. It is a core component of popular productivity frameworks like the <a href="/articles/pomodoro-technique">Pomodoro Technique</a>.
       </p>
 
       <h2>The Science Behind Timeboxing in Meetings</h2>

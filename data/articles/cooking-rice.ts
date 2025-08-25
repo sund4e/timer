@@ -230,7 +230,8 @@ export const cookingRice: Article = {
       </p>
       <p>
         Cooking rice is no longer guesswork—it’s precision science, and the
-        clock is your most reliable tool.
+        clock is your most reliable tool. Just as a timer brings precision to
+        cooking, it can bring focus and efficiency to your workday, as explored in our articles on <a href="/articles/science-of-productivity">the science of productivity</a>.
       </p>
 
       <h2>How to Use Aika for Perfect Rice Timing</h2>
