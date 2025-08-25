@@ -69,6 +69,35 @@ export const articles: Article[] = [
           fast.
         </p>
 
+        <h2>Final Thoughts: The Power Is in the Simplicity</h2>
+        <p>
+          The Pomodoro Technique isn’t flashy and that&apos;s the point. It
+          helps you return to the basics of focus: short, intense effort,
+          followed by rest.
+        </p>
+        <p>
+          Whether you’re studying, coding, or trying to manage your time better
+          with ADHD, Pomodoro can help. Tools like Aika can make it effortless
+          to build the habit.
+        </p>
+
+        <h2>Frequently Asked Questions</h2>
+        <h3>How long is a Pomodoro session?</h3>
+        <p>
+          Traditionally, 25 minutes of focused work followed by a 5-minute
+          break.
+        </p>
+        <h3>Do I need a special app to use Pomodoro?</h3>
+        <p>
+          No. You can use any timer — though minimalist Pomodoro apps make it
+          easier to automate breaks.
+        </p>
+        <h3>Is Pomodoro good for ADHD?</h3>
+        <p>
+          Yes. Its structure helps manage time blindness, overwhelm, and task
+          switching.
+        </p>
+
         <h2>How to use Aika for Pomodoro Technique:</h2>
         <p>
           Aika is a free, web-based Pomodoro timer. Here&apos;s how to set up a
@@ -94,41 +123,6 @@ export const articles: Article[] = [
         <p>
           That&apos;s it! You’ve set up a complete Pomodoro routine with no
           signup or download.
-        </p>
-
-        <h2>Final Thoughts: The Power Is in the Simplicity</h2>
-        <p>
-          The Pomodoro Technique isn’t flashy and that&apos;s the point. It
-          helps you return to the basics of focus: short, intense effort,
-          followed by rest.
-        </p>
-        <p>
-          Whether you’re studying, coding, or trying to manage your time better
-          with ADHD, Pomodoro can help. Tools like Aika can make it effortless
-          to build the habit.
-        </p>
-
-        <h2>Frequently Asked Questions</h2>
-        <p>
-          <strong>How long is a Pomodoro session?</strong>
-        </p>
-        <p>
-          Traditionally, 25 minutes of focused work followed by a 5-minute
-          break.
-        </p>
-        <p>
-          <strong>Do I need a special app to use Pomodoro?</strong>
-        </p>
-        <p>
-          No. You can use any timer — though minimalist Pomodoro apps make it
-          easier to automate breaks.
-        </p>
-        <p>
-          <strong>Is Pomodoro good for ADHD?</strong>
-        </p>
-        <p>
-          Yes. Its structure helps manage time blindness, overwhelm, and task
-          switching.
         </p>
     `,
   },
