@@ -22,20 +22,57 @@ const PostContainer = styled.div`
   min-height: 100vh;
 `;
 
+type PageProps = {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  structuredData?: object;
+  ogImage?: string;
+  canonicalUrl?: string;
+};
+
 export const Page = ({
   title,
   description,
   children,
-}: {
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-}) => {
+  structuredData,
+  ogImage,
+  canonicalUrl,
+}: PageProps) => {
+  const siteName = 'Aika';
+  const ogImageUrl = `https://aika.app${ogImage || '/logo.png'}`;
+
   return (
     <>
       <Head>
         <title>{title}</title>
         {description && <meta name="description" content={description} />}
+        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content={title} />
+        {description && (
+          <meta property="og:description" content={description} />
+        )}
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:site_name" content={siteName} />
+        {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+        <meta property="og:type" content="article" />
+
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        {description && (
+          <meta name="twitter:description" content={description} />
+        )}
+        <meta name="twitter:image" content={ogImageUrl} />
+
+        {structuredData && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
+        )}
       </Head>
       <Header>
         <Logo />

@@ -82,13 +82,24 @@ const BackLink = styled(Link)`
 
 interface ArticlePageProps {
   article: Article;
+  canonicalUrl?: string;
+  structuredData?: object;
+  ogImage?: string;
 }
 
-const ArticlePage = ({ article }: ArticlePageProps) => {
+const ArticlePage = ({
+  article,
+  canonicalUrl,
+  structuredData,
+  ogImage,
+}: ArticlePageProps) => {
   return (
     <Page
       title={`${article.title} - Aika Timer`}
       description={article.description}
+      canonicalUrl={canonicalUrl}
+      structuredData={structuredData}
+      ogImage={ogImage}
     >
       <Title>{article.title}</Title>
       <ContentContainer dangerouslySetInnerHTML={{ __html: article.content }} />

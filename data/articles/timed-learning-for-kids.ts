@@ -9,6 +9,7 @@ export const timedLearningForKids: Article = {
   description:
     'Discover the science behind using countdown timers for children’s learning. An evidence-based guide for parents and teachers on improving focus and managing tasks.',
   date: '2025-06-22',
+  image: '/logo.png',
   content: `
       <p>
         Helping children learn effectively is one of the biggest challenges

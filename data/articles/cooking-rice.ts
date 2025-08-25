@@ -8,6 +8,7 @@ export const cookingRice: Article = {
   description:
     'Learn how to master the art of cooking rice with perfect timing. A science-backed guide to different rice varieties, cooking methods, and using a timer for consistent results.',
   date: '2025-07-13',
+  image: '/logo.png',
   content: `
       <p>
         Cooking rice might seem like one of the simplest kitchen tasks, but

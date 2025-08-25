@@ -4,5 +4,6 @@ export interface Article {
   abstract: string;
   description: string;
   date: string;
+  image?: string;
   content: string;
 }

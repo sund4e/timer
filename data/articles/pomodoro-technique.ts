@@ -8,6 +8,7 @@ export const pomodoroTechnique: Article = {
   description:
     'Learn what the Pomodoro Technique is, why it improves focus, and how to use it step-by-step. Includes science-backed tips and a free timer to get started.',
   date: '2025-06-08',
+  image: '/logo.png',
   content: `
       <p>
         In an age of constant notifications, multitasking, and digital distractions,
