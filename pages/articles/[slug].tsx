@@ -36,11 +36,8 @@ const ArticlePost = ({ article }: ArticleProps) => {
   return (
     <ArticlePage
       article={article}
-      // @ts-ignore
       canonicalUrl={canonicalUrl}
-      // @ts-ignore
       structuredData={structuredData}
-      // @ts-ignore
       ogImage={article.image}
     />
   );
