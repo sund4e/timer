@@ -9,20 +9,30 @@ const Title = styled.h1`
 const PostList = styled.ul`
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 `;
 
 const PostItem = styled.li`
   margin-bottom: 1.5rem;
+  flex: 0 0 auto;
+  width: 45%;
+  border: 1px solid;
+  padding: 1rem;
+  border-radius: ${({ theme }) => theme.radius}rem;
+  &:hover {
+    color: white;
+    a {
+      color: white;
+    }
+  }
 `;
 
 const PostLink = styled.a`
   font-size: 1.5rem;
   color: ${({ theme }) => theme.colors.light};
   text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const ReadMorePage = () => {
