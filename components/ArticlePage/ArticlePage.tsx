@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Page } from '../Page/Page';
-import { Article } from '../../data/articles';
+import { Article } from '../../data/articles/index';
 import Link from 'next/link';
 import Button from '../Button/Button';
 

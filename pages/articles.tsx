@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Page } from '../components/Page/Page';
-import { articles } from '../data/articles';
+import { articles } from '../data/articles/index';
 import Link from 'next/link';
 
 const Title = styled.h1`
