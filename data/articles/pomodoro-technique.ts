@@ -195,7 +195,7 @@ export const pomodoroTechnique: Article = {
         intervals and progress. You can try a free timer here: <a href="/">Aika Timer</a>.
       </p>
 
-            <h2>How to use Aika for Pomodoro Technique:</h2>
+      <h2>How to use Aika for Pomodoro Technique:</h2>
       <p>
         Aika is a free, web-based Pomodoro timer you can use right now without
         signup or download required. Here&apos;s how to set up a full session in
