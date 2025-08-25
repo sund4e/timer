@@ -1,6 +1,8 @@
 import type { AppProps } from 'next/app';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { theme } from '../styles/theme';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -40,6 +42,22 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      if (window.umami) {
+        window.umami.track(url);
+      }
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   return (
     <>
       <ThemeProvider theme={theme}>
