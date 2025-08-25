@@ -6,7 +6,7 @@ export const scienceOfProductivity: Article = {
   abstract:
     'Explore the scientific basis of timer-based productivity, examining insights from psychology, neuroscience, and education research to understand why timers work.',
   description:
-    'Explore the scientific basis of timer-based productivity, examining insights from psychology, neuroscience, and education research to understand why timers work.',
+    'Discover how timers boost productivity, focus, and memory, backed by psychology and neuroscience. Learn how to use timed work intervals effectively',
   content: `
       <p>
         In the modern world of constant notifications, endless to-do lists, and
