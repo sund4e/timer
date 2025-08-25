@@ -8,6 +8,7 @@ export const timedLearningForKids: Article = {
     'Explore the research behind timed learning for kids, why countdown timers work, and how parents and teachers can use them to improve focus and self-regulation.',
   description:
     'Discover the science behind using countdown timers for children’s learning. An evidence-based guide for parents and teachers on improving focus and managing tasks.',
+  date: '2025-06-22',
   content: `
       <p>
         Helping children learn effectively is one of the biggest challenges

@@ -8,6 +8,7 @@ export const the202020Rule: Article = {
     'Explore the science behind digital eye strain, the evidence supporting the 20-20-20 rule, and how timers can play a practical role in protecting your vision health.',
   description:
     'Learn the science behind the 20-20-20 rule for digital eye strain. Discover how using a timer can help you reduce symptoms and protect your vision health.',
+  date: '2025-06-29',
   content: `
       <p>
         We live in a world where screens are inescapable. From laptops and tablets

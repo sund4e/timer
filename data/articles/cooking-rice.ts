@@ -7,6 +7,7 @@ export const cookingRice: Article = {
     'Discover why timing is the secret to perfect rice. This guide covers the science of starch, cultural methods, and step-by-step instructions for fluffy, delicious rice every time.',
   description:
     'Learn how to master the art of cooking rice with perfect timing. A science-backed guide to different rice varieties, cooking methods, and using a timer for consistent results.',
+  date: '2025-07-13',
   content: `
       <p>
         Cooking rice might seem like one of the simplest kitchen tasks, but

@@ -7,6 +7,7 @@ export const pomodoroTechnique: Article = {
     'A simple yet powerful time management method to combat distraction, improve productivity, and build stronger focus and better work habits.',
   description:
     'Learn what the Pomodoro Technique is, why it improves focus, and how to use it step-by-step. Includes science-backed tips and a free timer to get started.',
+  date: '2025-06-08',
   content: `
       <p>
         In an age of constant notifications, multitasking, and digital distractions,

@@ -8,6 +8,7 @@ export const timedMeetings: Article = {
     'Explore the science behind timeboxing, why timed meetings work, and how teams can adopt this strategy for greater efficiency and satisfaction.',
   description:
     'Learn how timeboxing can transform your meetings. This guide covers the science, benefits, and practical steps for implementing timed meetings to boost team productivity and happiness.',
+  date: '2025-07-06',
   content: `
       <p>
         Meetings are one of the most common—and most complained-about—features
