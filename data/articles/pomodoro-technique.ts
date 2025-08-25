@@ -24,7 +24,7 @@ export const pomodoroTechnique: Article = {
         The Pomodoro Technique is a time management method developed by Francesco
         Cirillo in the late 1980s. Cirillo named it after the tomato-shaped
         kitchen timer he used while studying — “pomodoro” means “tomato” in
-        Italian (<a href="https://francescocirillo.com/pages/pomodoro-technique" target="_blank" rel="noopener noreferrer">Cirillo, Official Site</a>).
+        Italian (<a href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="_blank" rel="noopener noreferrer">Wikipedia – Pomodoro Technique</a>).
       </p>
       <p>The core idea is simple:</p>
       <ul>
@@ -39,7 +39,7 @@ export const pomodoroTechnique: Article = {
       </ul>
       <p>
         This structured approach is based on the principle that frequent breaks
-        improve mental agility (<a href="https://francescocirillo.com/pages/pomodoro-technique" target="_blank" rel="noopener noreferrer">Cirillo, Official Site</a>).
+        improve mental agility.
       </p>
 
       <h2>Why the Pomodoro Technique Works</h2>
@@ -47,26 +47,28 @@ export const pomodoroTechnique: Article = {
         Several cognitive science and psychology principles explain why the
         Pomodoro Technique is effective:
       </p>
-      <h3>Combats mental fatigue</h3>
-      <p>
-        Research shows that sustained attention decreases over time, and brief
-        mental breaks can restore focus (<a href="https://doi.org/10.1016/j.cognition.2010.12.007" target="_blank" rel="noopener noreferrer">Ariga & Lleras, 2011</a>).
-      </p>
-      <h3>Reduces procrastination</h3>
-      <p>
-        Breaking work into small, time-boxed intervals lowers the psychological
-        barrier to starting tasks (<a href="https://psycnet.apa.org/record/2007-00436-004" target="_blank" rel="noopener noreferrer">Steel, 2007</a>).
-      </p>
-      <h3>Encourages deep work</h3>
-      <p>
-        Time blocking is a known productivity strategy that helps protect focus
-        and reduce multitasking (<a href="https://www.calnewport.com/books/deep-work/" target="_blank" rel="noopener noreferrer">Newport, 2016</a>).
-      </p>
-      <h3>Improves motivation</h3>
-      <p>
-        Tracking completed Pomodoros provides visible progress, which boosts
-        intrinsic motivation (<a href="https://psycnet.apa.org/record/2000-13324-007" target="_blank" rel="noopener noreferrer">Deci & Ryan, 2000</a>).
-      </p>
+      <ul>
+        <li>
+          <strong>Combats mental fatigue:</strong> Research shows that
+          sustained attention decreases over time, and brief mental breaks can
+          restore focus (<a href="https://doi.org/10.1016/j.cognition.2010.12.007" target="_blank" rel="noopener noreferrer">Ariga & Lleras, 2011</a>).
+        </li>
+        <li>
+          <strong>Reduces procrastination:</strong> Breaking work into small,
+          time-boxed intervals lowers the psychological barrier to starting tasks
+          (<a href="https://psycnet.apa.org/record/2007-00436-004" target="_blank" rel="noopener noreferrer">Steel, 2007</a>).
+        </li>
+        <li>
+          <strong>Encourages deep work:</strong> Time blocking is a known
+          productivity strategy that helps protect focus and reduce multitasking
+          (<a href="https://www.calnewport.com/books/deep-work/" target="_blank" rel="noopener noreferrer">Newport, 2016</a>).
+        </li>
+        <li>
+          <strong>Improves motivation:</strong> Tracking completed Pomodoros
+          provides visible progress, which boosts intrinsic motivation
+          (<a href="https://psycnet.apa.org/record/2000-13324-007" target="_blank" rel="noopener noreferrer">Deci & Ryan, 2000</a>).
+        </li>
+      </ul>
 
       <h2>How to Use the Pomodoro Technique Step by Step</h2>
       <p>
@@ -96,26 +98,28 @@ export const pomodoroTechnique: Article = {
       </p>
 
       <h2>Tips to Maximize the Pomodoro Technique</h2>
-      <h3>Eliminate distractions</h3>
-      <p>
-        Digital interruptions are proven to reduce productivity and increase
-        error rates (<a href="https://doi.org/10.1145/1357054.1357072" target="_blank" rel="noopener noreferrer">Mark et al., 2008</a>).
-      </p>
-      <h3>Batch small tasks</h3>
-      <p>
-        Grouping similar small tasks together improves efficiency through task
-        batching (<a href="https://doi.org/10.1145/985692.985715" target="_blank" rel="noopener noreferrer">González & Mark, 2004</a>).
-      </p>
-      <h3>Adjust the timing</h3>
-      <p>
-        Some people prefer longer or shorter intervals; flexibility helps adapt
-        the technique to different working styles (<a href="https://francescocirillo.com/pages/pomodoro-technique" target="_blank" rel="noopener noreferrer">Cirillo, Official Site</a>).
-      </p>
-      <h3>Track progress</h3>
-      <p>
-        Self-monitoring is strongly linked to improved goal achievement and
-        productivity (<a href="https://doi.org/10.1037/bul0000025" target="_blank" rel="noopener noreferrer">Harkin et al., 2016</a>).
-      </p>
+      <ul>
+        <li>
+          <strong>Eliminate distractions:</strong> Digital interruptions are
+          proven to reduce productivity and increase error rates
+          (<a href="https://doi.org/10.1145/1357054.1357072" target="_blank" rel="noopener noreferrer">Mark et al., 2008</a>).
+        </li>
+        <li>
+          <strong>Batch small tasks:</strong> Grouping similar small tasks
+          together improves efficiency through task batching
+          (<a href="https://doi.org/10.1145/985692.985715" target="_blank" rel="noopener noreferrer">González & Mark, 2004</a>).
+        </li>
+        <li>
+          <strong>Adjust the timing:</strong> Some people prefer longer or
+          shorter intervals; flexibility helps adapt the technique to different
+          working styles (<a href="https://francescocirillo.com/pages/pomodoro-technique" target="_blank" rel="noopener noreferrer">Cirillo, Official Site</a>).
+        </li>
+        <li>
+          <strong>Track progress:</strong> Self-monitoring is strongly linked to
+          improved goal achievement and productivity
+          (<a href="https://doi.org/10.1037/bul0000025" target="_blank" rel="noopener noreferrer">Harkin et al., 2016</a>).
+        </li>
+      </ul>
 
       <h2>Who Should Try the Pomodoro Technique?</h2>
       <p>
