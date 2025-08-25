@@ -24,6 +24,7 @@ const PostItemContainer = styled.li`
   padding: 1rem;
   border-radius: ${({ theme }) => theme.radius}rem;
   transition: border-color 0.2s ease-in-out;
+
   &:hover {
     border-color: white;
     h3,

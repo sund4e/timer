@@ -32,33 +32,25 @@ export const articles: Article[] = [
         </p>
 
         <h2>Why the Pomodoro Technique Works (Backed by Psychology)</h2>
-        <p>
-          <strong>1. It reduces procrastination</strong>
-        </p>
+        <h3>1. It reduces procrastination</h3>
         <p>
           Committing to just 25 minutes feels much easier than “I need to write
           this whole paper” or “I have to finish this project.” It&apos;s a way
           to trick your brain into starting.
         </p>
-        <p>
-          <strong>2. It matches your brain’s natural focus rhythms</strong>
-        </p>
+        <h3>2. It matches your brain’s natural focus rhythms</h3>
         <p>
           Studies suggest that our brain can only focus deeply for short bursts
           — often around 20–30 minutes at a time. Pomodoro sessions work with
           this rhythm.
         </p>
-        <p>
-          <strong>3. It builds momentum</strong>
-        </p>
+        <h3>3. It builds momentum</h3>
         <p>
           Every completed Pomodoro feels like a small win. That sense of
           progress fuels motivation, especially when you&apos;re tired or
           overwhelmed.
         </p>
-        <p>
-          <strong>4. It helps manage ADHD and executive dysfunction</strong>
-        </p>
+        <h3>4. It helps manage ADHD and executive dysfunction</h3>
         <p>
           People with ADHD often struggle with task initiation, attention
           switching, and time blindness. Pomodoro offers:

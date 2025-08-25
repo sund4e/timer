@@ -13,14 +13,23 @@ const ContentContainer = styled.div`
   h2 {
     font-size: 2rem;
     margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
 
-  p,
+  h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0.5rem 0;
+  }
+
   li {
     font-size: 1.1rem;
     line-height: 1.6;
-    margin-bottom: 1rem;
   }
 
   ul,
@@ -28,6 +37,7 @@ const ContentContainer = styled.div`
     list-style-position: inside;
     padding-left: 1rem;
     margin-bottom: 1rem;
+    margin: 0;
   }
 
   strong {
