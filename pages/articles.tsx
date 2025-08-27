@@ -58,12 +58,14 @@ const PostLink = styled(Link)`
   h3 {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
+    margin-top: 0rem;
     transition: color 0.2s ease-in-out;
   }
 
   p {
     font-size: 1rem;
     opacity: 0.8;
+    margin-bottom: 0rem;
     transition:
       color 0.2s ease-in-out,
       opacity 0.2s ease-in-out;
