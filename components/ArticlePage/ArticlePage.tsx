@@ -6,38 +6,56 @@ import Button from '../Button/Button';
 
 export const Title = styled.h1`
   font-size: 3rem;
-  margin-top: 5rem;
+  margin-top: 3;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const ContentContainer = styled.div`
   h2 {
-    font-size: 2rem;
-    margin-top: 2rem;
-    margin-bottom: 1.5rem;
+    font-size: 2.2rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+
+    @media (max-width: 768px) {
+      font-size: 1.8rem;
+    }
   }
 
   h3 {
-    margin-top: 1.5rem;
+    font-size: 1.5rem;
+    margin-top: 2rem;
     margin-bottom: 0.5rem;
+    line-height: 1.4;
+
+    @media (max-width: 768px) {
+      font-size: 1.3rem;
+    }
   }
 
   p {
     font-size: 1.1rem;
-    line-height: 1.6;
-    margin: 0.5rem 0;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
   }
 
   li {
     font-size: 1.1rem;
-    line-height: 1.6;
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
   }
 
   ul,
   ol {
     list-style-position: inside;
-    padding-left: 1rem;
-    margin-bottom: 1rem;
-    margin: 0;
+    padding-left: 0.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
   strong {
