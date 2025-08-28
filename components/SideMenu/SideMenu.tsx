@@ -98,7 +98,11 @@ const SideMenu = ({ children, className }: Props) => {
         <Header>Aika Timer</Header>
         <MenuContent>{children}</MenuContent>
       </Menu>
-      <StyledButton isOpen={isOpen} onClick={onClickButton} />
+      <StyledButton
+        isOpen={isOpen}
+        onClick={onClickButton}
+        aria-label={isOpen ? 'Close menu' : 'Open menu'}
+      />
     </>
   );
 };
