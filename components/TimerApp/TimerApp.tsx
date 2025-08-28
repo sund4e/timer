@@ -36,8 +36,8 @@ const MenuSection = styled(Box)`
 
 const MenuLink = styled(Link)`
   color: ${({ theme }) => theme.colors.light};
+  color: white;
   text-decoration: none;
-  font-weight: 600;
   padding: 0.5rem 0;
 
   &:hover {
@@ -158,10 +158,20 @@ const TimerApp = memo(
             <SubHeader>What is Aika?</SubHeader>
             <Text>
               {
-                'Aika means "time" in Finnish. It\'s a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Perfect for Pomodoro productivity, time-boxed meetings, and the 20-20-20 eye care technique.'
+                'Aika means "time" in Finnish. It\'s a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Perfect for productivity techniques like the '
               }
+              <MenuLink href="/articles/pomodoro-technique">pomodoro</MenuLink>
+              {', '}
+              <MenuLink href="/articles/timed-meetings">
+                time-boxed meetings
+              </MenuLink>
+              {', and '}
+              <MenuLink href="/articles/20-20-20-rule">
+                20-20-20 eye care
+              </MenuLink>
+              {'.'}
               <p>
-                <MenuLink href="/articles">Read more</MenuLink>
+                <MenuLink href="/articles">Read all articles</MenuLink>
               </p>
             </Text>
           </MenuSection>
