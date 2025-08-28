@@ -236,6 +236,37 @@ export const cookingRice: Article = {
         cooking, it can bring focus and efficiency to your workday, as explored in our articles on <a href="/articles/science-of-productivity">the science of productivity</a>.
       </p>
 
+      <h2>Frequently Asked Questions about Cooking Rice</h2>
+      <h3>Q: Why is the resting period after cooking rice so important?</h3>
+      <p>
+        The resting period (5-10 minutes) allows the steam and moisture to
+        redistribute evenly throughout the pot. This firms up the grains and
+        prevents the rice at the bottom from being mushy, resulting in a
+        fluffier, more uniform texture.
+      </p>
+      <h3>Q: Do I really need to wash my rice before cooking?</h3>
+      <p>
+        Yes, for most rice varieties. Rinsing removes excess surface starch
+        that can cause the grains to become gummy and clump together. It leads
+        to a cleaner flavor and fluffier, more separated grains.
+      </p>
+      <h3>
+        Q: Can I use the same water ratio and timing for brown and white rice?
+      </h3>
+      <p>
+        No. Brown rice has an outer bran layer that requires more water and a
+        significantly longer cooking time (typically 35-40 minutes) to become
+        tender. White rice cooks much faster (15-18 minutes). Always adjust
+        your timing for the specific type of rice.
+      </p>
+      <h3>Q: What's the most common mistake when cooking rice?</h3>
+      <p>
+        Lifting the lid too early or too often. This releases steam, which is
+        essential for the cooking process. It lowers the temperature and
+        disrupts the water-to-rice ratio, often resulting in unevenly cooked
+        or hard rice.
+      </p>
+
       <h2>How to Use Aika for Perfect Rice Timing</h2>
       <p>
         Aika is a free, web-based timer you can use right now without signup or

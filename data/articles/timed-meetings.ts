@@ -231,6 +231,37 @@ export const timedMeetings: Article = {
         The research is clear: when meetings are timed, teams thrive.
       </p>
 
+      <h2>Frequently Asked Questions about Timeboxed Meetings</h2>
+      <h3>Q: What is the ideal length for a timeboxed meeting?</h3>
+      <p>
+        For most check-ins or status updates, 15-30 minutes is highly
+        effective. Research suggests that attention declines after 30-45
+        minutes, so for more complex topics, it's better to schedule multiple
+        short meetings than one long one.
+      </p>
+      <h3>
+        Q: What happens if we run out of time on a crucial agenda item?
+      </h3>
+      <p>
+        That's what the "parking lot" technique is for. The discussion is
+        paused, the topic is noted down, and a decision is made to either
+        address it in a follow-up meeting or handle it offline. This respects
+        everyone's time and keeps the meeting on track.
+      </p>
+      <h3>Q: Doesn't timeboxing stifle creative discussion?</h3>
+      <p>
+        On the contrary, constraints often breed creativity. A time limit
+        forces participants to be concise and focus on the most important
+        points, which can lead to faster, more innovative solutions. It
+        prevents discussions from meandering and ensures energy stays high.
+      </p>
+      <h3>Q: Who should be the timekeeper in a timed meeting?</h3>
+      <p>
+        Anyone can be the timekeeper, and it's often a good idea to rotate the
+        role among team members. This creates shared accountability and ensures
+        everyone is invested in keeping the meeting efficient.
+      </p>
+
       <h2>How to Use Aika for Timeboxed Meetings</h2>
       <p>
         If you’d like to try timeboxing in your own meetings, you don’t need

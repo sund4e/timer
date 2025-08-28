@@ -245,6 +245,35 @@ export const timedLearningForKids: Article = {
         countdown timers into powerful tools for children’s growth.
       </p>
 
+      <h2>Frequently Asked Questions about Timed Learning for Kids</h2>
+      <h3>Q: What's a good starting timer length for a child's homework?</h3>
+      <p>
+        A good rule of thumb is to match the child's age in minutes, up to a
+        certain point. For a 7-year-old, a 7-10 minute timer is a great start.
+        For older children (10+), 15-25 minute intervals often work well. The
+        key is to keep it short enough to feel achievable.
+      </p>
+      <h3>Q: Will using a timer create stress or anxiety for my child?</h3>
+      <p>
+        It depends on how it's presented. If the timer is framed as a helpful
+        tool to "beat the clock" or to show how much can be done in a short
+        time, it's usually motivating. Avoid using it as a punishment or a
+        source of pressure.
+      </p>
+      <h3>Q: Can timers be used for things other than schoolwork?</h3>
+      <p>
+        Absolutely. Timers are highly effective for managing transitions and
+        daily routines, such as "5-minute cleanup," "10 minutes to get ready
+        for bed," or limiting screen time. It makes time visible and helps
+        reduce arguments.
+      </p>
+      <h3>Q: Does this method work for children with ADHD?</h3>
+      <p>
+        Yes, research strongly supports the use of external time cues for
+        children with ADHD. Timers help make time concrete, improve task
+        initiation, and provide the structure needed to stay focused on a task.
+      </p>
+
       <h2>How to Use Aika as a Kids’ Learning Timer</h2>
       <p>
         Timers work best when they are simple, predictable, and easy for

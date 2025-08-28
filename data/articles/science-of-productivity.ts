@@ -246,5 +246,42 @@ export const scienceOfProductivity: Article = {
         use a free web-based tool like <a href="/">Aika</a>. It requires no signup
         and lets you create structured focus and break intervals in seconds.
       </p>
+
+      <h2>Frequently Asked Questions about Productivity Timers</h2>
+      <h3>
+        Q: What is the main psychological reason timers boost productivity?
+      </h3>
+      <p>
+        Timers help overcome procrastination. By breaking a large, daunting task
+        into a small, manageable time block (e.g., "work for 25 minutes"), it
+        lowers the emotional barrier to getting started.
+      </p>
+      <h3>
+        Q: Are longer focus sessions more productive than short ones?
+      </h3>
+      <p>
+        Not necessarily. Research on cognitive load suggests that our brains
+        work best in focused bursts followed by a break. Short, structured
+        intervals often lead to higher quality work and less fatigue than long,
+        unbroken sessions.
+      </p>
+      <h3>
+        Q: Do timers help with creative tasks, or do they interrupt flow?
+      </h3>
+      <p>
+        It can be a balance. For tasks requiring deep creative flow, it may be
+        best to extend a timed session. However, for brainstorming or starting
+        a creative project, timers can be excellent for generating ideas
+        quickly without overthinking.
+      </p>
+      <h3>
+        Q: Is there a perfect timer interval that works for everyone?
+      </h3>
+      <p>
+        No. While 25 minutes (the Pomodoro Technique) is a popular starting
+        point, the ideal interval depends on the person and the task. The key
+        is to experiment and find a rhythm that allows you to maintain focus
+        without feeling burned out.
+      </p>
   `,
 };

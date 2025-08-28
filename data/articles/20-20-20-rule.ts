@@ -219,6 +219,35 @@ export const the202020Rule: Article = {
         world.
       </p>
 
+      <h2>Frequently Asked Questions about the 20-20-20 Rule</h2>
+      <h3>Q: Does the 20-20-20 rule actually reduce eye strain?</h3>
+      <p>
+        Yes. Scientific evidence shows that taking short breaks to look at
+        distant objects allows the eye's focusing muscles (ciliary muscles) to
+        relax, which reduces fatigue and other symptoms of digital eye strain.
+      </p>
+      <h3>Q: How often should I follow the rule?</h3>
+      <p>
+        For the best results, you should take a break every 20 minutes you
+        spend looking at a screen. Consistency is more important than the
+        occasional long break. Using a recurring timer is the most effective
+        way to remember.
+      </p>
+      <h3>Q: Is 20 seconds long enough for a break?</h3>
+      <p>
+        Yes, 20 seconds is generally considered sufficient for the ciliary
+        muscles to relax and for you to blink several times, which helps
+        restore moisture to the eyes. The key is that you are looking at
+        something at least 20 feet away.
+      </p>
+      <h3>Q: Can I just close my eyes for 20 seconds instead?</h3>
+      <p>
+        While closing your eyes helps with dryness, it doesn't achieve the main
+        goal of relaxing the focusing muscles. The most important part of the
+        rule is looking at a distant object, which forces the muscles to change
+        focus.
+      </p>
+
       <h2>How to use Aika for 20-20-20 rule:</h2>
       <p>
         Aika is a free, web-based timer you can use right now without
