@@ -103,12 +103,10 @@ const ArticlesPage = () => {
       canonicalUrl={canonicalUrl}
       structuredData={structuredData}
     >
-      <Title>Time, Well Spent: The Science of Focus and Productivity</Title>
+      <Title>
         How to Use Timers: Science-Backed Guides for Focus & Productivity
+      </Title>
       <SubTitle>
-        Science-backed articles on using timers to boost focus, productivity,
-        and wellbeing. Explore our guides and improve how you work, learn, and
-        live.
         Explore our collection of guides on using timers to work smarter, learn
         faster, and improve your daily wellbeing.
       </SubTitle>
