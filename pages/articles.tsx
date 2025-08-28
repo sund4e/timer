@@ -53,12 +53,19 @@ const PostItemContainer = styled.li`
 
 const PostLink = styled(Link)`
   text-decoration: none;
-  color: ${({ theme }) => theme.colors.light};
+  color: inherit;
+  display: block;
+  height: 100%;
+  -webkit-tap-highlight-color: transparent; /* Prevent tap highlight on iOS */
+
+  &:active {
+    text-decoration: none; /* Ensure no underline on active state */
+  }
 
   h3 {
+    margin-top: 0;
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
-    margin-top: 0rem;
     transition: color 0.2s ease-in-out;
   }
 
