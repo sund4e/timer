@@ -87,6 +87,25 @@ const Home = () => {
         <link rel="canonical" href={APP_URL} />
         {/* More specific viewport, though _document.tsx has one already */}
         {/* <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"></meta> */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebApplication',
+              name: APP_NAME,
+              description: APP_DESCRIPTION,
+              url: APP_URL,
+              applicationCategory: 'Utilities',
+              operatingSystem: 'All', // Web app is OS-independent
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+              },
+            }),
+          }}
+        />
       </Head>
       <Container>
         <TimerApp initialTime={0} isActive={true} setTitleTime={setTime} />
