@@ -8,6 +8,7 @@ export const timedMeetings: Article = {
   description:
     'Learn how timeboxing can transform your meetings. This guide covers the science, benefits, and practical steps for implementing timed meetings to boost team productivity and happiness.',
   date: '2025-07-06',
+  lastModified: '2024-08-25',
   image: '/logo.png',
   content: `
       <p>

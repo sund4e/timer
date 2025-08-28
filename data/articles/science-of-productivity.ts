@@ -8,6 +8,7 @@ export const scienceOfProductivity: Article = {
   description:
     'Discover how timers boost productivity, focus, and memory, backed by psychology and neuroscience. Learn how to use timed work intervals effectively',
   date: '2025-06-15',
+  lastModified: '2024-08-28',
   image: '/logo.png',
   content: `
       <p>

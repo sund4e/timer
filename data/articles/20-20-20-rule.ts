@@ -8,6 +8,7 @@ export const the202020Rule: Article = {
   description:
     'Learn the science behind the 20-20-20 rule for digital eye strain. Discover how using a timer can help you reduce symptoms and protect your vision health.',
   date: '2025-06-29',
+  lastModified: '2024-08-28',
   image: '/logo.png',
   content: `
       <p>
