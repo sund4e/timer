@@ -33,7 +33,7 @@ type PageProps = {
   title: string;
   description: string;
   children: React.ReactNode;
-  structuredData?: object;
+  structuredData: object;
   ogImage?: string;
   canonicalUrl?: string;
 };

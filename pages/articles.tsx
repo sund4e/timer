@@ -1,6 +1,6 @@
 import styled from 'styled-components';
+import { articles } from '../data/articles';
 import { Page } from '../components/Page/Page';
-import { articles } from '../data/articles/index';
 import { Title as PageTitle } from '../components/ArticlePage/ArticlePage';
 import Link from 'next/link';
 
@@ -73,16 +73,44 @@ const PostLink = styled(Link)`
 `;
 
 const ArticlesPage = () => {
+  const pageTitle =
+    'Aika | Science-Backed Guides on Time Management & Productivity';
+  const pageDescription =
+    'A curated collection of science-backed articles on using timers to boost focus, productivity, and wellbeing. Explore our guides to improve how you work, learn, and live.';
+  const canonicalUrl = 'https://aika.app/articles';
+
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: pageTitle,
+    description: pageDescription,
+    url: canonicalUrl,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: articles.map((article, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${canonicalUrl}/${article.slug}`,
+        name: article.title,
+      })),
+    },
+  };
+
   return (
     <Page
-      title="Aika | Science-Backed Guides on Time Management & Productivity"
-      description="A curated collection of science-backed articles on using timers to boost focus, productivity, and wellbeing. Explore our guides to improve how you work, learn, and live."
+      title={pageTitle}
+      description={pageDescription}
+      canonicalUrl={canonicalUrl}
+      structuredData={structuredData}
     >
       <Title>Time, Well Spent: The Science of Focus and Productivity</Title>
+        How to Use Timers: Science-Backed Guides for Focus & Productivity
       <SubTitle>
         Science-backed articles on using timers to boost focus, productivity,
         and wellbeing. Explore our guides and improve how you work, learn, and
         live.
+        Explore our collection of guides on using timers to work smarter, learn
+        faster, and improve your daily wellbeing.
       </SubTitle>
       <PostList>
         {articles.map((article) => (

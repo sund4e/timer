@@ -101,7 +101,7 @@ const BackLink = styled(Link)`
 interface ArticlePageProps {
   article: Article;
   canonicalUrl?: string;
-  structuredData?: object;
+  structuredData: object;
   ogImage?: string;
 }
 
