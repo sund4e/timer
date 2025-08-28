@@ -31,7 +31,7 @@ const PostContainer = styled.div`
 
 type PageProps = {
   title: string;
-  description?: string;
+  description: string;
   children: React.ReactNode;
   structuredData?: object;
   ogImage?: string;
