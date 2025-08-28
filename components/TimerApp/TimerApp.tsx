@@ -166,12 +166,12 @@ const TimerApp = memo(
                 time-boxed meetings
               </MenuLink>
               {', and '}
-              <MenuLink href="/articles/20-20-20-rule">
-                20-20-20 eye care
-              </MenuLink>
+              <MenuLink href="/articles/20-20-20-rule">20-20-20 guide</MenuLink>
               {'.'}
               <p>
-                <MenuLink href="/articles">Read all articles</MenuLink>
+                <MenuLink href="/articles">
+                  Explore our guides on focus & productivity
+                </MenuLink>
               </p>
             </Text>
           </MenuSection>
