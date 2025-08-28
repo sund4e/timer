@@ -74,7 +74,10 @@ const PostLink = styled(Link)`
 
 const ArticlesPage = () => {
   return (
-    <Page title="Aika | Science-Backed Guides on Time Management & Productivity">
+    <Page
+      title="Aika | Science-Backed Guides on Time Management & Productivity"
+      description="A curated collection of science-backed articles on using timers to boost focus, productivity, and wellbeing. Explore our guides to improve how you work, learn, and live."
+    >
       <Title>Time, Well Spent: The Science of Focus and Productivity</Title>
       <SubTitle>
         Science-backed articles on using timers to boost focus, productivity,
