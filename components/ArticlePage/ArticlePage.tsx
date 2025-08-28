@@ -113,7 +113,7 @@ const ArticlePage = ({
 }: ArticlePageProps) => {
   return (
     <Page
-      title={`${article.title} - Aika Timer`}
+      title={article.title}
       description={article.description}
       canonicalUrl={canonicalUrl}
       structuredData={structuredData}

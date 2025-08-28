@@ -52,7 +52,7 @@ export const Page = ({
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{`${title} | ${siteName}`}</title>
         {description && <meta name="description" content={description} />}
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
 

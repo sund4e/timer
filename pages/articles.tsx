@@ -74,7 +74,7 @@ const PostLink = styled(Link)`
 
 const ArticlesPage = () => {
   const pageTitle =
-    'Aika | Science-Backed Guides on Time Management & Productivity';
+    'How to Use Timers: Science-Backed Guides for Focus & Productivity';
   const pageDescription =
     'A curated collection of science-backed articles on using timers to boost focus, productivity, and wellbeing. Explore our guides to improve how you work, learn, and live.';
   const canonicalUrl = 'https://aika.app/articles';

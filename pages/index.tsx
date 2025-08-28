@@ -4,10 +4,10 @@ import TimerApp from '../components/TimerApp';
 import { useState, useEffect } from 'react';
 import { getHms } from '../components/TimeInput';
 
-const APP_NAME = 'Aika Timer';
-const APP_DEFAULT_TITLE = 'Aika Timer - Minimalist Online Timer';
+const APP_NAME = 'Aika';
+const APP_DEFAULT_TITLE = 'Minimalist Online Timer | Aika';
 const APP_DESCRIPTION =
-  'Aika Timer is a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Use it for Pomodoro productivity, time-boxed meetings, or the 20-20-20 eye care technique. Completely free and ad-free.';
+  'Aika is a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Use it for Pomodoro productivity, time-boxed meetings, or the 20-20-20 eye care technique. Completely free and ad-free.';
 const APP_URL = 'https://aika.app';
 const APP_IMAGE_PREVIEW = '/preview.png';
 
@@ -36,7 +36,7 @@ const Home = () => {
     <>
       <Head>
         <title>
-          {time > 0 ? `${toTimeString(time)} - ${APP_NAME}` : APP_DEFAULT_TITLE}
+          {time > 0 ? `${toTimeString(time)} | ${APP_NAME}` : APP_DEFAULT_TITLE}
         </title>
         <meta name="description" content={APP_DESCRIPTION} />
         <link rel="icon" href="/logo.png" type="image/png" />
