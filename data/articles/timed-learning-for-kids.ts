@@ -2,8 +2,7 @@ import { Article } from './types';
 
 export const timedLearningForKids: Article = {
   slug: 'timed-learning-for-kids',
-  title:
-    'Timed Learning That Works: A Countdown Timer for Kids and the Science Behind It',
+  title: 'Timed Learning for Kids: A Science-Backed Guide to Better Focus',
   abstract:
     'Explore the research behind timed learning for kids, why countdown timers work, and how parents and teachers can use them to improve focus and self-regulation.',
   description:

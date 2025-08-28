@@ -2,8 +2,7 @@ import { Article } from './types';
 
 export const the202020Rule: Article = {
   slug: '20-20-20-rule',
-  title:
-    'Can a Timer Save Your Eyes? The Science Behind the 20-20-20 Rule for Digital Vision Health',
+  title: 'The 20-20-20 Rule: Science-Backed Tips for Digital Eye Strain',
   abstract:
     'Explore the science behind digital eye strain, the evidence supporting the 20-20-20 rule, and how timers can play a practical role in protecting your vision health.',
   description:

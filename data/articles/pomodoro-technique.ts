@@ -2,7 +2,7 @@ import { Article } from './types';
 
 export const pomodoroTechnique: Article = {
   slug: 'pomodoro-technique',
-  title: 'What Is the Pomodoro Technique and How to Use It for Better Focus',
+  title: 'The Pomodoro Technique: A Guide to Better Focus & Productivity',
   abstract:
     'A simple yet powerful time management method to combat distraction, improve productivity, and build stronger focus and better work habits.',
   description:

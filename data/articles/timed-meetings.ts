@@ -2,8 +2,7 @@ import { Article } from './types';
 
 export const timedMeetings: Article = {
   slug: 'timed-meetings',
-  title:
-    'Boost Productivity With Timed Meetings: How Timeboxing Creates Happier, More Efficient Teams',
+  title: 'Timeboxed Meetings: A Science-Backed Way to Boost Productivity',
   abstract:
     'Explore the science behind timeboxing, why timed meetings work, and how teams can adopt this strategy for greater efficiency and satisfaction.',
   description:
