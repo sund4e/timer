@@ -13,18 +13,11 @@ export const Background = () => (
   <BackgroundContainer>
     <Image
       alt="Sokosti"
-      src="/sokosti_small.jpg"
+      src="/sokosti.jpg"
       layout="fill"
       objectFit="cover"
-      quality={100}
       priority={true}
-    />
-    <Image
-      alt="Sokosti"
-      src="/sokosti.jpg"
-      layout={'fill'}
-      objectFit="cover"
-      quality={100}
+      quality={90}
     />
   </BackgroundContainer>
 );
