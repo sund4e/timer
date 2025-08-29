@@ -49,35 +49,18 @@ const Home = () => {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={APP_URL} />
+        <meta property="og:title" content={APP_DEFAULT_TITLE} />
+        <meta property="og:description" content={APP_DESCRIPTION} />
         <meta
-          property="og:title"
-          content={
-            'Aika Timer — Flexible Online Timer for Pomodoro, Focus & More'
-          }
-        />
-        <meta
-          property="og:description"
-          content={
-            'Create custom countdowns with Aika Timer. Use it for Pomodoro sessions, meetings, or 20-20-20 eye breaks. Beautiful, fullscreen, and ad-free.'
-          }
-        />
-        <meta property="og:image" content={`${APP_URL}${APP_IMAGE_PREVIEW}`} />{' '}
+          property="og:image"
+          content={`${APP_URL}${APP_IMAGE_PREVIEW}`}
+        />{' '}
         {/* Needs absolute URL for og:image */}
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={APP_URL} />
-        <meta
-          property="twitter:title"
-          content={
-            'Aika Timer — Flexible Online Timer for Pomodoro, Focus & More'
-          }
-        />
-        <meta
-          property="twitter:description"
-          content={
-            'Minimalist timer for Pomodoro, meetings, and focus. Fully free. No distractions.'
-          }
-        />
+        <meta property="twitter:title" content={APP_DEFAULT_TITLE} />
+        <meta property="twitter:description" content={APP_DESCRIPTION} />
         <meta
           property="twitter:image"
           content={`${APP_URL}${APP_IMAGE_PREVIEW}`}
@@ -93,7 +76,7 @@ const Home = () => {
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'WebApplication',
-              name: APP_NAME,
+              name: APP_DEFAULT_TITLE,
               description: APP_DESCRIPTION,
               url: APP_URL,
               applicationCategory: 'Utilities',
