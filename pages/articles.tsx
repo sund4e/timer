@@ -37,10 +37,6 @@ const PostItemContainer = styled.li`
   border-radius: ${({ theme }) => theme.radius}rem;
   transition: border-color 0.2s ease-in-out;
 
-  @media (max-width: 768px) {
-    flex-basis: 100%; /* Makes items full-width on mobile */
-  }
-
   &:hover {
     border-color: white;
     h3,
@@ -83,7 +79,7 @@ const ArticlesPage = () => {
   const pageTitle =
     'How to Use Timers: Science-Backed Guides for Focus & Productivity';
   const pageDescription =
-    'A curated collection of science-backed articles on using timers to boost focus, productivity, and wellbeing. Explore our guides to improve how you work, learn, and live.';
+    'A collection of science-backed guides on using timers to boost focus, productivity, and wellbeing. Learn how to work smarter, not harder.';
   const canonicalUrl = 'https://aika.app/articles';
 
   const structuredData = {

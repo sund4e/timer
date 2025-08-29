@@ -7,7 +7,7 @@ import { getHms } from '../components/TimeInput';
 const APP_NAME = 'Aika';
 const APP_DEFAULT_TITLE = 'Minimalist Online Timer | Aika';
 const APP_DESCRIPTION =
-  'Aika is a distraction-free online timer with fullscreen countdowns, desktop notifications, and customizable timer sequences. Use it for Pomodoro productivity, time-boxed meetings, or the 20-20-20 eye care technique. Completely free and ad-free.';
+  'Aika is a distraction-free online timer with fullscreen countdowns and desktop notifications. Perfect for Pomodoro, meetings, and the 20-20-20 rule. Free and ad-free.';
 const APP_URL = 'https://aika.app';
 const APP_IMAGE_PREVIEW = '/preview.png';
 
