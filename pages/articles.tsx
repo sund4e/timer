@@ -30,8 +30,7 @@ const PostList = styled.ul`
 
 const PostItemContainer = styled.li`
   margin-bottom: 1.5rem;
-  flex: 1 1 45%; /* Allows items to grow and shrink */
-  min-width: 300px; /* Prevents items from becoming too narrow */
+  flex: 1 1 300px; /* Allow items to grow and shrink from a 300px base */
   border: 1px solid;
   padding: 1rem;
   border-radius: ${({ theme }) => theme.radius}rem;
